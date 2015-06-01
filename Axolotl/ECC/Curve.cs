@@ -5,6 +5,7 @@ namespace Axolotl.ECC
 {
 	public class Curve
 	{
+		// Completed
 		public const byte DJB_TYPE = 0x05;
 
 		public static ECKeyPair GenerateKeyPair()

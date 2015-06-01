@@ -6,6 +6,8 @@ namespace Axolotl.Ratchet
 {
 	public class SymmetricAxolotlParameters
 	{
+		// Complete
+
 		public ECKeyPair       OurBaseKey		{ get; private set; }
 		public ECKeyPair       OurRatchetKey	{ get; private set; }
 		public IdentityKeyPair OurIdentityKey	{ get; private set; }

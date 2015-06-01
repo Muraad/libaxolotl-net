@@ -4,6 +4,8 @@ namespace Axolotl.Protocol
 {
 	public abstract class CiphertextMessage
 	{
+		// Complete
+
 		public static int UNSUPPORTED_VERSION = 1;
 		public static int CURRENT_VERSION     = 3;
 

@@ -1,23 +1,21 @@
 using System;
-using Axolotl.State;
+using System.Linq;
+using System.Text;
 using Axolotl.ECC;
+using Axolotl.KDF;
+using Axolotl.State;
+using Axolotl.Util;
 
 namespace Axolotl.Ratchet
 {
 	public class RatchetingSession
 	{
-		public RatchetingSession ()
-		{
-		}
-
 		public static void InitializeSession(SessionState sessionState,
 		                                     int sessionVersion,
 		                                     SymmetricAxolotlParameters parameters)
 		{
 			if (IsAlice(parameters.OurBaseKey.PublicKey, parameters.TheirBaseKey)) 
 			{
-				//AliceAxolotlParameters.Builder aliceParameters = AliceAxolotlParameters.newBuilder();
-
 				var alice = new AliceAxolotlParameters (
 					parameters.OurIdentityKey,
 					parameters.OurBaseKey,
@@ -27,8 +25,7 @@ namespace Axolotl.Ratchet
 					Absent ()); // UNDONE: Optional.<ECPublicKey>absent()
 
 				RatchetingSession.InitializeSession(sessionState, sessionVersion, alice);
-			} else {
-			//	BobAxolotlParameters.Builder bobParameters = BobAxolotlParameters.newBuilder();
+			} else {	
 				var bob = new BobAxolotlParameters (
 					parameters.OurIdentityKey,
 					parameters.OurBaseKey,
@@ -64,9 +61,33 @@ namespace Axolotl.Ratchet
 			throw new NotImplementedException ();
 		}
 
-		///
-		// UNDONE
-		///
+		private static byte[] GetDiscontinuityBytes() {
+			byte[] discontinuity = new byte[32];
+			discontinuity = discontinuity.Select (i => (byte)0xFF).ToArray ();
+			return discontinuity;
+		}
+
+		private static DerivedKeys CalculateDerivedKeys(int sessionVersion, byte[] masterSecret) {
+			var kdf = HKDF.CreateFor (sessionVersion);
+			byte[] derivedSecretBytes = kdf.DeriveSecrets (masterSecret, Encoding.UTF8.GetBytes ("WhisperText"), 64);
+			byte[][] derivedSecrets = ByteUtil.Split (derivedSecretBytes, 32, 32);
+
+			return new DerivedKeys (new RootKey (kdf, derivedSecrets [0]),
+			                        new ChainKey (kdf, derivedSecrets [1], 0));
+		}
+
+
+		private class DerivedKeys
+		{
+			public RootKey RootKey { get; private set; }
+			public ChainKey ChainKey { get; private set; }
+
+			public DerivedKeys (RootKey rootKey, ChainKey chainKey)
+			{
+				RootKey = rootKey;
+				ChainKey = chainKey;
+			}
+		}
 	}
 }
 

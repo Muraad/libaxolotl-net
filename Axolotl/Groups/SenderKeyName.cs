@@ -3,6 +3,7 @@ using Axolotl;
 
 namespace Axolotl.Groups
 {
+	// Completed
 	public class SenderKeyName
 	{
 		public string GroupID { get; private set; }

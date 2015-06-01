@@ -73,6 +73,10 @@
     <Compile Include="Ratchet\RatchetingSession.cs" />
     <Compile Include="State\SessionState.cs" />
     <Compile Include="Ratchet\SymmetricAxolotlParameters.cs" />
+    <Compile Include="Ratchet\ChainKey.cs" />
+    <Compile Include="Ratchet\MessageKeys.cs" />
+    <Compile Include="Ratchet\RootKey.cs" />
+    <Compile Include="IDecryprionCallback.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
