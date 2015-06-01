@@ -77,6 +77,12 @@
     <Compile Include="Ratchet\MessageKeys.cs" />
     <Compile Include="Ratchet\RootKey.cs" />
     <Compile Include="IDecryprionCallback.cs" />
+    <Compile Include="State\ISessionStore.cs" />
+    <Compile Include="State\SessionRecord.cs" />
+    <Compile Include="State\ISignedPreKeyStore.cs" />
+    <Compile Include="State\SignedPreKeyRecord.cs" />
+    <Compile Include="Logging\IAxolotlLogger.cs" />
+    <Compile Include="Logging\DebugLevel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -89,6 +95,7 @@
     <Folder Include="Groups\Ratchet\" />
     <Folder Include="Groups\State\" />
     <Folder Include="Protocol\" />
+    <Folder Include="Logging\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
