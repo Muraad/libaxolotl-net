@@ -1,0 +1,11 @@
+using System;
+
+namespace Axolotl.State
+{
+	public interface IIdentityKeyStore
+	{
+		void SaveIdentity(string name, IdentityKey identityKey);
+		bool IsTrustedIdentity(string name, IdentityKey identityKey);
+	}
+}
+
