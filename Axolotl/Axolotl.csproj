@@ -35,6 +35,9 @@
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Security" />
+    <Reference Include="Sodium">
+      <HintPath>..\packages\libsodium-net.0.8.0\lib\Net40\Sodium.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,4 +89,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="../packages/Baseclass.Contrib.Nuget.Output.2.0.0/build/net40/Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('../packages/Baseclass.Contrib.Nuget.Output.2.0.0/build/net40/Baseclass.Contrib.Nuget.Output.targets')" />
 </Project>

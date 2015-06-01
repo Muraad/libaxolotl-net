@@ -6,7 +6,7 @@ namespace Axolotl.ECC
 	{
 		public byte[] PublicKey { get; private set; }
 
-		DjbECPrivateKey (byte[] privateKey) {
+		public DjbECPrivateKey (byte[] privateKey) {
 			PublicKey = privateKey;
 		}
 
@@ -15,7 +15,7 @@ namespace Axolotl.ECC
 			return PublicKey;
 		}
 
-		public override int GetType ()
+		public override int GetKeyType ()
 		{
 			return Curve.DJB_TYPE;
 		}

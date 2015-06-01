@@ -10,7 +10,7 @@ namespace Axolotl.ECC
 
 		public abstract int CompareTo(ECPublicKey another);
 
-		public abstract int GetType();
+		public abstract int GetKeyType();
 	}
 }
 

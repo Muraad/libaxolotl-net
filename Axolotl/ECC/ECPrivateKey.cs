@@ -5,7 +5,7 @@ namespace Axolotl.ECC
 	public abstract class ECPrivateKey
 	{
 		public abstract byte[] Serialize();
-		public abstract int GetType();
+		public abstract int GetKeyType();
 	}
 }
 

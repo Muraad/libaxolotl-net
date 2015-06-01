@@ -20,7 +20,7 @@ namespace Axolotl.ECC
 			return ByteUtil.Combine(type, PublicKey);
 		}
 
-		public override int GetType ()
+		public override int GetKeyType ()
 		{
 			return Curve.DJB_TYPE;
 		}

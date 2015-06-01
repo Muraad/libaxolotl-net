@@ -1,9 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/State/PreKeyBundle.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/Ratchet/RatchetingSession.cs">
     <Files>
-      <File FileName="Axolotl/State/IdentityKeyPairStructure.cs" Line="1" Column="1" />
-      <File FileName="Axolotl/State/PreKeyBundle.cs" Line="2" Column="19" />
+      <File FileName="Axolotl/Protocol/CiphertextMessage.cs" Line="3" Column="27" />
+      <File FileName="Axolotl/Ratchet/RatchetingSession.cs" Line="68" Column="5" />
+      <File FileName="Axolotl/ECC/DjbECPublicKey.cs" Line="46" Column="19" />
+      <File FileName="Axolotl/ECC/ECPublicKey.cs" Line="11" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
