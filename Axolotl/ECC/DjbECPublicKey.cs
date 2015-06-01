@@ -1,22 +1,23 @@
 using System;
 using Axolotl.Util;
 using System.Security.Cryptography;
+using Mono.Math;
 
 namespace Axolotl.ECC
 {
 	public class DjbECPublicKey : ECPublicKey
 	{
-		private byte[] _publicKey;
+		public byte[] PublicKey { get; private set; }
 
 		public DjbECPublicKey (byte[] publicKey)
 		{
-			_publicKey = publicKey;
+			PublicKey = publicKey;
 		}
 
 		public override byte[] Serialize ()
 		{
 			byte[] type = { Curve.DJB_TYPE };
-			return ByteUtil.Combine(type, _publicKey);
+			return ByteUtil.Combine(type, PublicKey);
 		}
 
 		public override int GetType ()
@@ -33,7 +34,7 @@ namespace Axolotl.ECC
 				return false;
 
 			var that = (DjbECPublicKey)obj;
-			return Array.Equals (_publicKey, that._publicKey);
+			return Array.Equals (PublicKey, that.PublicKey);
 		}
 
 		// TODO: implement GetHashCode and comparators
@@ -42,14 +43,10 @@ namespace Axolotl.ECC
 		//	return Arrays.hashCode(publicKey);
 		//}
 
-		//@Override
-		//	public int compareTo(ECPublicKey another) {
-		//	return new BigInteger(publicKey).compareTo(new BigInteger(((DjbECPublicKey)another).publicKey));
-		//}
-
-		//public byte[] getPublicKey() {
-		//	return publicKey;
-		//}
+		public override int CompareTo(ECPublicKey another)
+		{
+			return (int)new BigInteger (PublicKey).Compare (new BigInteger (((DjbECPublicKey)another).PublicKey));
+		}
 	}
 }
 

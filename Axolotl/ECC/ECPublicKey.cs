@@ -8,6 +8,8 @@ namespace Axolotl.ECC
 
 		public abstract byte[] Serialize();
 
+		public abstract int CompareTo(ECPublicKey another);
+
 		public abstract int GetType();
 	}
 }
