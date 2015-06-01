@@ -83,6 +83,7 @@
     <Compile Include="State\SignedPreKeyRecord.cs" />
     <Compile Include="Logging\IAxolotlLogger.cs" />
     <Compile Include="Logging\DebugLevel.cs" />
+    <Compile Include="Protobuf\LocalStorageProtocol.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -96,6 +97,7 @@
     <Folder Include="Groups\State\" />
     <Folder Include="Protocol\" />
     <Folder Include="Logging\" />
+    <Folder Include="Protobuf\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
