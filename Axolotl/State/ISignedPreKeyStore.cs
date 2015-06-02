@@ -5,6 +5,7 @@ namespace Axolotl.State
 {
 	public interface ISignedPreKeyStore
 	{
+		// Complete
 		SignedPreKeyRecord LoadSignedPreKey (int signedPreKeyId);
 
 		List<SignedPreKeyRecord> LoadSignedPreKeys ();

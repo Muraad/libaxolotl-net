@@ -89,6 +89,7 @@
     <Compile Include="Protobuf\SessionStructure\Chain.cs" />
     <Compile Include="Protobuf\SessionStructure\PendingKeyExchange.cs" />
     <Compile Include="Protobuf\SessionStructure\PendingPreKey.cs" />
+    <Compile Include="State\Impl\InMemoryPreKeyStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -104,6 +105,7 @@
     <Folder Include="Logging\" />
     <Folder Include="Protobuf\" />
     <Folder Include="Protobuf\SessionStructure\" />
+    <Folder Include="State\Impl\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

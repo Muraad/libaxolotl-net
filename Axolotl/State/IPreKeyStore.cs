@@ -4,10 +4,10 @@ namespace Axolotl.State
 {
 	public interface IPreKeyStore
 	{
-		PreKeyRecord LoadPreKey (int preKeyId);
-		void StorePreKey(int preKeyId, PreKeyRecord record);
-		bool ContainsPreKey(int preKeyId, PreKeyRecord record);
-		void RemovePreKey (int preKeyId);
+		PreKeyRecord LoadPreKey (uint preKeyId);
+		void StorePreKey(uint preKeyId, PreKeyRecord record);
+		bool ContainsPreKey(uint preKeyId);
+		void RemovePreKey (uint preKeyId);
 	}
 }
 
