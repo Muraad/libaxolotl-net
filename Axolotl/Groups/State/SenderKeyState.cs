@@ -9,6 +9,8 @@ namespace Axolotl.Groups.State
 {
 	public class SenderKeyState
 	{
+		// Completed
+
 		public SenderKeyStateStructure Structure { get; private set; }
 
 		public uint KeyId {

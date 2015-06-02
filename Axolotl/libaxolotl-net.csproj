@@ -94,6 +94,9 @@
     <Compile Include="State\Impl\InMemoryIdentityKeyStore.cs" />
     <Compile Include="State\Impl\InMemoryAxolotlStore.cs" />
     <Compile Include="State\IAxolotlStore.cs" />
+    <Compile Include="Groups\State\ISenderKeyStore.cs" />
+    <Compile Include="Groups\GroupCipher.cs" />
+    <Compile Include="Protocol\SenderKeyMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

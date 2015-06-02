@@ -10,8 +10,9 @@ namespace Axolotl.Groups.State
 {
 	public class SenderKeyRecord
 	{
-		private List<SenderKeyState> _senderKeyStates = new List<SenderKeyState>();
+		// Completed
 
+		private List<SenderKeyState> _senderKeyStates = new List<SenderKeyState>();
 
 		public bool IsEmpty {
 			get { return _senderKeyStates.Count == 0; }

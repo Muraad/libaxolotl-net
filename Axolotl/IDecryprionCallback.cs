@@ -4,7 +4,7 @@ namespace Axolotl
 {
 	public interface IDecryprionCallback
 	{
-		void HandlePlainText(byte[] plaintext);
+		void HandlePlaintext (byte[] plaintext);
 	}
 }
 
