@@ -5,7 +5,7 @@ namespace Axolotl.State
 {
 	public class InMemorySignedPreKeyStore : ISignedPreKeyStore
 	{
-		Dictionary<int, byte[]> _store;
+		private Dictionary<int, byte[]> _store;
 
 		public InMemorySignedPreKeyStore ()
 		{

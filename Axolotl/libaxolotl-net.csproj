@@ -92,6 +92,9 @@
     <Compile Include="State\Impl\InMemoryPreKeyStore.cs" />
     <Compile Include="State\Impl\InMemorySessionStore.cs" />
     <Compile Include="State\Impl\InMemorySignedPreKeyStore.cs" />
+    <Compile Include="State\Impl\InMemoryIdentityKeyStore.cs" />
+    <Compile Include="State\Impl\InMemoryAxolotlStore.cs" />
+    <Compile Include="State\IAxolotlStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
