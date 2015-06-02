@@ -1,46 +1,13 @@
 using System;
 using ProtoBuf;
 using System.Collections.Generic;
+using Axolotl.SessionStructure;
 
 namespace Axolotl.State
 {
 	[ProtoContract]
 	public class SessionStructure
 	{
-		[ProtoContract]
-		public class Chain {
-			[ProtoMember(1)]
-			public byte[] senderRatchetKey { get; set; }
-			[ProtoMember(2)]
-			public byte[] senderRatchetKeyPrivate { get; set; }
-
-			[ProtoContract]
-			public class ChainKey {
-				[ProtoMember(1)]
-				public UInt32 index { get; set; }
-				[ProtoMember(2)]
-				public byte[] key { get; set; }
-			}
-
-			[ProtoMember(3)]
-			public ChainKey chainKey;
-
-			[ProtoContract]
-			public class MessageKey {
-				[ProtoMember(1)]
-				public UInt32 index { get; set; }
-				[ProtoMember(2)]
-				public byte[] cipherKey { get; set; }
-				[ProtoMember(3)]
-				public byte[] macKey { get; set; }
-				[ProtoMember(4)]
-				public byte[] iv { get; set; }
-			}
-
-			[ProtoMember(4)]
-			public List<MessageKey> messageKeys { get; set; }
-		}
-
 		[ProtoContract]
 		public class PendingKeyExchange {
 			[ProtoMember(1)]
@@ -70,36 +37,36 @@ namespace Axolotl.State
 		}
 
 		[ProtoMember(1)]
-		public UInt32 sessionVersion { get; set; }
+		public UInt32 SessionVersion { get; set; }
 		[ProtoMember(2)]
-		public byte[] localIdentityPublic { get; set; }
+		public byte[] LocalIdentityPublic { get; set; }
 		[ProtoMember(3)]
-		public byte[] remoteIdentityPublic { get; set; }
+		public byte[] RemoteIdentityPublic { get; set; }
 
 		[ProtoMember(4)]
-		public byte[] rootKey { get; set; }
+		public byte[] RootKey { get; set; }
 		[ProtoMember(5)]
-		public UInt32 previousCounter { get; set; }
+		public UInt32 PreviousCounter { get; set; }
 
 		[ProtoMember(6)]
-		public Chain senderChain { get; set; }
+		public Chain SenderChain { get; set; }
 		[ProtoMember(7)]
-		public List<Chain> receiverChains { get; set; }
+		public List<Chain> ReceiverChains { get; set; }
 
 		[ProtoMember(8)]
-		public PendingKeyExchange pendingKeyExchange { get; set; }
+		public PendingKeyExchange PendKeyExchange { get; set; }
 		[ProtoMember(9)]
-		public PendingPreKey      pendingPreKey { get; set; }
+		public PendingPreKey      PendPreKey { get; set; }
 
 		[ProtoMember(10)]
-		public UInt32 remoteRegistrationId { get; set; }
+		public UInt32 RemoteRegistrationId { get; set; }
 		[ProtoMember(11)]
-		public UInt32 localRegistrationId { get; set; }
+		public UInt32 LocalRegistrationId { get; set; }
 
 		[ProtoMember(12)]
-		public bool needsRefresh { get; set; }
+		public bool NeedsRefresh { get; set; }
 		[ProtoMember(13)]
-		public byte[] aliceBaseKey { get; set; }
+		public byte[] AliceBaseKey { get; set; }
 	}
 
 	[ProtoContract]

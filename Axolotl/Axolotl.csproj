@@ -86,6 +86,7 @@
     <Compile Include="Logging\DebugLevel.cs" />
     <Compile Include="Protobuf\LocalStorageProtocol.cs" />
     <Compile Include="Protobuf\WhisperTextProtocol.cs" />
+    <Compile Include="Protobuf\SessionStructure\Chain.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -100,6 +101,7 @@
     <Folder Include="Protocol\" />
     <Folder Include="Logging\" />
     <Folder Include="Protobuf\" />
+    <Folder Include="Protobuf\SessionStructure\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

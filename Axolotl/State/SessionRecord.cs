@@ -44,13 +44,13 @@ namespace Axolotl.State
 
 		public bool HasSessionState(int version, byte[] aliceBaseKey)
 		{
-			if (SessionState.Version == version &&
+			if (SessionState.SessionVersion == version &&
 				Array.Equals (aliceBaseKey, SessionState.AliceBaseKey)) {
 				return true;
 			}
 
 			foreach (var state in _previousStates) {
-				if (state.Version == version &&
+				if (state.SessionVersion == version &&
 				    Array.Equals (aliceBaseKey, state.AliceBaseKey)) {
 					return true;
 				}
