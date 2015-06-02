@@ -52,7 +52,6 @@
     <Compile Include="ECC\DjbECPrivateKey.cs" />
     <Compile Include="Util\Hex.cs" />
     <Compile Include="IdentityKeyPair.cs" />
-    <Compile Include="State\IdentityKeyPairStructure.cs" />
     <Compile Include="Ratchet\AliceAxolotlParameters.cs" />
     <Compile Include="Ratchet\BobAxolotlParameters.cs" />
     <Compile Include="KDF\HKDF.cs" />

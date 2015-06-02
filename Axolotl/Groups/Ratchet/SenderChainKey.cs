@@ -5,11 +5,14 @@ namespace Axolotl.Groups.Ratchet
 {
 	public class SenderChainKey
 	{
+		// Complete
+
 		private static byte[] MESSAGE_KEY_SEED = { 0x01 };
 		private static byte[] CHAIN_KEY_SEED   = { 0x02 };
 
 		public int Iteration { get; private set; }
 		public byte[] ChainKey { get; private set; }
+		public byte[] Seed { get { return ChainKey; } }
 
 		public SenderChainKey (int iteration, byte[] chainKey)
 		{

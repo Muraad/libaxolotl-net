@@ -107,20 +107,20 @@ namespace Axolotl.State
 		public class SenderChainKey
 		{
 			[ProtoMember(1)]
-			public UInt32 iteration { get; set; }
+			public UInt32 Iteration { get; set; }
 
 			[ProtoMember(2)]
-			public byte[] seed { get; set; }
+			public byte[] Seed { get; set; }
 		}
 
 		[ProtoContract]
 		public class SenderMessageKey
 		{
 			[ProtoMember(1)]
-			public UInt32 iteration { get; set; }
+			public UInt32 Iteration { get; set; }
 
 			[ProtoMember(2)]
-			public byte[] seed { get; set; }
+			public byte[] Seed { get; set; }
 		}
 
 		[ProtoContract]
@@ -134,7 +134,7 @@ namespace Axolotl.State
 		}
 
 		[ProtoMember(1)]
-		public UInt32 senderKeyId { get; set; }
+		public UInt32 SenderKeyId { get; set; }
 
 		[ProtoMember(2)]
 		public SenderChainKey senderChainKey { get; set; }
