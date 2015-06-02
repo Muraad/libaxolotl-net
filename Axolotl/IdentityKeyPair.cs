@@ -1,38 +1,51 @@
 using System;
+using System.IO;
 using Axolotl.ECC;
 using Axolotl.State;
+using ProtoBuf;
 
 namespace Axolotl
 {
 	public class IdentityKeyPair
 	{
+		// Complete
+
 		public IdentityKey PublicKey { get; private set; }
+
 		public ECPrivateKey PrivateKey { get; private set; }
 
-		public IdentityKeyPair (IdentityKey publicKey, ECPrivateKey privateKey)
+		public IdentityKeyPair(IdentityKey publicKey, ECPrivateKey privateKey)
 		{
 			PublicKey = publicKey;
 			PrivateKey = privateKey;
 		}
 
-		public IdentityKeyPair (byte[] serialized)
+		public IdentityKeyPair(byte[] serialized)
 		{
-			try {
-				// TODO
-			}
-			catch {
-				throw new Exception ();
+			//TODO: check for errors
+
+			using(var stream = new MemoryStream())
+			{
+				stream.Write(serialized, 0, serialized.Length);
+				var deserialized = Serializer.Deserialize<IdentityKeyPairStructure>(stream);
+
+				PublicKey = new IdentityKey(deserialized.publicKey, 0);
+				PrivateKey = Curve.DecodePrivatePoint(deserialized.privateKey);
 			}
 		}
 
 		public byte[] Serialize()
 		{
-			// TODO
-			//return IdentityKeyPairStructure.newBuilder()
-			//	.setPublicKey(ByteString.copyFrom(publicKey.serialize()))
-			//		.setPrivateKey(ByteString.copyFrom(privateKey.serialize()))
-			//		.build().toByteArray();
-			return new byte[3];
+			var idkp = new IdentityKeyPairStructure {
+				publicKey = PublicKey.Serialize(),
+				privateKey = PrivateKey.Serialize()
+			};
+
+			using(var stream = new MemoryStream())
+			{
+				Serializer.Serialize<IdentityKeyPairStructure>(stream, idkp);
+				return stream.GetBuffer();
+			}
 		}
 	}
 }

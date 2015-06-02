@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{690CBEFA-BF81-41E5-A76F-077C877A5493}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -87,6 +87,8 @@
     <Compile Include="Protobuf\LocalStorageProtocol.cs" />
     <Compile Include="Protobuf\WhisperTextProtocol.cs" />
     <Compile Include="Protobuf\SessionStructure\Chain.cs" />
+    <Compile Include="Protobuf\SessionStructure\PendingKeyExchange.cs" />
+    <Compile Include="Protobuf\SessionStructure\PendingPreKey.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

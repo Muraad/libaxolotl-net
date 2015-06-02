@@ -4,6 +4,8 @@ using Axolotl.KDF;
 using Axolotl.ECC;
 using Axolotl.SessionStructure;
 using System.Collections.Generic;
+using System.IO;
+using ProtoBuf;
 
 namespace Axolotl.State
 {
@@ -13,34 +15,43 @@ namespace Axolotl.State
 		private IdentityKey _remoteIdentityKey;
 		private IdentityKey _localIdentityKey;
 
-		public UInt32 SessionVersion { 
-			get {
+		public UInt32 SessionVersion
+		{ 
+			get
+			{
 				var sVersion = Structure.SessionVersion;
-				return sVersion == 0 ?  2 : sVersion;
+				return sVersion == 0 ? 2 : sVersion;
 			} 
-			set {
+			set
+			{
 				_sessionVersion = value;
 			} 
 		}
 
-		public IdentityKey RemoteIdentityKey { 
-			get {
+		public IdentityKey RemoteIdentityKey
+		{ 
+			get
+			{
 				//TODO: check it right and add exceptions
-				if (Structure.RemoteIdentityPublic == null)
+				if(Structure.RemoteIdentityPublic == null)
 					return null;
-				return new IdentityKey (Structure.RemoteIdentityPublic, 0);
+				return new IdentityKey(Structure.RemoteIdentityPublic, 0);
 			}
-			set {
+			set
+			{
 				_remoteIdentityKey = value;
 			}
 		}
 
 
-		public IdentityKey LocalIdentityKey { 
-			get {
-				return new IdentityKey (Structure.LocalIdentityPublic, 0);
+		public IdentityKey LocalIdentityKey
+		{ 
+			get
+			{
+				return new IdentityKey(Structure.LocalIdentityPublic, 0);
 			} 
-			set {
+			set
+			{
 				_localIdentityKey = value;
 			}
 		}
@@ -49,38 +60,47 @@ namespace Axolotl.State
 
 		public SessionStructure Structure { get; private set; }
 
-		public UInt32 PreviousCounter {
+		public UInt32 PreviousCounter
+		{
 			get { return Structure.PreviousCounter; }
-			set { Structure.PreviousCounter = (UInt32)value; }
+			set { Structure.PreviousCounter = value; }
 		}
 
-		public RootKey RKey {
-			get { return new RootKey (HKDF.CreateFor ((int)SessionVersion), Structure.RootKey); }
+		public RootKey RKey
+		{
+			get { return new RootKey(HKDF.CreateFor((int)SessionVersion), Structure.RootKey); }
 			set { Structure.RootKey = value.Key; }
 		}
 
-		public ECPublicKey SenderRatchetKey {
-			get {
-				return Curve.DecodePoint (Structure.SenderChain.SenderRatchetKey, 0);
+		public ECPublicKey SenderRatchetKey
+		{
+			get
+			{
+				return Curve.DecodePoint(Structure.SenderChain.SenderRatchetKey, 0);
 			}
 		}
 
-		public ECKeyPair SenderRatchetKeyPair {
-			get {
+		public ECKeyPair SenderRatchetKeyPair
+		{
+			get
+			{
 				var pKey = SenderRatchetKey;
-				var sKey = Curve.DecodePrivatePoint (Structure.SenderChain.SenderRatchetKeyPrivate);
-				return new ECKeyPair (sKey, pKey);
+				var sKey = Curve.DecodePrivatePoint(Structure.SenderChain.SenderRatchetKeyPrivate);
+				return new ECKeyPair(sKey, pKey);
 			}
 		}
 
-		public ChainKey SenderChainKey {
-			get {
+		public ChainKey SenderChainKey
+		{
+			get
+			{
 				var chainKeyStructure = Structure.SenderChain.chainKey;
-				return new ChainKey (HKDF.CreateFor ((int)SessionVersion),
-				                    chainKeyStructure.key,
-				                    (int)chainKeyStructure.index);
+				return new ChainKey(HKDF.CreateFor((int)SessionVersion),
+					chainKeyStructure.key,
+					(int)chainKeyStructure.index);
 			}
-			set {
+			set
+			{
 				var chainKey = new Chain.ChainKey { 
 					key = value.Key,
 					index = (UInt32)value.Index
@@ -89,24 +109,90 @@ namespace Axolotl.State
 			}
 		}
 
-		public SessionState ()
+		public UInt32 PendingKeyExchangeSequence
 		{
-			Structure = new SessionStructure ();
+			get
+			{
+				return Structure.PendKeyExchange.Sequence;
+			}
 		}
 
-		public SessionState (SessionStructure sessionStructure)
+		public ECKeyPair PendingKeyExchangeBaseKey
+		{
+			get
+			{
+				var publicKey = Curve.DecodePoint(Structure.PendKeyExchange.LocalBaseKey, 0);
+				var privateKey = Curve.DecodePrivatePoint(Structure.PendKeyExchange.LocalBaseKeyPrivate);
+				return new ECKeyPair(privateKey, publicKey);
+			}
+		}
+
+		public ECKeyPair PendingKeyExchangeRatchetKey
+		{
+			get
+			{
+				var publicKey = Curve.DecodePoint(Structure.PendKeyExchange.LocalRatchetKey, 0);
+				var privateKey = Curve.DecodePrivatePoint(Structure.PendKeyExchange.LocalRatchetKeyPrivate);
+				return new ECKeyPair(privateKey, publicKey);
+			}
+		}
+
+		public IdentityKeyPair PendingKeyExchangeIdentityKey
+		{
+			get
+			{
+				var publicKey = new IdentityKey(Structure.PendKeyExchange.LocalIdentityKey, 0);
+				var privateKey = Curve.DecodePrivatePoint(Structure.PendKeyExchange.LocalIdentityKeyPrivate);
+				return new IdentityKeyPair(publicKey, privateKey);
+			}
+		}
+
+		public bool HasPendingKeyExchange
+		{			
+			get
+			{
+				// TODO: Check
+				return Structure.PendKeyExchange != null;
+			}
+		}
+
+		public bool HasUnacknowledgedPreKeyMessage()
+		{
+			// TODO: Check
+			return Structure.PendPreKey != null;
+		}
+
+		public UInt32 RemoteRegistrationId
+		{
+			// TODO: Check
+			get { return Structure.RemoteRegistrationId; }
+			set { Structure.RemoteRegistrationId = value; }
+		}
+
+		public UInt32 LocalRegistrationId
+		{
+			get { return Structure.LocalRegistrationId; }
+			set { Structure.LocalRegistrationId = value; }
+		}
+
+		public SessionState()
+		{
+			Structure = new SessionStructure();
+		}
+
+		public SessionState(SessionStructure sessionStructure)
 		{
 			Structure = sessionStructure;
 		}
 
-		public SessionState (SessionState copy)
+		public SessionState(SessionState copy)
 		{
 			Structure = copy.Structure;
 		}
 
 		public bool HasReceiverChain(ECPublicKey senderEphemeral)
 		{
-			return GetReceiverChain (senderEphemeral) != null;
+			return GetReceiverChain(senderEphemeral) != null;
 		}
 
 		public bool HasSenderChain()
@@ -114,17 +200,18 @@ namespace Axolotl.State
 			return Structure.SenderChain != null;
 		}
 
-		private Tuple<Chain, int> GetReceiverChain (ECPublicKey senderEphemeral)
+		private Tuple<Chain, int> GetReceiverChain(ECPublicKey senderEphemeral)
 		{
 			List<Chain> ReceiverChains = Structure.ReceiverChains;
 			int index = 0;
 
-			foreach (var chain in ReceiverChains) {
+			foreach(var chain in ReceiverChains)
+			{
 				// TODO: add exceptions
-				ECPublicKey chainSenderRatchetKey = Curve.DecodePoint (chain.SenderRatchetKey, 0);
+				ECPublicKey chainSenderRatchetKey = Curve.DecodePoint(chain.SenderRatchetKey, 0);
 
-				if (chainSenderRatchetKey.Equals (senderEphemeral))
-					return new Tuple<Chain, int> (chain, index);
+				if(chainSenderRatchetKey.Equals(senderEphemeral))
+					return new Tuple<Chain, int>(chain, index);
 
 				index++;
 			}
@@ -134,15 +221,18 @@ namespace Axolotl.State
 
 		public ChainKey GetReceiverChainKey(ECPublicKey senderEphemeral)
 		{
-			Tuple<Chain, int> ReceiverChainAndIndex = GetReceiverChain (senderEphemeral);
+			Tuple<Chain, int> ReceiverChainAndIndex = GetReceiverChain(senderEphemeral);
 			var ReceiverChain = ReceiverChainAndIndex.Item1;
 
-			if (ReceiverChain == null) {
+			if(ReceiverChain == null)
+			{
 				return null;
-			} else {
-				return new ChainKey (HKDF.CreateFor ((int)SessionVersion),
-				                    ReceiverChain.chainKey.key,
-				                    (int)ReceiverChain.chainKey.index);
+			}
+			else
+			{
+				return new ChainKey(HKDF.CreateFor((int)SessionVersion),
+					ReceiverChain.chainKey.key,
+					(int)ReceiverChain.chainKey.index);
 			}
 		}
 
@@ -155,13 +245,14 @@ namespace Axolotl.State
 
 			var chain = new Chain {
 				chainKey = chainKeyStructure,
-				SenderRatchetKey =  senderRatchetKey.Serialize()
+				SenderRatchetKey = senderRatchetKey.Serialize()
 			};
 
-			Structure.ReceiverChains.Add (chain);
+			Structure.ReceiverChains.Add(chain);
 
-			if (Structure.ReceiverChains.Count > 5) {
-				Structure.ReceiverChains.RemoveAt (0);
+			if(Structure.ReceiverChains.Count > 5)
+			{
+				Structure.ReceiverChains.RemoveAt(0);
 			}
 		}
 
@@ -181,63 +272,155 @@ namespace Axolotl.State
 			Structure.SenderChain = senderChain;
 		}
 
-		public bool HasMessageKeys(ECPublicKey senderEphemeral, int counter) 
+		public bool HasMessageKeys(ECPublicKey senderEphemeral, int counter)
 		{
 			var chainAndIndex = GetReceiverChain(senderEphemeral);
 			var chain = chainAndIndex.Item1;
 
-			if (chain == null) {
+			if(chain == null)
+			{
 				return false;
 			}
 
 			List<Chain.MessageKey> messageKeyList = chain.messageKeys;
 
-			foreach (var mkey in messageKeyList) {
-				if (mkey.index == counter)
+			foreach(var mKey in messageKeyList)
+			{
+				if(mKey.index == counter)
 					return true;
 			}
 
 			return false;
 		}
 
-		//public MessageKeys RemoveMessageKeys(ECPublicKey senderEphemeral, int counter) 
-		//{
-		//	var chainAndIndex = GetReceiverChain(senderEphemeral);
-		//	Chain chain = chainAndIndex.Item1;
-		//
-		//	if (chain == null) {
-		//		return null;
-		//	}
-		//
-		//	var messageKeyList = new LinkedList<Chain.MessageKey> (chain.messageKeys);
-		//	var mKeyEnumerator = messageKeyList.GetEnumerator ();
-			//Iterator<Chain.MessageKey> messageKeyIterator = messageKeyList.iterator();
-			//MessageKeys result = null;
+		public MessageKeys RemoveMessageKeys(ECPublicKey senderEphemeral, int counter)
+		{
+			// UNDONE
+			throw new NotImplementedException();
+		}
 
-			//while (mKeyEnumerator.hasNext()) {
-			//	Chain.MessageKey messageKey = messageKeyIterator.next();
-			//
-			//	if (messageKey.getIndex() == counter) {
-			//		result = new MessageKeys(new SecretKeySpec(messageKey.getCipherKey().toByteArray(), "AES"),
-			//		                         new SecretKeySpec(messageKey.getMacKey().toByteArray(), "HmacSHA256"),
-			//		                         new IvParameterSpec(messageKey.getIv().toByteArray()),
-			//		                         messageKey.getIndex());
-			//
-			//		messageKeyIterator.remove();
-			//		break;
-			//	}
-			//}
+		public void SetMessageKeys(ECPublicKey senderEphemeral, MessageKeys messageKeys)
+		{
 
-			//Chain updatedChain = chain.toBuilder().clearMessageKeys()
-			//	.addAllMessageKeys(messageKeyList)
-			//		.build();
-			//
-			//this.sessionStructure = this.sessionStructure.toBuilder()
-			//	.setReceiverChains(chainAndIndex.second(), updatedChain)
-			//		.build();
+			var chainAndIndex = GetReceiverChain(senderEphemeral);
+			var chain = chainAndIndex.Item1;
+			var messageKeyStructure = new Chain.MessageKey {
+				cipherKey = messageKeys.CipherKey,
+				macKey = messageKeys.MacKey,
+				index = messageKeys.Counter,
+				iv = messageKeys.Iv
+			};
+			chain.messageKeys.Add(messageKeyStructure);
 
-			//return result;
-	//	}
+			// TODO
+
+			//			this.sessionStructure = this.sessionStructure.toBuilder()
+			//				.setReceiverChains(chainAndIndex.second(), updatedChain)
+			//				.build();
+		}
+
+		public void SetReceiverChainKey(ECPublicKey senderEphemeral, ChainKey chainKey)
+		{
+
+			var chainAndIndex = GetReceiverChain(senderEphemeral);
+			var chain = chainAndIndex.Item1;
+			var chainKeyStructure = new Chain.ChainKey {
+				key = chainKey.Key,
+				index = (UInt32)chainKey.Index
+			};
+			chain.chainKey = chainKeyStructure;
+
+
+			// TODO
+			//			this.sessionStructure = this.sessionStructure.toBuilder()
+			//				.setReceiverChains(chainAndIndex.second(), updatedChain)
+			//				.build();
+		}
+
+		public void setPendingKeyExchange(int sequence,
+		                                  ECKeyPair ourBaseKey,
+		                                  ECKeyPair ourRatchetKey,
+		                                  IdentityKeyPair ourIdentityKey)
+		{
+			var structure = new PendingKeyExchange {
+				Sequence = (UInt32)sequence,
+				LocalBaseKey = ourBaseKey.PublicKey.Serialize(),
+				LocalBaseKeyPrivate = ourBaseKey.PrivateKey.Serialize(),
+				LocalRatchetKey = ourRatchetKey.PublicKey.Serialize(),
+				LocalRatchetKeyPrivate = ourRatchetKey.PrivateKey.Serialize(),
+				LocalIdentityKey = ourIdentityKey.PublicKey.Serialize(),
+				LocalIdentityKeyPrivate = ourIdentityKey.PrivateKey.Serialize()
+			};
+
+			Structure.PendKeyExchange = structure;
+		}
+
+		public void SetUnacknowledgedPreKeyMessage(int? preKeyId, int signedPreKeyId, ECPublicKey baseKey)
+		{
+			// TODO: check
+			var pending = new PendingPreKey {
+				signedPreKeyId = signedPreKeyId,
+				baseKey = baseKey.Serialize()
+			};
+					
+			if(preKeyId.HasValue)
+			{
+				pending.preKeyId = (UInt32)preKeyId.Value;
+			}
+				
+			Structure.PendPreKey = pending;
+		}
+
+		// UNDONE
+		public UnacknowledgedPreKeyMessageItems getUnacknowledgedPreKeyMessageItems()
+		{
+			int? preKeyId;
+			// TODO: Check if prekey exist
+			if(Structure.PendPreKey.preKeyId != null)
+			{
+				preKeyId = (int)Structure.PendPreKey.preKeyId;
+			}
+			else
+			{
+				preKeyId = null; //Optional.absent(); TODO
+			}
+
+			return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
+		}
+
+		public void ClearUnacknowledgedPreKeyMessage()
+		{
+			// TODO: make normal clearing
+			Structure.PendPreKey = null;
+		}
+
+		public byte[] Serialize()
+		{
+			using(var stream = new MemoryStream())
+			{
+				//TODO: check
+				Serializer.Serialize<SessionStructure>(stream, Structure);
+				return stream.GetBuffer();
+			}
+		}
+
+		public class UnacknowledgedPreKeyMessageItems
+		{
+			public int? PreKeyId { get; private set; }
+
+			public int SignedPreKeyId { get; private set; }
+
+			public ECPublicKey BaseKey { get; private set; }
+
+			public UnacknowledgedPreKeyMessageItems(int? preKeyId,
+			                                        int signedPreKeyId,
+			                                        ECPublicKey baseKey)
+			{
+				PreKeyId = preKeyId;
+				SignedPreKeyId = signedPreKeyId;
+				BaseKey = baseKey;
+			}
+		}
 	}
 }
 
