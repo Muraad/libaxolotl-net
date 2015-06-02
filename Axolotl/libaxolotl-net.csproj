@@ -91,6 +91,7 @@
     <Compile Include="Protobuf\SessionStructure\PendingPreKey.cs" />
     <Compile Include="State\Impl\InMemoryPreKeyStore.cs" />
     <Compile Include="State\Impl\InMemorySessionStore.cs" />
+    <Compile Include="State\Impl\InMemorySignedPreKeyStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
