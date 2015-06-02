@@ -5,6 +5,8 @@ namespace Axolotl.State
 {
 	public class PreKeyBundle
 	{
+		// Complete
+
 		public int RegistrationID { get; private set; }
 		public int DeviceID { get; private set; }
 		public int PreKeyID { get; private set; }

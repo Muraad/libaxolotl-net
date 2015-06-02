@@ -38,6 +38,7 @@
     <Reference Include="Sodium">
       <HintPath>..\packages\libsodium-net.0.8.0\lib\Net40\Sodium.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Logging\IAxolotlLogger.cs" />
     <Compile Include="Logging\DebugLevel.cs" />
     <Compile Include="Protobuf\LocalStorageProtocol.cs" />
+    <Compile Include="Protobuf\WhisperTextProtocol.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

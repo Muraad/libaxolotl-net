@@ -2,7 +2,7 @@ using System;
 using ProtoBuf;
 using System.Collections.Generic;
 
-namespace Axolotl.Protobuf
+namespace Axolotl.State
 {
 	[ProtoContract]
 	public class SessionStructure
@@ -105,31 +105,31 @@ namespace Axolotl.Protobuf
 	[ProtoContract]
 	public class RecordStructure {
 		[ProtoMember(1)]
-		public SessionStructure currentSession { get; set; }
+		public SessionStructure CurrentSession { get; set; }
 		[ProtoMember(2)]
-		public List<SessionStructure> previousSessions { get; set;}
+		public List<SessionStructure> PreviousSessions { get; set;}
 	}
 
 	[ProtoContract]
 	public class PreKeyRecordStructure {
 		[ProtoMember(1)]
-		public UInt32 id { get; set; }
+		public UInt32 Id { get; set; }
 		[ProtoMember(2)]
-		public byte[] publicKey { get; set; }
+		public byte[] PublicKey { get; set; }
 		[ProtoMember(3)]
-		public byte[] privateKey { get; set; }
+		public byte[] PrivateKey { get; set; }
 	}
 
 	[ProtoContract]
 	public class SignedPreKeyRecordStructure {
 		[ProtoMember(1)]
-		public UInt32 id { get; set; }
+		public UInt32 Id { get; set; }
 		[ProtoMember(2)]
-		public byte[] publicKey { get; set; }
+		public byte[] PublicKey { get; set; }
 		[ProtoMember(3)]
-		public byte[] privateKey { get; set; }
+		public byte[] PrivateKey { get; set; }
 		[ProtoMember(4)]
-		public byte[] signature { get; set; }
+		public byte[] Signature { get; set; }
 		//[ProtoMember(5)]
 		//public fixed64 timestamp  = 5; // UNDONE
 	}
