@@ -1,16 +1,17 @@
 using System;
-using Axolotl.Groups.State;
-using Axolotl.Groups.Ratchet;
-using Axolotl.Protocol;
-using System.Security.Cryptography;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
+using Axolotl.Groups.Ratchet;
+using Axolotl.Groups.State;
+using Axolotl.Protocol;
 
 namespace Axolotl.Groups
 {
+	// Completed
 	public class GroupCipher
 	{
-		private object LOCK = new object();
+		public static object LOCK = new object();
 
 		private ISenderKeyStore _senderKeyStore;
 		private SenderKeyName _senderKeyId;
