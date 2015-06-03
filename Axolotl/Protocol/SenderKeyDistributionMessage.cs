@@ -5,7 +5,7 @@ namespace Axolotl.Protocol
 {
 	public class SenderKeyDistributionMessage
 	{
-		// UNDONE
+		// UNDONE	
 
 		public int Id {
 			get;

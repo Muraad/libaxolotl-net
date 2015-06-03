@@ -1,10 +1,10 @@
 using System;
 using ProtoBuf;
 
-namespace Axolotl.Protocol
+namespace Axolotl.WhisperProtos
 {
 	[ProtoContract]
-	public class Whisperclass
+	public class WhisperMessage
 	{
 		[ProtoMember(1)]
 		public byte[] RatchetKey { get; set; }
@@ -17,7 +17,7 @@ namespace Axolotl.Protocol
 	}
 
 	[ProtoContract]
-	public class PreKeyWhisperclass {
+	public class PreKeyWhisperMessage {
 		[ProtoMember(5)]
 		public UInt32 registrationId { get; set; }
 		[ProtoMember(1)]
@@ -29,11 +29,11 @@ namespace Axolotl.Protocol
 		[ProtoMember(3)]
 		public byte[]  identityKey    { get; set; }
 		[ProtoMember(4)]
-		public byte[]  message        { get; set; } // Whisperclass
+		public byte[]  message        { get; set; } // WhisperMessage
 	}
 
 	[ProtoContract]
-	public class KeyExchangeclass {
+	public class KeyExchangeMessage {
 		[ProtoMember(1)]
 		public UInt32 id               { get; set; }
 		[ProtoMember(2)]
@@ -47,7 +47,7 @@ namespace Axolotl.Protocol
 	}
 
 	[ProtoContract]
-	public class SenderKeyclass {
+	public class SenderKeyMessage {
 		[ProtoMember(1)]
 		public UInt32 id         { get; set; }
 		[ProtoMember(2)]
@@ -56,7 +56,7 @@ namespace Axolotl.Protocol
 		public byte[]  ciphertext { get; set; }
 	}
 	[ProtoContract]
-	public class SenderKeyDistributionclass {
+	public class SenderKeyDistributionMessage {
 		[ProtoMember(1)]
 		public UInt32 id         { get; set; }
 		[ProtoMember(2)]

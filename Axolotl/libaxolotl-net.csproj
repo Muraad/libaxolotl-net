@@ -100,6 +100,7 @@
     <Compile Include="Groups\State\GroupSessionBuilder.cs" />
     <Compile Include="Protocol\SenderKeyDistributionMessage.cs" />
     <Compile Include="Util\KeyHelper.cs" />
+    <Compile Include="Protocol\KeyExchangeMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
