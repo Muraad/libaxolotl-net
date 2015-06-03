@@ -67,9 +67,9 @@ namespace Axolotl.State
 			set { Structure.PreviousCounter = value; }
 		}
 
-		public RootKey RKey
+		public RootKey RootKey
 		{
-			get { return new RootKey(HKDF.CreateFor((int)SessionVersion), Structure.RootKey); }
+			get { return new RootKey(HKDF.CreateFor(SessionVersion), Structure.RootKey); }
 			set { Structure.RootKey = value.Key; }
 		}
 
@@ -96,7 +96,7 @@ namespace Axolotl.State
 			get
 			{
 				var chainKeyStructure = Structure.SenderChain.chainKey;
-				return new ChainKey(HKDF.CreateFor((int)SessionVersion),
+				return new ChainKey(HKDF.CreateFor(SessionVersion),
 					chainKeyStructure.key,
 					(int)chainKeyStructure.index);
 			}
@@ -228,7 +228,7 @@ namespace Axolotl.State
 			}
 			else
 			{
-				return new ChainKey(HKDF.CreateFor((int)SessionVersion),
+				return new ChainKey(HKDF.CreateFor(SessionVersion),
 					ReceiverChain.chainKey.key,
 					(int)ReceiverChain.chainKey.index);
 			}

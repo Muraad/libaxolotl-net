@@ -6,7 +6,7 @@ namespace Axolotl.KDF
 	{
 		public int HASH_OUTPUT_SIZE = 32;
 
-		public static HKDF CreateFor(int messageVersion)
+		public static HKDF CreateFor(UInt32 messageVersion)
 		{
 			switch (messageVersion) {
 				case 2:
