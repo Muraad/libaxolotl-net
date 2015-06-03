@@ -371,15 +371,15 @@ namespace Axolotl.State
 		// UNDONE
 		public UnacknowledgedPreKeyMessageItems getUnacknowledgedPreKeyMessageItems()
 		{
-			int? preKeyId;
-			// TODO: Check if prekey exist
+			Maybe<UInt32> preKeyId;
+
 			if(Structure.PendPreKey.preKeyId != null)
 			{
-				preKeyId = (int)Structure.PendPreKey.preKeyId;
+				preKeyId = Structure.PendPreKey.preKeyId.ToMaybe ();
 			}
 			else
 			{
-				preKeyId = null; //Optional.absent(); TODO
+				preKeyId = Maybe<UInt32>.Nothing; 
 			}
 
 			return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
@@ -403,13 +403,13 @@ namespace Axolotl.State
 
 		public class UnacknowledgedPreKeyMessageItems
 		{
-			public int? PreKeyId { get; private set; }
+			public Maybe<UInt32> PreKeyId { get; private set; }
 
 			public int SignedPreKeyId { get; private set; }
 
 			public ECPublicKey BaseKey { get; private set; }
 
-			public UnacknowledgedPreKeyMessageItems(int? preKeyId,
+			public UnacknowledgedPreKeyMessageItems(Maybe<UInt32> preKeyId,
 			                                        int signedPreKeyId,
 			                                        ECPublicKey baseKey)
 			{

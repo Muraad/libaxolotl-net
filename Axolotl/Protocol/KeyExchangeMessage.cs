@@ -18,9 +18,9 @@ namespace Axolotl.Protocol
 
 		public int         MaxVersion { get; private set; }
 
-		public int         Sequence { get; private set; }
+		public UInt32         Sequence { get; private set; }
 
-		public int         Flags { get; private set; }
+		public UInt32         Flags { get; private set; }
 
 		public ECPublicKey BaseKey { get; private set; }
 
@@ -56,7 +56,7 @@ namespace Axolotl.Protocol
 			}
 		}
 
-		public KeyExchangeMessage(int messageVersion, int sequence, int flags,
+		public KeyExchangeMessage(int messageVersion, UInt32 sequence, UInt32 flags,
 		                           ECPublicKey baseKey, byte[] baseKeySignature,
 		                           ECPublicKey ratchetKey,
 		                           IdentityKey identityKey)
@@ -72,7 +72,7 @@ namespace Axolotl.Protocol
 
 			byte[] version = { ByteUtil.IntsToByteHighAndLow(Version, MaxVersion) };
 			var keyExchangeMsg = new WhisperProtos.KeyExchangeMessage {
-				id = (uint)((Sequence << 5) | Flags),
+				id = (Sequence << 5) | Flags,
 				baseKey = BaseKey.Serialize(),
 				ratchetKey = RatchetKey.Serialize(),
 				identityKey = IdentityKey.Serialize()
@@ -117,16 +117,15 @@ namespace Axolotl.Protocol
 					message = Serializer.Deserialize<WhisperProtos.KeyExchangeMessage>(stream);
 				}
 
-				// TODO: it's not nullable ints
-				if(message.id == null || message.baseKey == null ||
+				if(!message.id.HasValue || message.baseKey == null ||
 				    message.ratchetKey == null || message.identityKey == null ||
 				    (Version >= 3 && message.baseKeySignature == null))
 				{
 					throw new Exception("Some required fields missing!");
 				}
 
-				Sequence = (int)message.id >> 5;
-				Flags = (int)message.id & 0x1f;
+				Sequence = message.id.Value >> 5;
+				Flags = message.id.Value & 0x1f;
 				_serialized = serialized;
 				BaseKey = Curve.DecodePoint(message.baseKey, 0);
 				BaseKeySignature = message.baseKeySignature;

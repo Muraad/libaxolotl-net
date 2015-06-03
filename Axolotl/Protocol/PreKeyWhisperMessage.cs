@@ -34,8 +34,7 @@ namespace Axolotl.Protocol
 					stream.Write(serialized, 1, serialized.Length - 1);
 					preKeyWhisperMessage = Serializer.Deserialize<WhisperProtos.PreKeyWhisperMessage>(stream);
 				}
-
-				// TODO: not nullable
+			
 				if ((_version == 2 && !preKeyWhisperMessage.preKeyId.HasValue)        ||
 				    (_version == 3 && !preKeyWhisperMessage.signedPreKeyId.HasValue)  ||
 				    preKeyWhisperMessage.baseKey == null                              ||

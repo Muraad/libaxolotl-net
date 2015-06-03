@@ -26,7 +26,7 @@ namespace Axolotl.Ratchet
 			TheirBaseKey = theirBaseKey;
 
 			if (ourIdentityKey == null || ourSignedPreKey == null || ourRatchetKey == null ||
-			    ourOneTimePreKey == null || theirIdentityKey == null || theirBaseKey == null)
+			    theirIdentityKey == null || theirBaseKey == null)
 			{
 				throw new Exception("Null value!");
 			}

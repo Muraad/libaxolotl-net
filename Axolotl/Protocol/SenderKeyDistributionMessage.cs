@@ -71,7 +71,6 @@ namespace Axolotl.Protocol
 					distributionMessage = Serializer.Deserialize<WhisperProtos.SenderKeyDistributionMessage>(stream);
 				}
 
-				// TODO values is not nullable
 				if(!distributionMessage.id.HasValue ||
 				   !distributionMessage.iteration.HasValue ||
 				   distributionMessage.chainKey == null ||
