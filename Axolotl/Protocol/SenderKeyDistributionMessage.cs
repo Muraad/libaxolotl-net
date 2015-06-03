@@ -1,35 +1,105 @@
+using System.IO;
+using Axolotl.ECC;
+using Axolotl.Util;
+using ProtoBuf;
 using System;
-using Axolotl.Groups.State;
 
 namespace Axolotl.Protocol
 {
-	public class SenderKeyDistributionMessage
+	public class SenderKeyDistributionMessage : CiphertextMessage
 	{
-		// UNDONE	
+		// Complete
 
-		public int Id {
-			get;
-			set;
-		}
+		public int Id { get; private set; }
 
-		public int Iteration {
-			get;
-			set;
-		}
+		public int Iteration { get; private set; }
 
-		public byte[] ChainKey {
-			get;
-			set;
-		}
+		public byte[] ChainKey { get; private set; }
 
-		public Axolotl.ECC.ECPublicKey SignatureKey {
-			get;
-			set;
-		}
+		public ECPublicKey SignatureKey { get; private set; }
 
-		public SenderKeyDistributionMessage (uint keyId, int iteration, byte[] seed, Axolotl.ECC.ECPublicKey signingKeyPublic)
+		private readonly byte[] _serialized;
+
+		public SenderKeyDistributionMessage(uint id, int iteration, byte[] chainKey, ECPublicKey signatureKey)
 		{
-			throw new NotImplementedException ();
+			byte[] version = { ByteUtil.IntsToByteHighAndLow(CURRENT_VERSION, CURRENT_VERSION) };
+
+			var protobufObject = new WhisperProtos.SenderKeyDistributionMessage {
+				id = id,
+				iteration = (uint)iteration,
+				chainKey = chainKey,
+				signingKey = signatureKey.Serialize()
+			};
+
+			byte[] protobuf;
+			using(var stream = new MemoryStream())
+			{
+				Serializer.Serialize<WhisperProtos.SenderKeyDistributionMessage>(stream, protobufObject);
+				protobuf = stream.ToArray();
+			}
+				
+			Id = (int)id;
+			Iteration = iteration;
+			ChainKey = chainKey;
+			SignatureKey = signatureKey;
+			_serialized = ByteUtil.Combine(version, protobuf);
+		}
+
+		public SenderKeyDistributionMessage(byte[] serialized)
+		{
+			try
+			{
+				byte[][] messageParts = ByteUtil.Split(serialized, 1, serialized.Length - 1);
+				byte version = messageParts[0][0];
+				byte[] message = messageParts[1];
+
+				if(ByteUtil.HighBitsToInt(version) < CiphertextMessage.CURRENT_VERSION)
+				{
+					throw new Exception("Legacy message: " + ByteUtil.HighBitsToInt(version));
+				}
+
+				if(ByteUtil.HighBitsToInt(version) > CURRENT_VERSION)
+				{
+					throw new Exception("Unknown version: " + ByteUtil.HighBitsToInt(version));
+				}
+					
+				WhisperProtos.SenderKeyDistributionMessage distributionMessage;
+
+				using(var stream = new MemoryStream())
+				{
+					stream.Write(message, 0, message.Length);
+					distributionMessage = Serializer.Deserialize<WhisperProtos.SenderKeyDistributionMessage>(stream);
+				}
+
+				// TODO values is not nullable
+				if(distributionMessage.id == null ||
+				   distributionMessage.iteration == null ||
+				   distributionMessage.chainKey == null ||
+				   distributionMessage.signingKey == null)
+				{
+					throw new Exception("Incomplete message.");
+				}
+
+				_serialized = serialized;
+				Id = (int)distributionMessage.id;
+				Iteration = (int)distributionMessage.iteration;
+				ChainKey = distributionMessage.chainKey;
+				SignatureKey = Curve.DecodePoint(distributionMessage.signingKey, 0);
+			}
+			catch(Exception e)
+			{
+				throw new IOException("WTF " + e);
+			}
+		}
+
+		public override byte[] Serialize()
+		{
+			return _serialized;
+		}
+
+		public override int GetKeyType()
+		{
+			return SENDERKEY_DISTRIBUTION_TYPE;
 		}
 	}
 }
