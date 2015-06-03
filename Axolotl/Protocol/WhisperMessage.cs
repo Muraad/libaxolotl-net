@@ -1,21 +1,141 @@
 using System;
+using Axolotl.Util;
+using Axolotl.ECC;
+using System.IO;
+using ProtoBuf;
+using System.Security.Cryptography;
 
 namespace Axolotl.Protocol
 {
-	public class WhisperMessage
+	//Complete
+
+	public class WhisperMessage : CiphertextMessage
 	{
-		public WhisperMessage ()
+		private const int MAC_LENGTH = 8;
+
+		public int         MessageVersion { get; private set; }
+		public ECPublicKey SenderRatchetKey { get; private set; }
+		public UInt32      Counter { get; private set; }
+		public UInt32      PreviousCounter { get; private set; }
+		public byte[]      Body { get; private set; }
+
+		private byte[]     _serialized;
+
+		public WhisperMessage (byte[] serialized)
 		{
+			try {
+				byte[][] messageParts = ByteUtil.Split(serialized, 1, serialized.Length - 1 - MAC_LENGTH, MAC_LENGTH);
+				byte     version      = messageParts[0][0];
+				byte[]   message      = messageParts[1];
+
+				if (ByteUtil.HighBitsToInt(version) <= CiphertextMessage.UNSUPPORTED_VERSION) {
+					throw new Exception("Legacy message: " + ByteUtil.HighBitsToInt(version));
+				}
+
+				if (ByteUtil.HighBitsToInt(version) > CURRENT_VERSION) {
+					throw new Exception("Unknown version: " + ByteUtil.HighBitsToInt(version));
+				}
+
+				WhisperProtos.WhisperMessage whisperMessage;
+
+				using(var stream = new MemoryStream())
+				{
+					stream.Write(message, 0, message.Length);
+					whisperMessage = Serializer.Deserialize<WhisperProtos.WhisperMessage>(stream);
+				}
+
+				if(whisperMessage.Ciphertext == null ||
+				   !whisperMessage.Counter.HasValue ||
+				   whisperMessage.RatchetKey == null)
+				{
+					throw new Exception("Incomplete message");
+				}
+
+				_serialized       = serialized;
+				SenderRatchetKey = Curve.DecodePoint(whisperMessage.RatchetKey, 0);
+				MessageVersion   = ByteUtil.HighBitsToInt(version);
+				Counter          = whisperMessage.Counter.Value;
+				PreviousCounter  = whisperMessage.PreviousCounter.Value;
+				Body       = whisperMessage.Ciphertext;
+			} catch (Exception e) {
+				throw new Exception("Invalid message exception " + e);
+			}
 		}
 
-		public WhisperMessage (object par)
+		public WhisperMessage(int messageVersion, byte[] macKey, ECPublicKey senderRatchetKey,
+		                      UInt32 counter, UInt32 previousCounter, byte[] ciphertext,
+		                      IdentityKey senderIdentityKey,
+		                      IdentityKey receiverIdentityKey)
 		{
-			throw new NotImplementedException ();
+			byte[] version = { ByteUtil.IntsToByteHighAndLow(messageVersion, CURRENT_VERSION) };
+
+			var messageObj = new WhisperProtos.WhisperMessage{
+				RatchetKey = senderRatchetKey.Serialize(),
+				Counter = counter,
+				PreviousCounter = previousCounter,
+				Ciphertext = ciphertext
+			};
+
+			byte[] message;
+
+			using(var stream = new MemoryStream())
+			{
+				Serializer.Serialize<WhisperProtos.WhisperMessage>(stream, messageObj);
+				message = stream.ToArray();
+			}
+
+
+			byte[] mac    		  = GetMac(messageVersion, senderIdentityKey, receiverIdentityKey, macKey,
+			                        ByteUtil.Combine(version, message));
+
+			_serialized       = ByteUtil.Combine(version, message, mac);
+			SenderRatchetKey = senderRatchetKey;
+			Counter          = counter;
+			PreviousCounter  = previousCounter;
+			Body       = ciphertext;
+			MessageVersion   = messageVersion;
 		}
 
-		public byte[] Serialize ()
+		private byte[] GetMac (int messageVersion,
+		               IdentityKey senderIdentityKey,
+		               IdentityKey receiverIdentityKey,
+		               byte[] macKey, byte[] serialized)
 		{
-			throw new NotImplementedException ();
+			try {
+				byte[] fullMac;
+				using(var mac = new HMACSHA256())
+				{
+					mac.Key = macKey;
+					if (messageVersion >= 3)
+					{
+						var SIk = senderIdentityKey.PublicKey.Serialize();
+						var RIk = receiverIdentityKey.PublicKey.Serialize();
+							mac.TransformBlock(SIk, 0, SIk.Length, null, 0);
+							mac.TransformBlock(RIk, 0, RIk.Length, null, 0);
+					}
+					fullMac = mac.TransformFinalBlock(serialized, 0, serialized.Length);
+				}
+
+				return ByteUtil.Trim(fullMac, MAC_LENGTH);
+			} catch (Exception e) {
+				throw new Exception("No such alg or stuff ex " + e);
+			}
+		}
+
+		public bool IsLegacy(byte[] message)
+		{
+			return message != null && message.Length >= 1 &&
+				ByteUtil.HighBitsToInt (message [0]) <= CiphertextMessage.UNSUPPORTED_VERSION;
+		}
+
+		public override byte[] Serialize ()
+		{
+			return _serialized;
+		}
+
+		public override int GetKeyType ()
+		{
+			return CiphertextMessage.WHISPER_TYPE;
 		}
 	}
 }

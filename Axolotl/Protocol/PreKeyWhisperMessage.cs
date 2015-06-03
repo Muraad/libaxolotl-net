@@ -7,6 +7,8 @@ using Functional.Maybe;
 
 namespace Axolotl.Protocol
 {
+	// Complete 
+
 	public class PreKeyWhisperMessage : CiphertextMessage
 	{
 		public int               MessageVersion { get; private set; }
