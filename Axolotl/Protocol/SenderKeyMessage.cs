@@ -12,11 +12,11 @@ namespace Axolotl.Protocol
 	{
 		private const int SIGNATURE_LENGTH = 64;
 
-		public int KeyId { get; set; }
+		public UInt32 KeyId { get; set; }
 
 		public byte[] CipherText { get; set; }
 
-		public int Iteration { get; set; }
+		public UInt32 Iteration { get; set; }
 
 
 		private byte[] _serialized;
@@ -49,9 +49,8 @@ namespace Axolotl.Protocol
 					senderKeyMessage = Serializer.Deserialize<WhisperProtos.SenderKeyMessage>(stream);
 				}
 					
-				// TODO: not nullable
-				if(senderKeyMessage.id == null ||
-				   senderKeyMessage.iteration == null ||
+				if(!senderKeyMessage.id.HasValue ||
+				   !senderKeyMessage.iteration.HasValue ||
 				   senderKeyMessage.ciphertext == null)
 				{
 					throw new Exception("Incomplete message.");
@@ -59,8 +58,8 @@ namespace Axolotl.Protocol
 
 				_serialized = serialized;
 				_messageVersion = ByteUtil.HighBitsToInt(version);
-				KeyId = (int)senderKeyMessage.id;
-				Iteration = (int)senderKeyMessage.iteration;
+				KeyId = senderKeyMessage.id.Value;
+				Iteration = senderKeyMessage.iteration.Value;
 				CipherText = senderKeyMessage.ciphertext;
 			}
 			catch(Exception e)
@@ -69,7 +68,7 @@ namespace Axolotl.Protocol
 			}
 		}
 
-		public SenderKeyMessage(int keyId, int iteration, byte[] ciphertext, ECPrivateKey signatureKey)
+		public SenderKeyMessage(UInt32 keyId, UInt32 iteration, byte[] ciphertext, ECPrivateKey signatureKey)
 		{
 			byte[] version = { ByteUtil.IntsToByteHighAndLow(CURRENT_VERSION, CURRENT_VERSION) };
 

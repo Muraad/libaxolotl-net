@@ -5,6 +5,7 @@ using Axolotl.ECC;
 using Axolotl.KDF;
 using Axolotl.State;
 using Axolotl.Util;
+using Functional.Maybe;
 
 namespace Axolotl.Ratchet
 {
@@ -22,14 +23,14 @@ namespace Axolotl.Ratchet
 					parameters.TheirIdentityKey,
 					parameters.TheirBaseKey,
 					parameters.TheirRatchetKey,
-					Absent ()); // UNDONE: Optional.<ECPublicKey>absent()
+					Maybe<ECPublicKey>.Nothing);
 
 				RatchetingSession.InitializeSession(sessionState, sessionVersion, alice);
 			} else {	
 				var bob = new BobAxolotlParameters (
 					parameters.OurIdentityKey,
 					parameters.OurBaseKey,
-					new ECKeyPair (null, null), // UNDONE : like alice but for ECKeyPair
+					Maybe<ECKeyPair>.Nothing,
 					parameters.OurRatchetKey,
 					parameters.TheirIdentityKey,
 					parameters.TheirBaseKey);
@@ -54,11 +55,6 @@ namespace Axolotl.Ratchet
 
 		private static bool IsAlice(ECPublicKey ourKey, ECPublicKey theirKey) {
 			return ourKey.CompareTo(theirKey) < 0;
-		}
-
-		private static ECPublicKey Absent ()
-		{
-			throw new NotImplementedException ();
 		}
 
 		private static byte[] GetDiscontinuityBytes() {

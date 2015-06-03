@@ -4,6 +4,7 @@ using Axolotl.State;
 using Axolotl.ECC;
 using Axolotl.Groups.Ratchet;
 using System.Linq;
+using Functional.Maybe;
 
 namespace Axolotl.Groups.State
 {
@@ -13,14 +14,14 @@ namespace Axolotl.Groups.State
 
 		public SenderKeyStateStructure Structure { get; private set; }
 
-		public uint KeyId {
-			get { return Structure.SenderKeyId; }
+		public UInt32 KeyId {
+			get { return Structure.SenderKeyId.Value; }
 		}
 
 		public SenderChainKey SenderChainKey {
 			get {
-				return new SenderChainKey ((int)Structure.senderChainKey.Iteration,
-				                          Structure.senderChainKey.Seed);
+				return new SenderChainKey (Structure.senderChainKey.Iteration.Value,
+				                           Structure.senderChainKey.Seed);
 			}
 			set {
 				var senderCkStruct = new SenderKeyStateStructure.SenderChainKey {
@@ -48,19 +49,19 @@ namespace Axolotl.Groups.State
 			Structure = structure;
 		}
 
-		public SenderKeyState (int id, int iteration, byte[] chainKey, ECPublicKey signatureKey)
-			: this(id, iteration, chainKey, signatureKey, null)
+		public SenderKeyState (UInt32 id, UInt32 iteration, byte[] chainKey, ECPublicKey signatureKey)
+			: this(id, iteration, chainKey, signatureKey, Maybe<ECPrivateKey>.Nothing)
 		{
 		}
 
-		public SenderKeyState (int id, int iteration, byte[] chainKey, ECKeyPair signatureKey)
-			: this(id, iteration, chainKey, signatureKey.PublicKey, signatureKey.PrivateKey)
+		public SenderKeyState (UInt32 id, UInt32 iteration, byte[] chainKey, ECKeyPair signatureKey)
+			: this(id, iteration, chainKey, signatureKey.PublicKey, signatureKey.PrivateKey.ToMaybe())
 		{
 		}
 
-		private SenderKeyState(int id, int iteration, byte[] chainKey,
+		private SenderKeyState(UInt32 id, UInt32 iteration, byte[] chainKey,
 		                       ECPublicKey signatureKeyPublic,
-		                       ECPrivateKey signatureKeyPrivate = null)
+		                       Maybe<ECPrivateKey> signatureKeyPrivate)
 		{
 			var senderChainKeyStructure = new SenderKeyStateStructure.SenderChainKey {
 				Iteration = (uint)iteration,
@@ -71,10 +72,10 @@ namespace Axolotl.Groups.State
 				PublicKey = signatureKeyPublic.Serialize()
 			};
 
-			if (signatureKeyPrivate != null) {
-				signingKeyStructure.PrivateKey = signatureKeyPrivate.Serialize ();
-			}
-
+			signatureKeyPrivate.Do (SKp => {
+				signingKeyStructure.PrivateKey = SKp.Serialize();
+			});
+		 
 			Structure = new SenderKeyStateStructure {
 				SenderKeyId = (uint)id,
 				senderChainKey = senderChainKeyStructure,
@@ -82,7 +83,7 @@ namespace Axolotl.Groups.State
 			};
 		}
 
-		public bool HasSenderMessageKey(int iteration)
+		public bool HasSenderMessageKey(UInt32 iteration)
 		{
 			return Structure.senderMessageKeys.Any (x => x.Iteration == iteration);
 		}
@@ -97,7 +98,7 @@ namespace Axolotl.Groups.State
 			Structure.senderMessageKeys.Add (senderMessageKeyStructure);
 		}
 
-		public SenderMessageKey RemoveSenderMessageKey(int iteration)
+		public SenderMessageKey RemoveSenderMessageKey(UInt32 iteration)
 		{
 			var keys = new List<SenderKeyStateStructure.SenderMessageKey>(Structure.senderMessageKeys);
 
@@ -114,7 +115,7 @@ namespace Axolotl.Groups.State
 
 			if (result != null) {
 				Structure.senderMessageKeys = keys;
-				return new SenderMessageKey ((int)result.Iteration, result.Seed);
+				return new SenderMessageKey (result.Iteration.Value, result.Seed);
 			} else {
 				return null;
 			}

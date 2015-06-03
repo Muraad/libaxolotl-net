@@ -10,11 +10,11 @@ namespace Axolotl.Groups.Ratchet
 		private static byte[] MESSAGE_KEY_SEED = { 0x01 };
 		private static byte[] CHAIN_KEY_SEED   = { 0x02 };
 
-		public int Iteration { get; private set; }
+		public UInt32 Iteration { get; private set; }
 		public byte[] ChainKey { get; private set; }
 		public byte[] Seed { get { return ChainKey; } }
 
-		public SenderChainKey (int iteration, byte[] chainKey)
+		public SenderChainKey (UInt32 iteration, byte[] chainKey)
 		{
 			Iteration = iteration;
 			ChainKey = chainKey;

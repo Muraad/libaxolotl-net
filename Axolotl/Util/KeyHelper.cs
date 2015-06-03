@@ -6,7 +6,7 @@ namespace Axolotl.Util
 {
 	public class KeyHelper
 	{
-		public static int GenerateSenderKeyId ()
+		public static UInt32 GenerateSenderKeyId ()
 		{
 			throw new NotImplementedException ();
 		}

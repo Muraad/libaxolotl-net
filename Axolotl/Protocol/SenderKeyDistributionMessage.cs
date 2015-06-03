@@ -10,9 +10,9 @@ namespace Axolotl.Protocol
 	{
 		// Complete
 
-		public int Id { get; private set; }
+		public UInt32 Id { get; private set; }
 
-		public int Iteration { get; private set; }
+		public UInt32 Iteration { get; private set; }
 
 		public byte[] ChainKey { get; private set; }
 
@@ -20,13 +20,13 @@ namespace Axolotl.Protocol
 
 		private readonly byte[] _serialized;
 
-		public SenderKeyDistributionMessage(uint id, int iteration, byte[] chainKey, ECPublicKey signatureKey)
+		public SenderKeyDistributionMessage(UInt32 id, UInt32 iteration, byte[] chainKey, ECPublicKey signatureKey)
 		{
 			byte[] version = { ByteUtil.IntsToByteHighAndLow(CURRENT_VERSION, CURRENT_VERSION) };
 
 			var protobufObject = new WhisperProtos.SenderKeyDistributionMessage {
 				id = id,
-				iteration = (uint)iteration,
+				iteration = iteration,
 				chainKey = chainKey,
 				signingKey = signatureKey.Serialize()
 			};
@@ -38,7 +38,7 @@ namespace Axolotl.Protocol
 				protobuf = stream.ToArray();
 			}
 				
-			Id = (int)id;
+			Id = id;
 			Iteration = iteration;
 			ChainKey = chainKey;
 			SignatureKey = signatureKey;
@@ -72,8 +72,8 @@ namespace Axolotl.Protocol
 				}
 
 				// TODO values is not nullable
-				if(distributionMessage.id == null ||
-				   distributionMessage.iteration == null ||
+				if(!distributionMessage.id.HasValue ||
+				   !distributionMessage.iteration.HasValue ||
 				   distributionMessage.chainKey == null ||
 				   distributionMessage.signingKey == null)
 				{
@@ -81,8 +81,8 @@ namespace Axolotl.Protocol
 				}
 
 				_serialized = serialized;
-				Id = (int)distributionMessage.id;
-				Iteration = (int)distributionMessage.iteration;
+				Id = distributionMessage.id.Value;
+				Iteration = distributionMessage.iteration.Value;
 				ChainKey = distributionMessage.chainKey;
 				SignatureKey = Curve.DecodePoint(distributionMessage.signingKey, 0);
 			}

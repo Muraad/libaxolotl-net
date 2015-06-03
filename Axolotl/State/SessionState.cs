@@ -6,6 +6,7 @@ using Axolotl.SessionStructure;
 using System.Collections.Generic;
 using System.IO;
 using ProtoBuf;
+using Functional.Maybe;
 
 namespace Axolotl.State
 {
@@ -19,7 +20,7 @@ namespace Axolotl.State
 		{ 
 			get
 			{
-				var sVersion = Structure.SessionVersion;
+				var sVersion = Structure.SessionVersion.Value;
 				return sVersion == 0 ? 2 : sVersion;
 			} 
 			set
@@ -62,7 +63,7 @@ namespace Axolotl.State
 
 		public UInt32 PreviousCounter
 		{
-			get { return Structure.PreviousCounter; }
+			get { return Structure.PreviousCounter.Value; }
 			set { Structure.PreviousCounter = value; }
 		}
 
@@ -165,13 +166,13 @@ namespace Axolotl.State
 		public UInt32 RemoteRegistrationId
 		{
 			// TODO: Check
-			get { return Structure.RemoteRegistrationId; }
+			get { return Structure.RemoteRegistrationId.Value; }
 			set { Structure.RemoteRegistrationId = value; }
 		}
 
 		public UInt32 LocalRegistrationId
 		{
-			get { return Structure.LocalRegistrationId; }
+			get { return Structure.LocalRegistrationId.Value; }
 			set { Structure.LocalRegistrationId = value; }
 		}
 
@@ -355,19 +356,15 @@ namespace Axolotl.State
 			Structure.PendKeyExchange = structure;
 		}
 
-		public void SetUnacknowledgedPreKeyMessage(int? preKeyId, int signedPreKeyId, ECPublicKey baseKey)
+		public void SetUnacknowledgedPreKeyMessage(Maybe<UInt32> preKeyId, int signedPreKeyId, ECPublicKey baseKey)
 		{
 			// TODO: check
 			var pending = new PendingPreKey {
 				signedPreKeyId = signedPreKeyId,
 				baseKey = baseKey.Serialize()
 			};
-					
-			if(preKeyId.HasValue)
-			{
-				pending.preKeyId = (UInt32)preKeyId.Value;
-			}
-				
+			preKeyId.Do (pKid => pending.preKeyId = pKid);
+
 			Structure.PendPreKey = pending;
 		}
 

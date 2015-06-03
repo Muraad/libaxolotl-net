@@ -1,5 +1,6 @@
 using System;
 using Axolotl.ECC;
+using Functional.Maybe;
 
 namespace Axolotl.Ratchet
 {
@@ -7,14 +8,14 @@ namespace Axolotl.Ratchet
 	{
 		public IdentityKeyPair OurIdentityKey { get; private set; }
 		public ECKeyPair OurSignedPreKey { get; private set; }
-		public ECKeyPair OurOneTimePreKey { get; private set; }
+		public Maybe<ECKeyPair> OurOneTimePreKey { get; private set; }
 		public ECKeyPair OurRatchetKey { get; private set; }
 
 		public IdentityKey TheirIdentityKey { get; private set; }
 		public ECPublicKey TheirBaseKey { get; private set; }
 
 		public BobAxolotlParameters (IdentityKeyPair ourIdentityKey, ECKeyPair ourSignedPreKey,
-		                             ECKeyPair ourOneTimePreKey, ECKeyPair ourRatchetKey,
+		                             Maybe<ECKeyPair> ourOneTimePreKey, ECKeyPair ourRatchetKey,
 		                             IdentityKey theirIdentityKey, ECPublicKey theirBaseKey)
 		{
 			OurIdentityKey = ourIdentityKey;

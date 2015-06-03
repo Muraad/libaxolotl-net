@@ -1,5 +1,6 @@
 using System;
 using Axolotl.ECC;
+using Functional.Maybe;
 
 namespace Axolotl.Ratchet
 {
@@ -10,12 +11,12 @@ namespace Axolotl.Ratchet
 
 		public IdentityKey TheirIdentityKey { get; private set; }
 		public ECPublicKey TheirSignedPreKey { get; private set; }
-		public ECPublicKey TheirOneTimePreKey { get; private set; }
+		public Maybe<ECPublicKey> TheirOneTimePreKey { get; private set; }
 		public ECPublicKey TheirRatchetKey { get; private set; }
 
 		public AliceAxolotlParameters (IdentityKeyPair ourIdentityKey, ECKeyPair ourBaseKey,
 		                               IdentityKey theirIdentityKey, ECPublicKey theirSignedPreKey,
-		                               ECPublicKey theirRatchetKey, ECPublicKey theirOneTimePreKey)
+		                               ECPublicKey theirRatchetKey, Maybe<ECPublicKey> theirOneTimePreKey)
 		{
 			OurIdentityKey = ourIdentityKey;
 			OurBaseKey = ourBaseKey;
@@ -25,7 +26,7 @@ namespace Axolotl.Ratchet
 			TheirOneTimePreKey = theirOneTimePreKey;
 
 			if (ourIdentityKey == null || ourBaseKey == null || theirIdentityKey == null ||
-				theirSignedPreKey == null || theirRatchetKey == null || theirOneTimePreKey == null) 
+				theirSignedPreKey == null || theirRatchetKey == null) 
 			{
 
 				throw new Exception ("Null values!");

@@ -26,25 +26,26 @@ namespace Axolotl.Groups
 		{
 			lock(LOCK)
 			{
-				// TODO
-				//			try {
+				try {
 				var record = _senderKeyStore.LoadSenderKey(_senderKeyId);
 				var senderKeyState = record.GetSenderKeyState();
 				var senderKey = senderKeyState.SenderChainKey.GetSenderMessageKey();
 				var ciphertext = GetCipherText(senderKey.Iv, senderKey.CipherKey, paddedPlaintext);
 
-				var senderKeyMessage = new SenderKeyMessage((int)senderKeyState.KeyId,
-					                       senderKey.Iteration,
-					                       ciphertext,
-					                       senderKeyState.SigningKeyPrivate);
+				var senderKeyMessage = new SenderKeyMessage(senderKeyState.KeyId,
+									                       senderKey.Iteration,
+									                       ciphertext,
+									                       senderKeyState.SigningKeyPrivate);
 
 				senderKeyState.SenderChainKey = senderKeyState.SenderChainKey.GetNext();
 				_senderKeyStore.StoreSenderKey(_senderKeyId, record);
 
 				return senderKeyMessage.Serialize();
-				//			} catch (InvalidKeyIdException e) {
-				//				throw new NoSessionException(e);
-				//			}
+				} 
+				catch (Exception e) 
+				{
+					throw new Exception("wtf :" + e);
+				}
 			}
 		}
 
@@ -82,7 +83,7 @@ namespace Axolotl.Groups
 			}
 		}
 
-		private SenderMessageKey GetSenderKey(SenderKeyState senderKeyState, int iteration)
+		private SenderMessageKey GetSenderKey(SenderKeyState senderKeyState, UInt32 iteration)
 		{
 			var senderChainKey = senderKeyState.SenderChainKey;
 

@@ -7,12 +7,12 @@ namespace Axolotl.Groups.Ratchet
 {
 	public class SenderMessageKey
 	{
-		public int    Iteration;
+		public UInt32    Iteration;
 		public byte[] Iv;
 		public byte[] CipherKey;
 		public byte[] Seed;
 
-		public SenderMessageKey (int iteration, byte[] seed)
+		public SenderMessageKey (UInt32 iteration, byte[] seed)
 		{
 			byte[] derivative = new HKDFv3 ().DeriveSecrets (seed, Encoding.UTF8.GetBytes ("WhisperGroup"), 48);
 			byte[][] parts = ByteUtil.Split (derivative, 16, 32);

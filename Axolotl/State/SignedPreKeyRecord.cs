@@ -11,7 +11,7 @@ namespace Axolotl.State
 		private SignedPreKeyRecordStructure _structure;
 
 		public UInt32 Id { 
-			get { return _structure.Id; }
+			get { return _structure.Id.Value; }
 		}
 
 		public long Timestamp {

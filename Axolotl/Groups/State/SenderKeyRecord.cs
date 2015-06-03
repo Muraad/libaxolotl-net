@@ -40,7 +40,7 @@ namespace Axolotl.Groups.State
 			}
 		}
 
-		public SenderKeyState GetSenderKeyState(int keyId)
+		public SenderKeyState GetSenderKeyState(UInt32 keyId)
 		{
 			foreach (var state in _senderKeyStates) {
 				if (state.KeyId == keyId) return state;
@@ -49,12 +49,12 @@ namespace Axolotl.Groups.State
 			throw new KeyNotFoundException ();
 		}
 
-		public void AddSenderKeyState(int id, int iteration, byte[] chainKey, ECPublicKey signatureKey) 
+		public void AddSenderKeyState(UInt32 id, UInt32 iteration, byte[] chainKey, ECPublicKey signatureKey) 
 		{
 			_senderKeyStates.Add(new SenderKeyState(id, iteration, chainKey, signatureKey));
 		}
 
-		public void SetSenderKeyState(int id, int iteration, byte[] chainKey, ECKeyPair signatureKey) {
+		public void SetSenderKeyState(UInt32 id, UInt32 iteration, byte[] chainKey, ECKeyPair signatureKey) {
 			_senderKeyStates.Clear();
 			_senderKeyStates.Add(new SenderKeyState(id, iteration, chainKey, signatureKey));
 		}

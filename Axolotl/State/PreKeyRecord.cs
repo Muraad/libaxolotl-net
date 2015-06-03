@@ -12,7 +12,7 @@ namespace Axolotl.State
 	{
 		private PreKeyRecordStructure structure;
 
-		public UInt32 Id { 
+		public UInt32? Id { 
 			get { return structure.Id; } 
 		}
 

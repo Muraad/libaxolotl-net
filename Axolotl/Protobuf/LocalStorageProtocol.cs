@@ -9,7 +9,7 @@ namespace Axolotl.State
 	public class SessionStructure
 	{
 		[ProtoMember(1)]
-		public UInt32 SessionVersion { get; set; }
+		public UInt32? SessionVersion { get; set; }
 
 		[ProtoMember(2)]
 		public byte[] LocalIdentityPublic { get; set; }
@@ -21,7 +21,7 @@ namespace Axolotl.State
 		public byte[] RootKey { get; set; }
 
 		[ProtoMember(5)]
-		public UInt32 PreviousCounter { get; set; }
+		public UInt32? PreviousCounter { get; set; }
 
 		[ProtoMember(6)]
 		public Chain SenderChain { get; set; }
@@ -36,13 +36,13 @@ namespace Axolotl.State
 		public PendingPreKey      PendPreKey { get; set; }
 
 		[ProtoMember(10)]
-		public UInt32 RemoteRegistrationId { get; set; }
+		public UInt32? RemoteRegistrationId { get; set; }
 
 		[ProtoMember(11)]
-		public UInt32 LocalRegistrationId { get; set; }
+		public UInt32? LocalRegistrationId { get; set; }
 
 		[ProtoMember(12)]
-		public bool NeedsRefresh { get; set; }
+		public bool? NeedsRefresh { get; set; }
 
 		[ProtoMember(13)]
 		public byte[] AliceBaseKey { get; set; }
@@ -62,7 +62,7 @@ namespace Axolotl.State
 	public class PreKeyRecordStructure
 	{
 		[ProtoMember(1)]
-		public UInt32 Id { get; set; }
+		public UInt32? Id { get; set; }
 
 		[ProtoMember(2)]
 		public byte[] PublicKey { get; set; }
@@ -75,7 +75,7 @@ namespace Axolotl.State
 	public class SignedPreKeyRecordStructure
 	{
 		[ProtoMember(1)]
-		public UInt32 Id { get; set; }
+		public UInt32? Id { get; set; }
 
 		[ProtoMember(2)]
 		public byte[] PublicKey { get; set; }
@@ -85,7 +85,8 @@ namespace Axolotl.State
 
 		[ProtoMember(4)]
 		public byte[] Signature { get; set; }
-		//[ProtoMember(5)]
+		[ProtoMember(5)]
+		public long? timestamp { get; set; }
 		//public fixed64 timestamp  = 5; // UNDONE
 	}
 
@@ -107,7 +108,7 @@ namespace Axolotl.State
 		public class SenderChainKey
 		{
 			[ProtoMember(1)]
-			public UInt32 Iteration { get; set; }
+			public UInt32? Iteration { get; set; }
 
 			[ProtoMember(2)]
 			public byte[] Seed { get; set; }
@@ -117,7 +118,7 @@ namespace Axolotl.State
 		public class SenderMessageKey
 		{
 			[ProtoMember(1)]
-			public UInt32 Iteration { get; set; }
+			public UInt32? Iteration { get; set; }
 
 			[ProtoMember(2)]
 			public byte[] Seed { get; set; }
@@ -134,7 +135,7 @@ namespace Axolotl.State
 		}
 
 		[ProtoMember(1)]
-		public UInt32 SenderKeyId { get; set; }
+		public UInt32? SenderKeyId { get; set; }
 
 		[ProtoMember(2)]
 		public SenderChainKey senderChainKey { get; set; }

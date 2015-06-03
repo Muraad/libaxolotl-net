@@ -39,6 +39,9 @@
       <HintPath>..\packages\libsodium-net.0.8.0\lib\Net40\Sodium.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="Functional.Maybe">
+      <HintPath>..\packages\Functional.Maybe.1.0.3\lib\Functional.Maybe.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +104,8 @@
     <Compile Include="Protocol\SenderKeyDistributionMessage.cs" />
     <Compile Include="Util\KeyHelper.cs" />
     <Compile Include="Protocol\KeyExchangeMessage.cs" />
+    <Compile Include="Protocol\PreKeyWhisperMessage.cs" />
+    <Compile Include="Protocol\WhisperMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
