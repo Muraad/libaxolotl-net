@@ -95,7 +95,7 @@ namespace Axolotl.State
 			byte[] serialized;
 			using (var stream = new MemoryStream()) {
 				Serializer.Serialize<RecordStructure> (stream, record);
-				serialized = stream.GetBuffer ();
+				serialized = stream.ToArray ();
 			}
 			return serialized;
 		}

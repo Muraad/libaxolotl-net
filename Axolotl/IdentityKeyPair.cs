@@ -44,7 +44,7 @@ namespace Axolotl
 			using(var stream = new MemoryStream())
 			{
 				Serializer.Serialize<IdentityKeyPairStructure>(stream, idkp);
-				return stream.GetBuffer();
+				return stream.ToArray ();
 			}
 		}
 	}

@@ -400,7 +400,7 @@ namespace Axolotl.State
 			{
 				//TODO: check
 				Serializer.Serialize<SessionStructure>(stream, Structure);
-				return stream.GetBuffer();
+				return stream.ToArray ();
 			}
 		}
 

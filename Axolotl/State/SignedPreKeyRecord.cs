@@ -54,7 +54,7 @@ namespace Axolotl.State
 		{
 			using (var stream = new MemoryStream()) {
 				Serializer.Serialize<SignedPreKeyRecordStructure> (stream, _structure);
-				return stream.GetBuffer ();
+				return stream.ToArray ();
 			}
 		}
 	}

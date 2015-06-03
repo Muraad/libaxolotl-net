@@ -49,7 +49,7 @@ namespace Axolotl.State
 
 			using (var stream = new MemoryStream()) {
 				Serializer.Serialize<PreKeyRecordStructure> (stream, structure);
-				result = stream.GetBuffer ();
+				result = stream.ToArray ();
 			}
 
 			return result;

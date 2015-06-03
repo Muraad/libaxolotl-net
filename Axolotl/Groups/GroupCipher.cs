@@ -2,6 +2,9 @@ using System;
 using Axolotl.Groups.State;
 using Axolotl.Groups.Ratchet;
 using Axolotl.Protocol;
+using System.Security.Cryptography;
+using System.IO;
+using System.Text;
 
 namespace Axolotl.Groups
 {
@@ -18,7 +21,7 @@ namespace Axolotl.Groups
 			_senderKeyId = senderKeyId;
 		}
 
-		public byte[] encrypt(byte[] paddedPlaintext) 
+		public byte[] Encrypt(byte[] paddedPlaintext) 
 		{
 			lock(LOCK) {
 				// TODO
@@ -41,6 +44,11 @@ namespace Axolotl.Groups
 	//				throw new NoSessionException(e);
 	//			}
 			}
+		}
+
+		public byte[] Decrypt(byte[] senderKeyMessageBytes)
+		{
+			return Decrypt(senderKeyMessageBytes, new NullDecryptionCallback());
 		}
 
 		public byte[] Decrypt(byte[] senderKeyMessageBytes, IDecryprionCallback callback)
@@ -68,11 +76,6 @@ namespace Axolotl.Groups
 
 				return plaintext;
 			}
-		}
-
-		byte[] GetCipherText (byte[] iv, byte[] cipherKey, byte[] paddedPlaintext)
-		{
-			throw new NotImplementedException ();
 		}
 
 		private SenderMessageKey GetSenderKey (SenderKeyState senderKeyState, int iteration)
@@ -103,7 +106,51 @@ namespace Axolotl.Groups
 
 		private byte[] GetPlainText (byte[] iv, byte[] key, byte[] ciphertext)
 		{
-			throw new NotImplementedException ();
+			byte[] result; 
+
+			using (var rijAlg = Rijndael.Create()) {
+				rijAlg.Key = key;
+				rijAlg.IV = iv;
+
+				var decryptor = rijAlg.CreateDecryptor (key, iv);
+
+				using (var mStream = new MemoryStream())
+				using (var dcStream = new CryptoStream(mStream, decryptor, CryptoStreamMode.Read))
+				using (var sReader = new StreamReader(dcStream)) {
+					var stringText = sReader.ReadToEnd ();
+					result = Encoding.UTF8.GetBytes (stringText);
+				}
+			}
+
+			return result;
+		}
+
+		private byte[] GetCipherText (byte[] iv, byte[] cipherKey, byte[] paddedPlaintext)
+		{
+			byte[] result;
+
+			using (var aes = SymmetricAlgorithm.Create()) {
+				aes.Mode = CipherMode.CBC;
+				aes.Key = cipherKey;
+				aes.IV = iv;
+				aes.Padding = PaddingMode.PKCS7;
+				var encryptor = aes.CreateEncryptor ();
+
+				using (var mStream = new MemoryStream()) 
+				using (var cStream = new CryptoStream(mStream, encryptor, CryptoStreamMode.Write)) {
+					cStream.Write (paddedPlaintext, 0, paddedPlaintext.Length);
+					cStream.FlushFinalBlock ();
+					result = mStream.ToArray ();
+				}
+			}
+
+			return result;
+		}
+
+		private class NullDecryptionCallback : IDecryprionCallback 
+		{
+			public void HandlePlaintext(byte[] plaintext) {
+			}
 		}
 	}
 }

@@ -71,7 +71,7 @@ namespace Axolotl.Groups.State
 
 				Serializer.Serialize<SenderKeyRecordStructure>(stream, record);
 
-				return stream.GetBuffer();
+				return stream.ToArray ();
 			}
 		}
 	}
