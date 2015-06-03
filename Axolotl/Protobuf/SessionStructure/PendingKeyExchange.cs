@@ -7,7 +7,7 @@ namespace Axolotl.SessionStructure
 	public class PendingKeyExchange
 	{
 		[ProtoMember(1)]
-		public UInt32 Sequence { get; set; }
+		public UInt32? Sequence { get; set; }
 
 		[ProtoMember(2)]
 		public byte[]  LocalBaseKey { get; set; }

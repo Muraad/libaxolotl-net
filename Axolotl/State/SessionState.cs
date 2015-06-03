@@ -112,10 +112,7 @@ namespace Axolotl.State
 
 		public UInt32 PendingKeyExchangeSequence
 		{
-			get
-			{
-				return Structure.PendKeyExchange.Sequence;
-			}
+			get { return Structure.PendKeyExchange.Sequence.Value; }
 		}
 
 		public ECKeyPair PendingKeyExchangeBaseKey
@@ -373,7 +370,7 @@ namespace Axolotl.State
 		{
 			Maybe<UInt32> preKeyId;
 
-			if(Structure.PendPreKey.preKeyId != null)
+			if(Structure.PendPreKey.preKeyId.HasValue)
 			{
 				preKeyId = Structure.PendPreKey.preKeyId.ToMaybe ();
 			}
@@ -382,7 +379,7 @@ namespace Axolotl.State
 				preKeyId = Maybe<UInt32>.Nothing; 
 			}
 
-			return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
+			return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId.Value, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
 		}
 
 		public void ClearUnacknowledgedPreKeyMessage()

@@ -9,22 +9,23 @@ namespace Axolotl.Protocol
 {
 	public class PreKeyWhisperMessage : CiphertextMessage
 	{
-		private int               _version;
-		private UInt32            _registrationId;
-		private Maybe<UInt32>	  _preKeyId;
-		private UInt32               _signedPreKeyId;
-		private ECPublicKey       _baseKey;
-		private IdentityKey       _identityKey;
-		private WhisperMessage    _message;
+		public int               MessageVersion { get; private set; }
+		public UInt32            RegistrationId { get; private set; }
+		public Maybe<UInt32>	  PreKeyId { get; private set; }
+		public UInt32            SignedPreKeyId { get; private set; }
+		public ECPublicKey       BaseKey { get; private set; }
+		public IdentityKey       IdentityKey { get; private set; }
+		public WhisperMessage    Message { get; private set; }
+
 		private byte[]            _serialized;
 
 		public PreKeyWhisperMessage(byte[] serialized)
 		{
 			try {
-				_version = ByteUtil.HighBitsToInt(serialized[0]);
+				MessageVersion = ByteUtil.HighBitsToInt(serialized[0]);
 
-				if (_version > CiphertextMessage.CURRENT_VERSION) {
-					throw new Exception("Unknown version: " + _version);
+				if (MessageVersion > CiphertextMessage.CURRENT_VERSION) {
+					throw new Exception("Unknown version: " + MessageVersion);
 				}
 
 			
@@ -35,8 +36,8 @@ namespace Axolotl.Protocol
 					preKeyWhisperMessage = Serializer.Deserialize<WhisperProtos.PreKeyWhisperMessage>(stream);
 				}
 			
-				if ((_version == 2 && !preKeyWhisperMessage.preKeyId.HasValue)        ||
-				    (_version == 3 && !preKeyWhisperMessage.signedPreKeyId.HasValue)  ||
+				if ((MessageVersion == 2 && !preKeyWhisperMessage.preKeyId.HasValue)        ||
+				    (MessageVersion == 3 && !preKeyWhisperMessage.signedPreKeyId.HasValue)  ||
 				    preKeyWhisperMessage.baseKey == null                              ||
 				    preKeyWhisperMessage.identityKey == null                       	  ||
 				    preKeyWhisperMessage.message == null)
@@ -45,25 +46,59 @@ namespace Axolotl.Protocol
 				}
 
 				_serialized     = serialized;
-				_registrationId = preKeyWhisperMessage.registrationId.Value;
-				_preKeyId       = preKeyWhisperMessage.preKeyId.Value.ToMaybe();
-				_signedPreKeyId = preKeyWhisperMessage.signedPreKeyId.Value; //() ? preKeyWhisperMessage.getSignedPreKeyId() : -1;
-				_baseKey        = Curve.DecodePoint(preKeyWhisperMessage.baseKey, 0);
-				_identityKey    = new IdentityKey(Curve.DecodePoint(preKeyWhisperMessage.identityKey, 0));
-				_message        = new WhisperMessage(preKeyWhisperMessage.message);
+				RegistrationId = preKeyWhisperMessage.registrationId.Value;
+				PreKeyId       = preKeyWhisperMessage.preKeyId.Value.ToMaybe();
+				SignedPreKeyId = preKeyWhisperMessage.signedPreKeyId.Value; //() ? preKeyWhisperMessage.getSignedPreKeyId() : -1;
+				BaseKey        = Curve.DecodePoint(preKeyWhisperMessage.baseKey, 0);
+				IdentityKey    = new IdentityKey(Curve.DecodePoint(preKeyWhisperMessage.identityKey, 0));
+				Message        = new WhisperMessage(preKeyWhisperMessage.message);
 			} catch (Exception e) {
 				throw new Exception("WTF :" + e);
 			}
 		}
 
+		public PreKeyWhisperMessage(int messageVersion, UInt32 registrationId, Maybe<UInt32> preKeyId,
+		                            UInt32 signedPreKeyId, ECPublicKey baseKey, IdentityKey identityKey,
+		                            WhisperMessage message)
+		{
+			MessageVersion        = messageVersion;
+			RegistrationId = registrationId;
+			PreKeyId       = preKeyId;
+			SignedPreKeyId = signedPreKeyId;
+			BaseKey        = baseKey;
+			IdentityKey    = identityKey;
+			Message        = message;
+
+			var preKeyMessage = new WhisperProtos.PreKeyWhisperMessage {
+					signedPreKeyId = SignedPreKeyId,
+					baseKey = BaseKey.Serialize(),
+					identityKey = IdentityKey.Serialize(),
+					message = Message.Serialize(),
+					registrationId = registrationId
+			};
+
+			preKeyId.Do (pKid => preKeyMessage.preKeyId = pKid);
+
+			byte[] versionBytes = { ByteUtil.IntsToByteHighAndLow(MessageVersion, CURRENT_VERSION) };
+
+			byte[] messageBytes;
+			using(var stream = new MemoryStream())
+			{
+				Serializer.Serialize(stream, preKeyMessage);
+				messageBytes = stream.ToArray();
+			}
+
+			_serialized = ByteUtil.Combine(versionBytes, messageBytes);
+		}
+
 		public override int GetKeyType ()
 		{
-			throw new NotImplementedException ();
+			return CiphertextMessage.PREKEY_TYPE;
 		}
 
 		public override byte[] Serialize ()
 		{
-			throw new NotImplementedException ();
+			return _serialized;
 		}
 	}
 }
