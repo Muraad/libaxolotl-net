@@ -173,8 +173,6 @@ namespace Axolotl
 
 				}
 
-				var enumerator = previousStates.GetEnumerator();
-
 				throw new InvalidMessageException("No valid sessions.", exceptions);
 			}
 		}

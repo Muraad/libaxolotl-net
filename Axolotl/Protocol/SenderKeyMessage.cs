@@ -18,9 +18,7 @@ namespace Axolotl.Protocol
 
 		public UInt32 Iteration { get; set; }
 
-
 		private byte[] _serialized;
-		private int _messageVersion;
 
 		public SenderKeyMessage(byte[] serialized)
 		{
@@ -56,7 +54,6 @@ namespace Axolotl.Protocol
 				}
 
 				_serialized = serialized;
-				_messageVersion = ByteUtil.HighBitsToInt(version);
 				KeyId = senderKeyMessage.id.Value;
 				Iteration = senderKeyMessage.iteration.Value;
 				CipherText = senderKeyMessage.ciphertext;
@@ -88,7 +85,6 @@ namespace Axolotl.Protocol
 			byte[] signature = GetSignature(signatureKey, ByteUtil.Combine(version, message));
 
 			_serialized = ByteUtil.Combine(version, message, signature);
-			_messageVersion = CURRENT_VERSION;
 			KeyId = keyId;
 			Iteration = iteration;
 			CipherText = ciphertext;

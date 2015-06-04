@@ -10,7 +10,7 @@ namespace Axolotl.Ratchet
 		// Looks like done
 
 		private byte[] MESSAGE_KEY_SEED = { 0x01 };
-		private byte[] CHAIN_KEY_SEED;
+		private byte[] CHAIN_KEY_SEED   = { 0x02 };
 
 		private HKDF _kdf;
 
