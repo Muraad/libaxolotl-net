@@ -14,7 +14,7 @@ namespace Axolotl.Ratchet
 
 		public byte[] Iv { get; set; }
 
-		public MessageKeys(byte[] cipherKey, byte[] macKey, byte[] iv, int counter)
+		public MessageKeys(byte[] cipherKey, byte[] macKey, byte[] iv, UInt32 counter)
 		{
 			CipherKey = cipherKey;
 			MacKey = macKey;

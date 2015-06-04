@@ -98,7 +98,7 @@ namespace Axolotl.State
 				var chainKeyStructure = Structure.SenderChain.chainKey;
 				return new ChainKey(HKDF.CreateFor(SessionVersion),
 					chainKeyStructure.key,
-					(int)chainKeyStructure.index);
+					chainKeyStructure.index);
 			}
 			set
 			{
@@ -149,20 +149,20 @@ namespace Axolotl.State
 		{			
 			get
 			{
-				// TODO: Check
+				// TODO: Check~
 				return Structure.PendKeyExchange != null;
 			}
 		}
 
 		public bool HasUnacknowledgedPreKeyMessage()
 		{
-			// TODO: Check
+			// TODO: Check~
 			return Structure.PendPreKey != null;
 		}
 
 		public UInt32 RemoteRegistrationId
 		{
-			// TODO: Check
+			// TODO: Check~
 			get { return Structure.RemoteRegistrationId.Value; }
 			set { Structure.RemoteRegistrationId = value; }
 		}
@@ -198,20 +198,24 @@ namespace Axolotl.State
 			return Structure.SenderChain != null;
 		}
 
-		private Tuple<Chain, int> GetReceiverChain(ECPublicKey senderEphemeral)
+		private Tuple<Chain, UInt32> GetReceiverChain(ECPublicKey senderEphemeral)
 		{
 			List<Chain> ReceiverChains = Structure.ReceiverChains;
-			int index = 0;
+			UInt32 index = 0;
 
 			foreach(var chain in ReceiverChains)
 			{
-				// TODO: add exceptions
-				ECPublicKey chainSenderRatchetKey = Curve.DecodePoint(chain.SenderRatchetKey, 0);
+				try {
+					ECPublicKey chainSenderRatchetKey = Curve.DecodePoint(chain.SenderRatchetKey, 0);
 
-				if(chainSenderRatchetKey.Equals(senderEphemeral))
-					return new Tuple<Chain, int>(chain, index);
+					if(chainSenderRatchetKey.Equals(senderEphemeral))
+						return new Tuple<Chain, UInt32>(chain, index);
 
-				index++;
+					index++;
+				}
+				catch(Exception e) {
+					throw new Exception ("wtf: " + e);
+				}
 			}
 
 			return null;
@@ -219,7 +223,7 @@ namespace Axolotl.State
 
 		public ChainKey GetReceiverChainKey(ECPublicKey senderEphemeral)
 		{
-			Tuple<Chain, int> ReceiverChainAndIndex = GetReceiverChain(senderEphemeral);
+			Tuple<Chain, UInt32> ReceiverChainAndIndex = GetReceiverChain(senderEphemeral);
 			var ReceiverChain = ReceiverChainAndIndex.Item1;
 
 			if(ReceiverChain == null)
@@ -230,7 +234,7 @@ namespace Axolotl.State
 			{
 				return new ChainKey(HKDF.CreateFor(SessionVersion),
 					ReceiverChain.chainKey.key,
-					(int)ReceiverChain.chainKey.index);
+					ReceiverChain.chainKey.index);
 			}
 		}
 
@@ -291,10 +295,32 @@ namespace Axolotl.State
 			return false;
 		}
 
-		public MessageKeys RemoveMessageKeys(ECPublicKey senderEphemeral, int counter)
+		public MessageKeys RemoveMessageKeys(ECPublicKey senderEphemeral, UInt32 counter)
 		{
+			Tuple<Chain, UInt32>   chainAndIndex = GetReceiverChain(senderEphemeral);
+			Chain               chain         = chainAndIndex.Item1;
+
+			if (chain == null) {
+				return null;
+			}
+
+			MessageKeys result = null;
+
+			// TODO: Check~
+			foreach (var mK in chain.messageKeys) {
+				if (mK.index == counter) {
+					result = new MessageKeys (mK.cipherKey, mK.macKey, mK.iv, mK.index);
+					chain.messageKeys.Remove (mK);
+					break;
+				}
+			}
+
+			//this.sessionStructure = this.sessionStructure.toBuilder()
+			//	.setReceiverChains(chainAndIndex.second(), updatedChain)
+			//		.build();
 			// UNDONE
-			throw new NotImplementedException();
+
+			return result;
 		}
 
 		public void SetMessageKeys(ECPublicKey senderEphemeral, MessageKeys messageKeys)
@@ -329,7 +355,7 @@ namespace Axolotl.State
 			chain.chainKey = chainKeyStructure;
 
 
-			// TODO
+			// UNDONE
 			//			this.sessionStructure = this.sessionStructure.toBuilder()
 			//				.setReceiverChains(chainAndIndex.second(), updatedChain)
 			//				.build();
@@ -355,7 +381,7 @@ namespace Axolotl.State
 
 		public void SetUnacknowledgedPreKeyMessage(Maybe<UInt32> preKeyId, int signedPreKeyId, ECPublicKey baseKey)
 		{
-			// TODO: check
+			// TODO: check~
 			var pending = new PendingPreKey {
 				signedPreKeyId = signedPreKeyId,
 				baseKey = baseKey.Serialize()
@@ -365,8 +391,7 @@ namespace Axolotl.State
 			Structure.PendPreKey = pending;
 		}
 
-		// UNDONE
-		public UnacknowledgedPreKeyMessageItems getUnacknowledgedPreKeyMessageItems()
+		public UnacknowledgedPreKeyMessageItems GetUnacknowledgedPreKeyMessageItems()
 		{
 			Maybe<UInt32> preKeyId;
 

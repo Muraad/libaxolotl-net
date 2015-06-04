@@ -9,15 +9,15 @@ namespace Axolotl.Ratchet
 	{
 		// Looks like done
 
-		private byte[] MESSAGE_KEY_SEED = { 0x01 };
-		private byte[] CHAIN_KEY_SEED   = { 0x02 };
+		private byte[] MESSAGE_KEY_SEED =  { 0x01 };
+		//private byte[] CHAIN_KEY_SEED;
 
-		private HKDF   _kdf;
+		private HKDF _kdf;
 
 		public byte[] Key { get; private set; }
-		public int Index { get; private set; }
+		public UInt32 Index { get; private set; }
 
-		public ChainKey (HKDF kdf, byte[] key, int index)
+		public ChainKey (HKDF kdf, byte[] key, UInt32 index)
 		{
 			_kdf = kdf;
 			Key = key;

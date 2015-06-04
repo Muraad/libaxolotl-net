@@ -29,7 +29,6 @@ namespace Axolotl.Protocol
 				byte[][] messageParts = ByteUtil.Split(serialized, 1, serialized.Length - 1 - SIGNATURE_LENGTH, SIGNATURE_LENGTH);
 				byte version = messageParts[0][0];
 				byte[] message = messageParts[1];
-				byte[] signature = messageParts[2];
 
 				if(ByteUtil.HighBitsToInt(version) < 3)
 				{

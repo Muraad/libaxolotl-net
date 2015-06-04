@@ -6,10 +6,10 @@ namespace Axolotl.KDF
 {
 	public class DerivedMessageSecrets
 	{
-		public  static int SIZE              = 80;
-		private static int CIPHER_KEY_LENGTH = 32;
-		private static int MAC_KEY_LENGTH    = 32;
-		private static int IV_LENGTH         = 16;
+		public  const int SIZE              = 80;
+		private const int CIPHER_KEY_LENGTH = 32;
+		private const int MAC_KEY_LENGTH    = 32;
+		private const int IV_LENGTH         = 16;
 
 		public byte[] CipherKey { get; private set; }
 		public byte[] MacKey { get; private set; }

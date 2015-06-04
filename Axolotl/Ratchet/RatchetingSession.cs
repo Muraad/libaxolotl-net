@@ -1,17 +1,18 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
+using Functional.Maybe;
 using Axolotl.ECC;
 using Axolotl.KDF;
 using Axolotl.State;
 using Axolotl.Util;
-using Functional.Maybe;
-using System.IO;
 
 namespace Axolotl.Ratchet
 {
 	public class RatchetingSession
 	{
+		// Complete
 		public static void InitializeSession(SessionState sessionState,
 		                                     UInt32 sessionVersion,
 		                                     SymmetricAxolotlParameters parameters)

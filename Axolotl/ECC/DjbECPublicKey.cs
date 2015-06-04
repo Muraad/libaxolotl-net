@@ -37,11 +37,11 @@ namespace Axolotl.ECC
 			return Array.Equals (PublicKey, that.PublicKey);
 		}
 
-		// TODO: implement GetHashCode and comparators
-		//@Override
-		//	public int hashCode() {
-		//	return Arrays.hashCode(publicKey);
-		//}
+		public override int GetHashCode ()
+		{
+			//TODO: gethashcode
+			return PublicKey.GetHashCode ();
+		}
 
 		public override int CompareTo(ECPublicKey another)
 		{
