@@ -10,7 +10,7 @@ namespace Axolotl.SessionStructure
 		public UInt32? preKeyId { get; set; }
 
 		[ProtoMember(2)]
-		public Int32?  signedPreKeyId { get; set; }
+		public UInt32?  signedPreKeyId { get; set; }
 
 		[ProtoMember(3)]
 		public byte[] baseKey { get; set; }

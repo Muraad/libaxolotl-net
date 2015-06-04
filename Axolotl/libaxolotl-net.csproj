@@ -79,7 +79,6 @@
     <Compile Include="Ratchet\ChainKey.cs" />
     <Compile Include="Ratchet\MessageKeys.cs" />
     <Compile Include="Ratchet\RootKey.cs" />
-    <Compile Include="IDecryprionCallback.cs" />
     <Compile Include="State\ISessionStore.cs" />
     <Compile Include="State\SessionRecord.cs" />
     <Compile Include="State\ISignedPreKeyStore.cs" />
@@ -116,8 +115,13 @@
     <Compile Include="Exceptions\NoSessionException.cs" />
     <Compile Include="Exceptions\StaleKeyExchangeException.cs" />
     <Compile Include="Exceptions\UntrustedIdentityException.cs" />
+    <Compile Include="SessionCipher.cs" />
+    <Compile Include="SessionBuilder.cs" />
+    <Compile Include="NullDecryptionCallback.cs" />
+    <Compile Include="IDecryptionCallback.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
   <ItemGroup>
     <Folder Include="ECC\" />
     <Folder Include="Util\" />
@@ -137,5 +141,4 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="../packages/Baseclass.Contrib.Nuget.Output.2.0.0/build/net40/Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('../packages/Baseclass.Contrib.Nuget.Output.2.0.0/build/net40/Baseclass.Contrib.Nuget.Output.targets')" />
 </Project>

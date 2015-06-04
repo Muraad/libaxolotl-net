@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Axolotl.State
 {
-	// Complete 
+	// Complete
 
 	public class SessionRecord
 	{
@@ -14,44 +14,54 @@ namespace Axolotl.State
 
 		public SessionState SessionState { get; private set; }
 
-		private LinkedList<SessionState> _previousStates = new LinkedList<SessionState> ();
+		public List<SessionState> PreviousStates { get; private set; }
 
 		public bool IsFresh { get; private set; }
 
-		public SessionRecord ()
+		public SessionRecord()
 		{
+
+			PreviousStates = new List<SessionState>();
+
 			SessionState = new SessionState();
 
 			IsFresh = true;
 		}
 
-		public SessionRecord (byte[] serialized)
+		public SessionRecord(byte[] serialized)
 		{
+			PreviousStates = new List<SessionState>();
+
 			RecordStructure record;
 
-			using (var stream = new MemoryStream()) {
-				stream.Write (serialized, 0, serialized.Length);
-				record = Serializer.Deserialize<RecordStructure> (stream);
+			using(var stream = new MemoryStream())
+			{
+				stream.Write(serialized, 0, serialized.Length);
+				record = Serializer.Deserialize<RecordStructure>(stream);
 			}
 
-			SessionState = new SessionState (record.CurrentSession);
+			SessionState = new SessionState(record.CurrentSession);
 			IsFresh = false;
 
-			foreach (var previousStructure in record.PreviousSessions) {
-				_previousStates.AddLast(new SessionState(previousStructure));
+			foreach(var previousStructure in record.PreviousSessions)
+			{
+				PreviousStates.Add(new SessionState(previousStructure));
 			}
 		}
 
 		public bool HasSessionState(int version, byte[] aliceBaseKey)
 		{
-			if (SessionState.SessionVersion == version &&
-				Array.Equals (aliceBaseKey, SessionState.AliceBaseKey)) {
+			if(SessionState.SessionVersion == version &&
+			   Array.Equals(aliceBaseKey, SessionState.AliceBaseKey))
+			{
 				return true;
 			}
 
-			foreach (var state in _previousStates) {
-				if (state.SessionVersion == version &&
-				    Array.Equals (aliceBaseKey, state.AliceBaseKey)) {
+			foreach(var state in PreviousStates)
+			{
+				if(state.SessionVersion == version &&
+				   Array.Equals(aliceBaseKey, state.AliceBaseKey))
+				{
 					return true;
 				}
 			}
@@ -61,30 +71,32 @@ namespace Axolotl.State
 
 		public void ArchiveCurrentState()
 		{
-			PromoteState (new SessionState ());
+			PromoteState(new SessionState());
 		}
 
-		public void PromoteState (SessionState promotedState)
+		public void PromoteState(SessionState promotedState)
 		{
-			_previousStates.AddFirst (SessionState);
+			PreviousStates.Insert(0, SessionState);
 			SessionState = promotedState;
 
-			if (_previousStates.Count > ARCHIVED_STATES_MAX_LENGTH) {
-				_previousStates.RemoveLast ();
+			if(PreviousStates.Count > ARCHIVED_STATES_MAX_LENGTH)
+			{
+				PreviousStates.RemoveAt(PreviousStates.Count - 1);
 			}
 		}
 
-		public void SetState (SessionState sessionState)
+		public void SetState(SessionState sessionState)
 		{
 			SessionState = sessionState;
 		}
 
 		public byte[] Serialize()
 		{
-			var previousStructures = new LinkedList<SessionStructure> ();
+			var previousStructures = new LinkedList<SessionStructure>();
 
-			foreach (var previousState in _previousStates) {
-				previousStructures.AddLast (previousState.Structure);
+			foreach(var previousState in PreviousStates)
+			{
+				previousStructures.AddLast(previousState.Structure);
 			}
 
 			var record = new RecordStructure { 
@@ -93,9 +105,10 @@ namespace Axolotl.State
 			};
 
 			byte[] serialized;
-			using (var stream = new MemoryStream()) {
-				Serializer.Serialize<RecordStructure> (stream, record);
-				serialized = stream.ToArray ();
+			using(var stream = new MemoryStream())
+			{
+				Serializer.Serialize<RecordStructure>(stream, record);
+				serialized = stream.ToArray();
 			}
 			return serialized;
 		}

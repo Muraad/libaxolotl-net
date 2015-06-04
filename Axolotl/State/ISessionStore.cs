@@ -12,9 +12,11 @@ namespace Axolotl.State
 
 		bool ContainsSession(AxolotlAddress address);
 
-		void DeleteSession (AxolotlAddress address);
+		void DeleteSession(AxolotlAddress address);
 
-		void DeleteAllSessions (string name);
+		void DeleteAllSessions(string name);
+
+		void StoreSession(AxolotlAddress address, SessionRecord record);
 	}
 }
 

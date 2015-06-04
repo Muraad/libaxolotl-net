@@ -33,14 +33,16 @@ namespace Axolotl.State
 		{ 
 			get
 			{
-				try {
+				try
+				{
 					if(Structure.RemoteIdentityPublic == null)
 						return null;
 					return new IdentityKey(Structure.RemoteIdentityPublic, 0);
 				}
-				catch (InvalidKeyException e) {
+				catch(InvalidKeyException e)
+				{
 					// TODO: LOG
-					Console.WriteLine ("SessionRecordV2", e);
+					Console.WriteLine("SessionRecordV2", e);
 					return null;
 				}
 			}
@@ -55,10 +57,13 @@ namespace Axolotl.State
 		{ 
 			get
 			{
-				try {
+				try
+				{
 					return new IdentityKey(Structure.LocalIdentityPublic, 0);
-				} catch(InvalidKeyException e) {
-					throw new InvalidOperationException ("Assertion error", e);
+				}
+				catch(InvalidKeyException e)
+				{
+					throw new InvalidOperationException("Assertion error", e);
 				}
 			} 
 			set
@@ -87,10 +92,13 @@ namespace Axolotl.State
 		{
 			get
 			{
-				try {
+				try
+				{
 					return Curve.DecodePoint(Structure.SenderChain.SenderRatchetKey, 0);
-				} catch (InvalidKeyException e) {
-					throw new InvalidOperationException ("Assertin error", e);
+				}
+				catch(InvalidKeyException e)
+				{
+					throw new InvalidOperationException("Assertin error", e);
 				}
 			}
 		}
@@ -219,7 +227,8 @@ namespace Axolotl.State
 
 			foreach(var chain in ReceiverChains)
 			{
-				try {
+				try
+				{
 					ECPublicKey chainSenderRatchetKey = Curve.DecodePoint(chain.SenderRatchetKey, 0);
 
 					if(chainSenderRatchetKey.Equals(senderEphemeral))
@@ -227,9 +236,10 @@ namespace Axolotl.State
 
 					index++;
 				}
-				catch(InvalidKeyException e) {
+				catch(InvalidKeyException e)
+				{
 					//TODO: LOG
-					Console.WriteLine ("SessionRecordV2", e);
+					Console.WriteLine("SessionRecordV2", e);
 				}
 			}
 
@@ -289,7 +299,7 @@ namespace Axolotl.State
 			Structure.SenderChain = senderChain;
 		}
 
-		public bool HasMessageKeys(ECPublicKey senderEphemeral, int counter)
+		public bool HasMessageKeys(ECPublicKey senderEphemeral, UInt32 counter)
 		{
 			var chainAndIndex = GetReceiverChain(senderEphemeral);
 			var chain = chainAndIndex.Item1;
@@ -312,20 +322,23 @@ namespace Axolotl.State
 
 		public MessageKeys RemoveMessageKeys(ECPublicKey senderEphemeral, UInt32 counter)
 		{
-			Tuple<Chain, UInt32>   chainAndIndex = GetReceiverChain(senderEphemeral);
-			Chain               chain         = chainAndIndex.Item1;
+			Tuple<Chain, UInt32> chainAndIndex = GetReceiverChain(senderEphemeral);
+			Chain chain = chainAndIndex.Item1;
 
-			if (chain == null) {
+			if(chain == null)
+			{
 				return null;
 			}
 
 			MessageKeys result = null;
 
 			// TODO: Check~
-			foreach (var mK in chain.messageKeys) {
-				if (mK.index == counter) {
-					result = new MessageKeys (mK.cipherKey, mK.macKey, mK.iv, mK.index);
-					chain.messageKeys.Remove (mK);
+			foreach(var mK in chain.messageKeys)
+			{
+				if(mK.index == counter)
+				{
+					result = new MessageKeys(mK.cipherKey, mK.macKey, mK.iv, mK.index);
+					chain.messageKeys.Remove(mK);
 					break;
 				}
 			}
@@ -394,26 +407,27 @@ namespace Axolotl.State
 			Structure.PendKeyExchange = structure;
 		}
 
-		public void SetUnacknowledgedPreKeyMessage(Maybe<UInt32> preKeyId, int signedPreKeyId, ECPublicKey baseKey)
+		public void SetUnacknowledgedPreKeyMessage(Maybe<UInt32> preKeyId, UInt32 signedPreKeyId, ECPublicKey baseKey)
 		{
 			// TODO: check~
 			var pending = new PendingPreKey {
 				signedPreKeyId = signedPreKeyId,
 				baseKey = baseKey.Serialize()
 			};
-			preKeyId.Do (pKid => pending.preKeyId = pKid);
+			preKeyId.Do(pKid => pending.preKeyId = pKid);
 
 			Structure.PendPreKey = pending;
 		}
 
 		public UnacknowledgedPreKeyMessageItems GetUnacknowledgedPreKeyMessageItems()
 		{
-			try {
+			try
+			{
 				Maybe<UInt32> preKeyId;
 
 				if(Structure.PendPreKey.preKeyId.HasValue)
 				{
-					preKeyId = Structure.PendPreKey.preKeyId.ToMaybe ();
+					preKeyId = Structure.PendPreKey.preKeyId.ToMaybe();
 				}
 				else
 				{
@@ -421,8 +435,10 @@ namespace Axolotl.State
 				}
 
 				return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId.Value, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
-			} catch (InvalidKeyException e) {
-				throw new InvalidOperationException ("Assertion error", e);
+			}
+			catch(InvalidKeyException e)
+			{
+				throw new InvalidOperationException("Assertion error", e);
 			}
 		}
 
@@ -438,7 +454,7 @@ namespace Axolotl.State
 			{
 				//TODO: check
 				Serializer.Serialize<SessionStructure>(stream, Structure);
-				return stream.ToArray ();
+				return stream.ToArray();
 			}
 		}
 
@@ -446,12 +462,12 @@ namespace Axolotl.State
 		{
 			public Maybe<UInt32> PreKeyId { get; private set; }
 
-			public int SignedPreKeyId { get; private set; }
+			public UInt32 SignedPreKeyId { get; private set; }
 
 			public ECPublicKey BaseKey { get; private set; }
 
 			public UnacknowledgedPreKeyMessageItems(Maybe<UInt32> preKeyId,
-			                                        int signedPreKeyId,
+			                                        UInt32 signedPreKeyId,
 			                                        ECPublicKey baseKey)
 			{
 				PreKeyId = preKeyId;

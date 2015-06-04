@@ -26,23 +26,24 @@ namespace Axolotl.Groups
 		{
 			lock(LOCK)
 			{
-				try {
+				try
+				{
 					var record = _senderKeyStore.LoadSenderKey(_senderKeyId);
 					var senderKeyState = record.GetSenderKeyState();
 					var senderKey = senderKeyState.SenderChainKey.GetSenderMessageKey();
 					var ciphertext = GetCipherText(senderKey.Iv, senderKey.CipherKey, paddedPlaintext);
 
 					var senderKeyMessage = new SenderKeyMessage(senderKeyState.KeyId,
-										                       senderKey.Iteration,
-										                       ciphertext,
-										                       senderKeyState.SigningKeyPrivate);
+						                       senderKey.Iteration,
+						                       ciphertext,
+						                       senderKeyState.SigningKeyPrivate);
 
 					senderKeyState.SenderChainKey = senderKeyState.SenderChainKey.GetNext();
 					_senderKeyStore.StoreSenderKey(_senderKeyId, record);
 
 					return senderKeyMessage.Serialize();
-				} 
-				catch (InvalidKeyException e) 
+				}
+				catch(InvalidKeyException e)
 				{
 					throw new NoSessionException(e);
 				}
@@ -54,11 +55,12 @@ namespace Axolotl.Groups
 			return Decrypt(senderKeyMessageBytes, new NullDecryptionCallback());
 		}
 
-		public byte[] Decrypt(byte[] senderKeyMessageBytes, IDecryprionCallback callback)
+		public byte[] Decrypt(byte[] senderKeyMessageBytes, IDecryptionCallback callback)
 		{
 			lock(LOCK)
 			{
-				try {
+				try
+				{
 					var record = _senderKeyStore.LoadSenderKey(_senderKeyId);
 
 					if(record.IsEmpty)
@@ -80,8 +82,10 @@ namespace Axolotl.Groups
 					_senderKeyStore.StoreSenderKey(_senderKeyId, record);
 
 					return plaintext;
-				} catch (Exception e) {
-					throw new InvalidMessageException (e);
+				}
+				catch(Exception e)
+				{
+					throw new InvalidMessageException(e);
 				}
 			}
 		}
@@ -120,7 +124,8 @@ namespace Axolotl.Groups
 
 		private byte[] GetPlainText(byte[] iv, byte[] key, byte[] ciphertext)
 		{
-			try {
+			try
+			{
 				byte[] result; 
 
 				using(var rijAlg = Rijndael.Create())
@@ -140,14 +145,17 @@ namespace Axolotl.Groups
 				}
 
 				return result;
-			} catch (Exception e) {
-				throw new InvalidOperationException ("Assertion error", e);
+			}
+			catch(Exception e)
+			{
+				throw new InvalidOperationException("Assertion error", e);
 			}
 		}
 
 		private byte[] GetCipherText(byte[] iv, byte[] cipherKey, byte[] paddedPlaintext)
 		{
-			try {
+			try
+			{
 				byte[] result;
 
 				using(var aes = SymmetricAlgorithm.Create())
@@ -168,15 +176,10 @@ namespace Axolotl.Groups
 				}
 
 				return result;
-			} catch (Exception e) {
-				throw new InvalidOperationException ("Assertion error", e);
 			}
-		}
-
-		private class NullDecryptionCallback : IDecryprionCallback
-		{
-			public void HandlePlaintext(byte[] plaintext)
+			catch(Exception e)
 			{
+				throw new InvalidOperationException("Assertion error", e);
 			}
 		}
 	}
