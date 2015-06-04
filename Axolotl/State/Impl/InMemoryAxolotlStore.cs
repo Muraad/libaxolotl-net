@@ -11,20 +11,12 @@ namespace Axolotl.State
 
 		private InMemoryIdentityKeyStore  _identityKeyStore;
 
-		public InMemoryAxolotlStore(IdentityKeyPair identityKeyPair, int registrationId) 
+		public InMemoryAxolotlStore(IdentityKeyPair identityKeyPair, UInt32 registrationId) 
 		{
 			_identityKeyStore = new InMemoryIdentityKeyStore(identityKeyPair, registrationId);
 			_preKeyStore = new InMemoryPreKeyStore ();
 			_sessionStore = new InMemorySessionStore ();
 			_signedPreKeyStore = new InMemorySignedPreKeyStore ();
-		}
-
-		public IdentityKeyPair IdentityKeyPair {
-			get { return _identityKeyStore.IdentityKeyPair; }
-		}
-
-		public int LocalRegistrationId {
-			get { return _identityKeyStore.LocalRegistrationId; }
 		}
 
 		public void SaveIdentity(string name, IdentityKey identityKey) 
@@ -79,7 +71,7 @@ namespace Axolotl.State
 			_sessionStore.DeleteAllSessions(name);
 		}
 
-		public SignedPreKeyRecord LoadSignedPreKey(int signedPreKeyId)
+		public SignedPreKeyRecord LoadSignedPreKey(UInt32 signedPreKeyId)
 		{
 			return _signedPreKeyStore.LoadSignedPreKey(signedPreKeyId);
 		}
@@ -88,16 +80,26 @@ namespace Axolotl.State
 			return _signedPreKeyStore.LoadSignedPreKeys();
 		}
 
-		public void StoreSignedPreKey(int signedPreKeyId, SignedPreKeyRecord record) {
+		public void StoreSignedPreKey(UInt32 signedPreKeyId, SignedPreKeyRecord record) {
 			_signedPreKeyStore.StoreSignedPreKey(signedPreKeyId, record);
 		}
 
-		public bool ContainsSignedPreKey(int signedPreKeyId) {
+		public bool ContainsSignedPreKey(UInt32 signedPreKeyId) {
 			return _signedPreKeyStore.ContainsSignedPreKey(signedPreKeyId);
 		}
 
-		public void RemoveSignedPreKey(int signedPreKeyId) {
+		public void RemoveSignedPreKey(UInt32 signedPreKeyId) {
 			_signedPreKeyStore.RemoveSignedPreKey(signedPreKeyId);
+		}
+
+		public IdentityKeyPair GetIdentityKeyPair()
+		{
+			return _identityKeyStore.GetIdentityKeyPair ();
+		}
+
+		public UInt32 GetLocalRegistrationId()
+		{
+			return _identityKeyStore.GetLocalRegistrationId ();
 		}
 	}
 }

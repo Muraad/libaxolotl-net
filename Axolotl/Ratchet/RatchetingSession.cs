@@ -19,25 +19,27 @@ namespace Axolotl.Ratchet
 			try {
 				if (IsAlice(parameters.OurBaseKey.PublicKey, parameters.TheirBaseKey)) 
 				{
-					var alice = new AliceAxolotlParameters (
-						parameters.OurIdentityKey,
-						parameters.OurBaseKey,
-						parameters.TheirIdentityKey,
-						parameters.TheirBaseKey,
-						parameters.TheirRatchetKey,
-						Maybe<ECPublicKey>.Nothing);
+					var aliceParams = AliceAxolotlParameters.NewBuilder();
 
-					RatchetingSession.InitializeSession(sessionState, sessionVersion, alice);
-				} else {	
-					var bob = new BobAxolotlParameters (
-						parameters.OurIdentityKey,
-						parameters.OurBaseKey,
-						Maybe<ECKeyPair>.Nothing,
-						parameters.OurRatchetKey,
-						parameters.TheirIdentityKey,
-						parameters.TheirBaseKey);
+					aliceParams.SetOurBaseKey(parameters.OurBaseKey)
+							.SetOurIdentityKey(parameters.OurIdentityKey)
+							.SetTheirRatchetKey(parameters.TheirRatchetKey)
+							.SetTheirIdentityKey(parameters.TheirIdentityKey)
+							.SetTheirSignedPreKey(parameters.TheirBaseKey)
+							.SetTheirOneTimePreKey(Maybe<ECPublicKey>.Nothing);
 
-					RatchetingSession.InitializeSession(sessionState, sessionVersion, bob);
+					RatchetingSession.InitializeSession(sessionState, sessionVersion, aliceParams.Create());
+				} else 
+				{
+					var bobParams = BobAxolotlParameters.NewBuilder();
+					bobParams.SetOurIdentityKey(parameters.OurIdentityKey)
+							.SetOurRatchetKey(parameters.OurRatchetKey)
+							.SetOurSignedPreKey(parameters.OurBaseKey)
+							.SetOurOneTimePreKey(Maybe<ECKeyPair>.Nothing)
+							.SetTheirBaseKey(parameters.TheirBaseKey)
+							.SetTheirIdentityKey(parameters.TheirIdentityKey);
+
+					RatchetingSession.InitializeSession(sessionState, sessionVersion, bobParams.Create());
 				}
 			} catch (Exception e) {
 				throw new InvalidOperationException ("Asserion error", e);

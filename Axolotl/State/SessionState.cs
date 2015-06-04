@@ -389,13 +389,13 @@ namespace Axolotl.State
 			//				.build();
 		}
 
-		public void setPendingKeyExchange(int sequence,
+		public void SetPendingKeyExchange(UInt32 sequence,
 		                                  ECKeyPair ourBaseKey,
 		                                  ECKeyPair ourRatchetKey,
 		                                  IdentityKeyPair ourIdentityKey)
 		{
 			var structure = new PendingKeyExchange {
-				Sequence = (UInt32)sequence,
+				Sequence = sequence,
 				LocalBaseKey = ourBaseKey.PublicKey.Serialize(),
 				LocalBaseKeyPrivate = ourBaseKey.PrivateKey.Serialize(),
 				LocalRatchetKey = ourRatchetKey.PublicKey.Serialize(),

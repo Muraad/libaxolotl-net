@@ -49,7 +49,7 @@ namespace Axolotl.State
 			}
 		}
 
-		public bool HasSessionState(int version, byte[] aliceBaseKey)
+		public bool HasSessionState(UInt32 version, byte[] aliceBaseKey)
 		{
 			if(SessionState.SessionVersion == version &&
 			   Array.Equals(aliceBaseKey, SessionState.AliceBaseKey))

@@ -32,6 +32,57 @@ namespace Axolotl.Ratchet
 				throw new Exception ("Null values!");
 			}
 		}
+
+		public static Builder NewBuilder()
+		{
+			return new Builder ();
+		}
+
+		public class Builder 
+		{
+			private IdentityKeyPair       _ourIdentityKey;
+			private ECKeyPair             _ourBaseKey;
+
+			private IdentityKey           _theirIdentityKey;
+			private ECPublicKey           _theirSignedPreKey;
+			private ECPublicKey           _theirRatchetKey;
+			private Maybe<ECPublicKey>    _theirOneTimePreKey;
+
+			public Builder SetOurIdentityKey(IdentityKeyPair ourIdentityKey) {
+				_ourIdentityKey = ourIdentityKey;
+				return this;
+			}
+
+			public Builder SetOurBaseKey(ECKeyPair ourBaseKey) {
+				_ourBaseKey = ourBaseKey;
+				return this;
+			}
+
+			public Builder SetTheirRatchetKey(ECPublicKey theirRatchetKey) {
+				_theirRatchetKey = theirRatchetKey;
+				return this;
+			}
+
+			public Builder SetTheirIdentityKey(IdentityKey theirIdentityKey) {
+				_theirIdentityKey = theirIdentityKey;
+				return this;
+			}
+
+			public Builder SetTheirSignedPreKey(ECPublicKey theirSignedPreKey) {
+				_theirSignedPreKey = theirSignedPreKey;
+				return this;
+			}
+
+			public Builder SetTheirOneTimePreKey(Maybe<ECPublicKey> theirOneTimePreKey) {
+				_theirOneTimePreKey = theirOneTimePreKey;
+				return this;
+			}
+
+			public AliceAxolotlParameters Create() {
+				return new AliceAxolotlParameters(_ourIdentityKey, _ourBaseKey, _theirIdentityKey,
+				                                  _theirSignedPreKey, _theirRatchetKey, _theirOneTimePreKey);
+			}
+		}
 	}
 }
 

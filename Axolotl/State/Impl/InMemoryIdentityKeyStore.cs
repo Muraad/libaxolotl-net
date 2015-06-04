@@ -7,14 +7,15 @@ namespace Axolotl.State
 	{
 		private Dictionary<string, IdentityKey> _trustedKeys;
 
-		public IdentityKeyPair IdentityKeyPair { get; private set; }
-		public int LocalRegistrationId { get; private set; }
+		private IdentityKeyPair _identityKeyPair;
 
-		public InMemoryIdentityKeyStore (IdentityKeyPair identityKeyPair, int localRegistrationId)
+		private UInt32 _localRegistrationId;
+
+		public InMemoryIdentityKeyStore (IdentityKeyPair identityKeyPair, UInt32 localRegistrationId)
 		{
 			_trustedKeys = new Dictionary<string, IdentityKey> ();
-			IdentityKeyPair = identityKeyPair;
-			LocalRegistrationId = localRegistrationId;
+			_identityKeyPair = identityKeyPair;
+			_localRegistrationId = localRegistrationId;
 		}
 
 		public void SaveIdentity(string name, IdentityKey identityKey) 
@@ -26,6 +27,16 @@ namespace Axolotl.State
 		{
 			IdentityKey trusted = _trustedKeys[name];
 			return (trusted == null || trusted.Equals(identityKey));
+		}
+
+		public IdentityKeyPair GetIdentityKeyPair()
+		{
+			return _identityKeyPair;
+		}
+
+		public UInt32 GetLocalRegistrationId()
+		{
+			return _localRegistrationId;
 		}
 	}
 }

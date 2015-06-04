@@ -7,17 +7,17 @@ namespace Axolotl.State
 	{
 		// Complete
 
-		public int RegistrationID { get; private set; }
-		public int DeviceID { get; private set; }
-		public int PreKeyID { get; private set; }
+		public UInt32 RegistrationID { get; private set; }
+		public UInt32 DeviceID { get; private set; }
+		public UInt32 PreKeyID { get; private set; }
 		public ECPublicKey PreKeyPublic { get; private set; }
-		public int SignedPreKeyID { get; private set; }
+		public UInt32 SignedPreKeyID { get; private set; }
 		public ECPublicKey SignedPreKeyPublic { get; private set; }
 		public byte[] SignedPreKeySignature { get; private set; }
 		public IdentityKey IdentityKey;
 
-		public PreKeyBundle (int registrationId, int deviceId, int preKeyId, ECPublicKey preKeyPublic,
-		                     int signedPreKeyId, ECPublicKey signedPreKeyPublic, byte[] signedPreKeySignature,
+		public PreKeyBundle (UInt32 registrationId, UInt32 deviceId, UInt32 preKeyId, ECPublicKey preKeyPublic,
+		                     UInt32 signedPreKeyId, ECPublicKey signedPreKeyPublic, byte[] signedPreKeySignature,
 		                     IdentityKey identityKey)
 		{
 			RegistrationID = registrationId;
@@ -30,7 +30,15 @@ namespace Axolotl.State
 			IdentityKey = identityKey;
 		}
 
+		public ECPublicKey GetSignedPreKey()
+		{
+			return SignedPreKeyPublic;
+		}
 
+		public ECPublicKey GetPreKey()
+		{
+			return PreKeyPublic;
+		}
 	}
 }
 

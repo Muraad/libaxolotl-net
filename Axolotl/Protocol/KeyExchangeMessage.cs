@@ -10,11 +10,11 @@ namespace Axolotl.Protocol
 
 	public class KeyExchangeMessage
 	{
-		public static int INITIATE_FLAG = 0x01;
-		public static int RESPONSE_FLAG = 0X02;
-		public static int SIMULTAENOUS_INITIATE_FLAG = 0x04;
+		public static UInt32 INITIATE_FLAG = 0x01;
+		public static UInt32 RESPONSE_FLAG = 0X02;
+		public static UInt32 SIMULTAENOUS_INITIATE_FLAG = 0x04;
 
-		public int         Version { get; private set; }
+		public UInt32         Version { get; private set; }
 
 		public int         MaxVersion { get; private set; }
 
@@ -56,7 +56,7 @@ namespace Axolotl.Protocol
 			}
 		}
 
-		public KeyExchangeMessage(int messageVersion, UInt32 sequence, UInt32 flags,
+		public KeyExchangeMessage(UInt32 messageVersion, UInt32 sequence, UInt32 flags,
 		                           ECPublicKey baseKey, byte[] baseKeySignature,
 		                           ECPublicKey ratchetKey,
 		                           IdentityKey identityKey)
@@ -70,7 +70,7 @@ namespace Axolotl.Protocol
 			RatchetKey = ratchetKey;
 			IdentityKey = identityKey;
 
-			byte[] version = { ByteUtil.IntsToByteHighAndLow(Version, MaxVersion) };
+			byte[] version = { ByteUtil.IntsToByteHighAndLow((int)Version, MaxVersion) };
 			var keyExchangeMsg = new WhisperProtos.KeyExchangeMessage {
 				id = (Sequence << 5) | Flags,
 				baseKey = BaseKey.Serialize(),
@@ -97,7 +97,7 @@ namespace Axolotl.Protocol
 			try
 			{
 				byte[][] parts = ByteUtil.Split(serialized, 1, serialized.Length - 1);
-				Version = ByteUtil.HighBitsToInt(parts[0][0]);
+				Version = (UInt32)ByteUtil.HighBitsToInt(parts[0][0]);
 				MaxVersion = ByteUtil.LowBitsToInt(parts[0][0]);
 
 				if(Version <= CiphertextMessage.UNSUPPORTED_VERSION)

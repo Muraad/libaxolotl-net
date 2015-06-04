@@ -6,15 +6,15 @@ namespace Axolotl.State
 	public interface ISignedPreKeyStore
 	{
 		// Complete
-		SignedPreKeyRecord LoadSignedPreKey (int signedPreKeyId);
+		SignedPreKeyRecord LoadSignedPreKey (UInt32 signedPreKeyId);
 
 		List<SignedPreKeyRecord> LoadSignedPreKeys ();
 
-		void StoreSignedPreKey (int signedPreKeyId, SignedPreKeyRecord record);
+		void StoreSignedPreKey (UInt32 signedPreKeyId, SignedPreKeyRecord record);
 
-		bool ContainsSignedPreKey (int signedPreKeyId);
+		bool ContainsSignedPreKey (UInt32 signedPreKeyId);
 
-		void RemoveSignedPreKey (int signedPreKeyId);
+		void RemoveSignedPreKey (UInt32 signedPreKeyId);
 	}
 }
 

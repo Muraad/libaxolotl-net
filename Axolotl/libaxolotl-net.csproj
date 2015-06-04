@@ -99,7 +99,6 @@
     <Compile Include="Groups\State\ISenderKeyStore.cs" />
     <Compile Include="Groups\GroupCipher.cs" />
     <Compile Include="Protocol\SenderKeyMessage.cs" />
-    <Compile Include="Groups\State\GroupSessionBuilder.cs" />
     <Compile Include="Protocol\SenderKeyDistributionMessage.cs" />
     <Compile Include="Util\KeyHelper.cs" />
     <Compile Include="Protocol\KeyExchangeMessage.cs" />
@@ -119,6 +118,9 @@
     <Compile Include="SessionBuilder.cs" />
     <Compile Include="NullDecryptionCallback.cs" />
     <Compile Include="IDecryptionCallback.cs" />
+    <Compile Include="Util\CryptoRandomProvider.cs" />
+    <Compile Include="Util\Medium.cs" />
+    <Compile Include="Groups\GroupSessionBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />

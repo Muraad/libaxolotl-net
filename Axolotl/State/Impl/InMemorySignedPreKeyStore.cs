@@ -5,14 +5,14 @@ namespace Axolotl.State
 {
 	public class InMemorySignedPreKeyStore : ISignedPreKeyStore
 	{
-		private Dictionary<int, byte[]> _store;
+		private Dictionary<UInt32, byte[]> _store;
 
 		public InMemorySignedPreKeyStore ()
 		{
-			_store = new Dictionary<int, byte[]> ();
+			_store = new Dictionary<UInt32, byte[]> ();
 		}
 
-		public SignedPreKeyRecord LoadSignedPreKey(int signedPreKeyId) 
+		public SignedPreKeyRecord LoadSignedPreKey(UInt32 signedPreKeyId) 
 		{
 			// TODO: exceptions check
 			if (!_store.ContainsKey(signedPreKeyId)) {
@@ -33,15 +33,15 @@ namespace Axolotl.State
 			return results;
 		}
 
-		public void StoreSignedPreKey(int signedPreKeyId, SignedPreKeyRecord record) {
+		public void StoreSignedPreKey(UInt32 signedPreKeyId, SignedPreKeyRecord record) {
 			_store.Add(signedPreKeyId, record.Serialize());
 		}
 
-		public bool ContainsSignedPreKey(int signedPreKeyId) {
+		public bool ContainsSignedPreKey(UInt32 signedPreKeyId) {
 			return _store.ContainsKey(signedPreKeyId);
 		}
 
-		public void RemoveSignedPreKey(int signedPreKeyId) {
+		public void RemoveSignedPreKey(UInt32 signedPreKeyId) {
 			_store.Remove(signedPreKeyId);
 		}
 	}

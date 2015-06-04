@@ -8,6 +8,8 @@ namespace Axolotl.State
 
 		void SaveIdentity(string name, IdentityKey identityKey);
 		bool IsTrustedIdentity(string name, IdentityKey identityKey);
+		IdentityKeyPair GetIdentityKeyPair();
+		UInt32 GetLocalRegistrationId ();
 	}
 }
 

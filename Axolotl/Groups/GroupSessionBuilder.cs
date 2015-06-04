@@ -36,7 +36,7 @@ namespace Axolotl.Groups
 					var senderKeyRecord = _senderKeyStore.LoadSenderKey(senderKeyName);
 
 					if (senderKeyRecord.IsEmpty) {
-						senderKeyRecord.SetSenderKeyState(KeyHelper.GenerateSenderKeyId(),
+						senderKeyRecord.SetSenderKeyState((UInt32)KeyHelper.GenerateSenderKeyId(),
 						                                  0,
 						                                  KeyHelper.GenerateSenderKey(),
 						                                  KeyHelper.GenerateSenderSigningKey());

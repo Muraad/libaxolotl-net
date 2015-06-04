@@ -35,6 +35,56 @@ namespace Axolotl.Ratchet
 		}
 
 
+		public static Builder NewBuilder ()
+		{
+			return new Builder ();
+		}
+
+		public class Builder {
+
+			private ECKeyPair       _ourBaseKey;
+			private ECKeyPair       _ourRatchetKey;
+			private IdentityKeyPair _ourIdentityKey;
+
+			private ECPublicKey     _theirBaseKey;
+			private ECPublicKey     _theirRatchetKey;
+			private IdentityKey     _theirIdentityKey;
+
+			public Builder SetOurBaseKey(ECKeyPair ourBaseKey) {
+				_ourBaseKey = ourBaseKey;
+				return this;
+			}
+
+			public Builder SetOurRatchetKey(ECKeyPair ourRatchetKey) {
+				_ourRatchetKey = ourRatchetKey;
+				return this;
+			}
+
+			public Builder SetOurIdentityKey(IdentityKeyPair ourIdentityKey) {
+				_ourIdentityKey = ourIdentityKey;
+				return this;
+			}
+
+			public Builder SetTheirBaseKey(ECPublicKey theirBaseKey) {
+				_theirBaseKey = theirBaseKey;
+				return this;
+			}
+
+			public Builder SetTheirRatchetKey(ECPublicKey theirRatchetKey) {
+				_theirRatchetKey = theirRatchetKey;
+				return this;
+			}
+
+			public Builder SetTheirIdentityKey(IdentityKey theirIdentityKey) {
+				_theirIdentityKey = theirIdentityKey;
+				return this;
+			}
+
+			public SymmetricAxolotlParameters Create() {
+				return new SymmetricAxolotlParameters(_ourBaseKey, _ourRatchetKey, _ourIdentityKey,
+				                                      _theirBaseKey, _theirRatchetKey, _theirIdentityKey);
+			}
+		}
 	}
 }
 
