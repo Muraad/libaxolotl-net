@@ -18,12 +18,13 @@ namespace Axolotl.KDF
 		public DerivedMessageSecrets (byte[] okm)
 		{
 			try {
-				//byte[][] keys = ByteUtil.Split(okm, CIPHER_KEY_LENGTH, MAC_KEY_LENGTH, IV_LENGTH);
-				//cipherKey = 
-				//macKey = new HMACSHA256(keys[1]).Key;
-				// TODO
+				byte[][] keys = ByteUtil.Split(okm, CIPHER_KEY_LENGTH, MAC_KEY_LENGTH, IV_LENGTH);
+				CipherKey = keys[0];
+				MacKey = keys[1];
+				Iv = keys[2]; 
 			}
-			catch {
+			catch (Exception e) {
+				throw new InvalidOperationException ("Assertion error", e);
 			}
 		}
 	}

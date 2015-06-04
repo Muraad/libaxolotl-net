@@ -29,11 +29,11 @@ namespace Axolotl.Protocol
 				byte[]   message      = messageParts[1];
 
 				if (ByteUtil.HighBitsToInt(version) <= CiphertextMessage.UNSUPPORTED_VERSION) {
-					throw new Exception("Legacy message: " + ByteUtil.HighBitsToInt(version));
+					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToInt(version));
 				}
 
 				if (ByteUtil.HighBitsToInt(version) > CURRENT_VERSION) {
-					throw new Exception("Unknown version: " + ByteUtil.HighBitsToInt(version));
+					throw new InvalidVersionException("Unknown version: " + ByteUtil.HighBitsToInt(version));
 				}
 
 				WhisperProtos.WhisperMessage whisperMessage;
@@ -48,7 +48,7 @@ namespace Axolotl.Protocol
 				   !whisperMessage.Counter.HasValue ||
 				   whisperMessage.RatchetKey == null)
 				{
-					throw new Exception("Incomplete message");
+					throw new InvalidMessageException("Incomplete message");
 				}
 
 				_serialized       = serialized;
@@ -58,7 +58,7 @@ namespace Axolotl.Protocol
 				PreviousCounter  = whisperMessage.PreviousCounter.Value;
 				Body       = whisperMessage.Ciphertext;
 			} catch (Exception e) {
-				throw new Exception("Invalid message exception " + e);
+				throw new InvalidMessageException(e);
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace Axolotl.Protocol
 
 				return ByteUtil.Trim(fullMac, MAC_LENGTH);
 			} catch (Exception e) {
-				throw new Exception("No such alg or stuff ex " + e);
+				throw new InvalidOperationException("Assertion error", e);
 			}
 		}
 

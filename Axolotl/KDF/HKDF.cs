@@ -1,7 +1,10 @@
 using System;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace Axolotl.KDF
 {
+	// Full Complete
 	public abstract class HKDF
 	{
 		public int HASH_OUTPUT_SIZE = 32;
@@ -33,48 +36,51 @@ namespace Axolotl.KDF
 		private byte[] Extract (byte[] salt, byte[] inputKeyMaterial)
 		{
 			try {
-				// TODO
-				//Mac mac = Mac.getInstance("HmacSHA256");
-				//mac.init(new SecretKeySpec(salt, "HmacSHA256"));
-				//return mac.doFinal(inputKeyMaterial);
+				using(var hmac = new HMACSHA256()){
+					hmac.Key = salt;
+					return hmac.TransformFinalBlock(inputKeyMaterial, 0, inputKeyMaterial.Length);
+				}
 			}
-			catch {
-
+			catch (Exception e) {
+				throw new InvalidOperationException ("Assertion Error", e);
 			}
-
-			return new byte[3];
 		}
 
-		private byte[] Expand (byte[] prk, byte[] info, int outputLength)
+		private byte[] Expand (byte[] prk, byte[] info, int outputSize)
 		{
-			// TODO
-			//int                   iterations     = (int) Math.ceil((double) outputSize / (double) HASH_OUTPUT_SIZE);
-			//byte[]                mixin          = new byte[0];
-			//ByteArrayOutputStream results        = new ByteArrayOutputStream();
-			//int                   remainingBytes = outputSize;
+			try {
+				int                   iterations     = (int) Math.Ceiling((double) outputSize / (double) HASH_OUTPUT_SIZE);
+				byte[]                mixin          = new byte[0];
+				int                   remainingBytes = outputSize;
 
-			//for (int i= getIterationStartOffset();i<iterations + getIterationStartOffset();i++) {
-			//	Mac mac = Mac.getInstance("HmacSHA256");
-			//	mac.init(new SecretKeySpec(prk, "HmacSHA256"));
-			//
-			//	mac.update(mixin);
-			//	if (info != null) {
-			//		mac.update(info);
-			//	}
-			//	mac.update((byte)i);
-			//
-			//	byte[] stepResult = mac.doFinal();
-			//	int    stepSize   = Math.min(remainingBytes, stepResult.length);
-			//
-			//	results.write(stepResult, 0, stepSize);
-			//
-			//	mixin          = stepResult;
-			//	remainingBytes -= stepSize;
-			//}
+				byte[] results;
+				using(var stream = new MemoryStream())
+				{
+					for (var i= GetIterationStartOffset(); i < iterations + GetIterationStartOffset(); i++)
+					{
+						using(var hmac = new HMACSHA256())
+						{
+							hmac.Key = prk;
+							hmac.TransformBlock(mixin, 0, mixin.Length, null, 0);
+							if(info != null) {
+								hmac.TransformBlock(info, 0, info.Length, null, 0);
+							}
+							// TODO: Check~
+							byte[] stepResult = hmac.TransformFinalBlock(new byte[] { (byte)i }, 0, 1);
+							int    stepSize   = Math.Min(remainingBytes, stepResult.Length);
 
-			//return results.toByteArray();
+							stream.Write(stepResult, 0, stepResult.Length);
 
-			return new byte[3];
+							mixin          = stepResult;
+							remainingBytes -= stepSize;
+						}
+					}
+					results = stream.ToArray();
+				}
+				return results;
+			} catch (Exception e) {
+				throw new InvalidOperationException("Assertion error", e);
+			}
 		}
 
 		protected abstract int GetIterationStartOffset ();

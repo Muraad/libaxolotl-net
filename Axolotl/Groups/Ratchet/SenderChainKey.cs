@@ -5,7 +5,7 @@ namespace Axolotl.Groups.Ratchet
 {
 	public class SenderChainKey
 	{
-		// Complete
+		// Full complete
 
 		private static byte[] MESSAGE_KEY_SEED = { 0x01 };
 		private static byte[] CHAIN_KEY_SEED   = { 0x02 };
@@ -37,7 +37,7 @@ namespace Axolotl.Groups.Ratchet
 				return mac.Hash;
 			}
 			catch {
-				throw new Exception ("watafuk exception");
+				throw new InvalidOperationException ("Assertion error");
 			}
 		}
 	}

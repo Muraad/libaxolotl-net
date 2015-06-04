@@ -6,7 +6,7 @@ using ProtoBuf;
 
 namespace Axolotl.Protocol
 {
-	// Complete
+	// Full Complete
 
 	public class KeyExchangeMessage
 	{
@@ -102,12 +102,12 @@ namespace Axolotl.Protocol
 
 				if(Version <= CiphertextMessage.UNSUPPORTED_VERSION)
 				{
-					throw new Exception("Unsupported legacy version: " + Version);
+					throw new LegacyMessageException("Unsupported legacy version: " + Version);
 				}
 
 				if(Version > CiphertextMessage.CURRENT_VERSION)
 				{
-					throw new Exception("Unknown version: " + Version);
+					throw new InvalidMessageException("Unknown version: " + Version);
 				}
 
 				WhisperProtos.KeyExchangeMessage message;
@@ -121,7 +121,7 @@ namespace Axolotl.Protocol
 				    message.ratchetKey == null || message.identityKey == null ||
 				    (Version >= 3 && message.baseKeySignature == null))
 				{
-					throw new Exception("Some required fields missing!");
+					throw new InvalidMessageException("Some required fields missing!");
 				}
 
 				Sequence = message.id.Value >> 5;
@@ -132,7 +132,7 @@ namespace Axolotl.Protocol
 				RatchetKey = Curve.DecodePoint(message.ratchetKey, 0);
 				IdentityKey = new IdentityKey(message.identityKey, 0);
 			}
-			catch(Exception e)
+			catch(InvalidMessageException e)
 			{
 				throw new Exception("Invalid message exception: " + e);
 			}

@@ -32,12 +32,12 @@ namespace Axolotl.Protocol
 
 				if(ByteUtil.HighBitsToInt(version) < 3)
 				{
-					throw new Exception("Legacy message: " + ByteUtil.HighBitsToInt(version));
+					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToInt(version));
 				}
 
 				if(ByteUtil.HighBitsToInt(version) > CURRENT_VERSION)
 				{
-					throw new Exception("Unknown version: " + ByteUtil.HighBitsToInt(version));
+					throw new InvalidVersionException("Unknown version: " + ByteUtil.HighBitsToInt(version));
 				}
 					
 				WhisperProtos.SenderKeyMessage senderKeyMessage;
@@ -52,7 +52,7 @@ namespace Axolotl.Protocol
 				   !senderKeyMessage.iteration.HasValue ||
 				   senderKeyMessage.ciphertext == null)
 				{
-					throw new Exception("Incomplete message.");
+					throw new InvalidMessageException("Incomplete message.");
 				}
 
 				_serialized = serialized;
@@ -63,7 +63,7 @@ namespace Axolotl.Protocol
 			}
 			catch(Exception e)
 			{
-				throw new Exception("exception " + e);
+				throw new InvalidMessageException(e);
 			}
 		}
 
@@ -107,13 +107,13 @@ namespace Axolotl.Protocol
 
 				if(!Curve.VerifySignature(signatureKey, parts[0], parts[1]))
 				{
-					throw new Exception("Invalid signature!");
+					throw new InvalidMessageException("Invalid signature!");
 				}
 
 			}
 			catch(Exception e)
 			{
-				throw new Exception("exception " + e);
+				throw new InvalidMessageException(e);
 			}
 		}
 
@@ -125,7 +125,7 @@ namespace Axolotl.Protocol
 			}
 			catch(Exception e)
 			{
-				throw new Exception("exception " + e);
+				throw new InvalidOperationException("Assertion error: " + e);
 			}
 		}
 

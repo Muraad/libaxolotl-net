@@ -32,11 +32,17 @@ namespace Axolotl.Ratchet
 			return new MessageKeys (keyMaterial.CipherKey, keyMaterial.MacKey, keyMaterial.Iv, Index);
 		}
 
-		private byte[] GetBaseMaterial(byte[] seed) {
-			var hmac = HMACSHA256.Create ();
-			hmac.Key = Key;
-			return hmac.ComputeHash (seed);
-			// TODO: check if right
+		private byte[] GetBaseMaterial(byte[] seed) 
+		{
+			try {
+				using(var hmac = new HMACSHA256()){
+					hmac.Key = Key;
+					return hmac.TransformFinalBlock(seed, 0, seed.Length);
+				}
+			}
+			catch (Exception e) {
+				throw new InvalidOperationException ("Assertion error", e);
+			}
 		}
 	}
 }

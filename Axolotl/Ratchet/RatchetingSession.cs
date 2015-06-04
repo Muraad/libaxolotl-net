@@ -12,32 +12,35 @@ namespace Axolotl.Ratchet
 {
 	public class RatchetingSession
 	{
-		// Complete
 		public static void InitializeSession(SessionState sessionState,
 		                                     UInt32 sessionVersion,
 		                                     SymmetricAxolotlParameters parameters)
 		{
-			if (IsAlice(parameters.OurBaseKey.PublicKey, parameters.TheirBaseKey)) 
-			{
-				var alice = new AliceAxolotlParameters (
-					parameters.OurIdentityKey,
-					parameters.OurBaseKey,
-					parameters.TheirIdentityKey,
-					parameters.TheirBaseKey,
-					parameters.TheirRatchetKey,
-					Maybe<ECPublicKey>.Nothing);
+			try {
+				if (IsAlice(parameters.OurBaseKey.PublicKey, parameters.TheirBaseKey)) 
+				{
+					var alice = new AliceAxolotlParameters (
+						parameters.OurIdentityKey,
+						parameters.OurBaseKey,
+						parameters.TheirIdentityKey,
+						parameters.TheirBaseKey,
+						parameters.TheirRatchetKey,
+						Maybe<ECPublicKey>.Nothing);
 
-				RatchetingSession.InitializeSession(sessionState, sessionVersion, alice);
-			} else {	
-				var bob = new BobAxolotlParameters (
-					parameters.OurIdentityKey,
-					parameters.OurBaseKey,
-					Maybe<ECKeyPair>.Nothing,
-					parameters.OurRatchetKey,
-					parameters.TheirIdentityKey,
-					parameters.TheirBaseKey);
+					RatchetingSession.InitializeSession(sessionState, sessionVersion, alice);
+				} else {	
+					var bob = new BobAxolotlParameters (
+						parameters.OurIdentityKey,
+						parameters.OurBaseKey,
+						Maybe<ECKeyPair>.Nothing,
+						parameters.OurRatchetKey,
+						parameters.TheirIdentityKey,
+						parameters.TheirBaseKey);
 
-				RatchetingSession.InitializeSession(sessionState, sessionVersion, bob);
+					RatchetingSession.InitializeSession(sessionState, sessionVersion, bob);
+				}
+			} catch (Exception e) {
+				throw new InvalidOperationException ("Asserion error", e);
 			}
 		}
 
@@ -101,7 +104,7 @@ namespace Axolotl.Ratchet
 				sessionState.SetSenderChain(sendingRatchetKey, sendingChain.Item2);
 				sessionState.RootKey = sendingChain.Item1;
 			} catch (Exception e) {
-				throw new Exception("wtf: " + e);
+				throw new InvalidOperationException("Assertion error" + e);
 			}
 		}
 
@@ -160,7 +163,7 @@ namespace Axolotl.Ratchet
 				sessionState.SetSenderChain(parameters.OurRatchetKey, derivedKeys.ChainKey);
 				sessionState.RootKey = derivedKeys.RootKey;
 			} catch (Exception e) {
-				throw new Exception("wtf " + e);
+				throw new InvalidOperationException("Assertion error", e);
 			}
 		}
 

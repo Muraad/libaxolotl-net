@@ -106,6 +106,16 @@
     <Compile Include="Protocol\KeyExchangeMessage.cs" />
     <Compile Include="Protocol\PreKeyWhisperMessage.cs" />
     <Compile Include="Protocol\WhisperMessage.cs" />
+    <Compile Include="Exceptions\DuplicateMessageException.cs" />
+    <Compile Include="Exceptions\InvalidKeyException.cs" />
+    <Compile Include="Exceptions\InvalidKeyIdException.cs" />
+    <Compile Include="Exceptions\InvalidMacException.cs" />
+    <Compile Include="Exceptions\InvalidMessageException.cs" />
+    <Compile Include="Exceptions\InvalidVersionException.cs" />
+    <Compile Include="Exceptions\LegacyMessageException.cs" />
+    <Compile Include="Exceptions\NoSessionException.cs" />
+    <Compile Include="Exceptions\StaleKeyExchangeException.cs" />
+    <Compile Include="Exceptions\UntrustedIdentityException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -122,6 +132,7 @@
     <Folder Include="Protobuf\" />
     <Folder Include="Protobuf\SessionStructure\" />
     <Folder Include="State\Impl\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

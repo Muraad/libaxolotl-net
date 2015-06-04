@@ -7,7 +7,7 @@ using Functional.Maybe;
 
 namespace Axolotl.Protocol
 {
-	// Complete 
+	// Full Complete 
 
 	public class PreKeyWhisperMessage : CiphertextMessage
 	{
@@ -27,7 +27,7 @@ namespace Axolotl.Protocol
 				MessageVersion = ByteUtil.HighBitsToInt(serialized[0]);
 
 				if (MessageVersion > CiphertextMessage.CURRENT_VERSION) {
-					throw new Exception("Unknown version: " + MessageVersion);
+					throw new InvalidVersionException("Unknown version: " + MessageVersion);
 				}
 
 			
@@ -44,7 +44,7 @@ namespace Axolotl.Protocol
 				    preKeyWhisperMessage.identityKey == null                       	  ||
 				    preKeyWhisperMessage.message == null)
 				{
-					throw new Exception("Incomplete message.");
+					throw new InvalidMessageException("Incomplete message.");
 				}
 
 				_serialized     = serialized;
@@ -54,8 +54,10 @@ namespace Axolotl.Protocol
 				BaseKey        = Curve.DecodePoint(preKeyWhisperMessage.baseKey, 0);
 				IdentityKey    = new IdentityKey(Curve.DecodePoint(preKeyWhisperMessage.identityKey, 0));
 				Message        = new WhisperMessage(preKeyWhisperMessage.message);
-			} catch (Exception e) {
-				throw new Exception("WTF :" + e);
+			} catch (InvalidKeyException e) {
+				throw new InvalidMessageException (e);
+			} catch (LegacyMessageException e) {
+				throw new InvalidMessageException (e);
 			}
 		}
 

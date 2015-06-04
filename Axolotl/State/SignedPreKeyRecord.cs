@@ -20,9 +20,13 @@ namespace Axolotl.State
 
 		public ECKeyPair keyPair {
 			get {
-				var publicKey = Curve.DecodePoint (_structure.PublicKey, 0);
-				var privateKey = Curve.DecodePrivatePoint (_structure.PrivateKey);
-				return new ECKeyPair (privateKey, publicKey);
+				try {
+					var publicKey = Curve.DecodePoint (_structure.PublicKey, 0);
+					var privateKey = Curve.DecodePrivatePoint (_structure.PrivateKey);
+					return new ECKeyPair (privateKey, publicKey);
+				} catch (InvalidKeyException e) {
+					throw new InvalidOperationException ("Assertion error", e);
+				}
 			}
 		}
 

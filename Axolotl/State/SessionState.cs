@@ -33,10 +33,16 @@ namespace Axolotl.State
 		{ 
 			get
 			{
-				//TODO: check it right and add exceptions
-				if(Structure.RemoteIdentityPublic == null)
+				try {
+					if(Structure.RemoteIdentityPublic == null)
+						return null;
+					return new IdentityKey(Structure.RemoteIdentityPublic, 0);
+				}
+				catch (InvalidKeyException e) {
+					// TODO: LOG
+					Console.WriteLine ("SessionRecordV2", e);
 					return null;
-				return new IdentityKey(Structure.RemoteIdentityPublic, 0);
+				}
 			}
 			set
 			{
@@ -49,7 +55,11 @@ namespace Axolotl.State
 		{ 
 			get
 			{
-				return new IdentityKey(Structure.LocalIdentityPublic, 0);
+				try {
+					return new IdentityKey(Structure.LocalIdentityPublic, 0);
+				} catch(InvalidKeyException e) {
+					throw new InvalidOperationException ("Assertion error", e);
+				}
 			} 
 			set
 			{
@@ -77,7 +87,11 @@ namespace Axolotl.State
 		{
 			get
 			{
-				return Curve.DecodePoint(Structure.SenderChain.SenderRatchetKey, 0);
+				try {
+					return Curve.DecodePoint(Structure.SenderChain.SenderRatchetKey, 0);
+				} catch (InvalidKeyException e) {
+					throw new InvalidOperationException ("Assertin error", e);
+				}
 			}
 		}
 
@@ -213,8 +227,9 @@ namespace Axolotl.State
 
 					index++;
 				}
-				catch(Exception e) {
-					throw new Exception ("wtf: " + e);
+				catch(InvalidKeyException e) {
+					//TODO: LOG
+					Console.WriteLine ("SessionRecordV2", e);
 				}
 			}
 
@@ -393,18 +408,22 @@ namespace Axolotl.State
 
 		public UnacknowledgedPreKeyMessageItems GetUnacknowledgedPreKeyMessageItems()
 		{
-			Maybe<UInt32> preKeyId;
+			try {
+				Maybe<UInt32> preKeyId;
 
-			if(Structure.PendPreKey.preKeyId.HasValue)
-			{
-				preKeyId = Structure.PendPreKey.preKeyId.ToMaybe ();
-			}
-			else
-			{
-				preKeyId = Maybe<UInt32>.Nothing; 
-			}
+				if(Structure.PendPreKey.preKeyId.HasValue)
+				{
+					preKeyId = Structure.PendPreKey.preKeyId.ToMaybe ();
+				}
+				else
+				{
+					preKeyId = Maybe<UInt32>.Nothing; 
+				}
 
-			return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId.Value, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
+				return new UnacknowledgedPreKeyMessageItems(preKeyId, Structure.PendPreKey.signedPreKeyId.Value, Curve.DecodePoint(Structure.PendPreKey.baseKey, 0));
+			} catch (InvalidKeyException e) {
+				throw new InvalidOperationException ("Assertion error", e);
+			}
 		}
 
 		public void ClearUnacknowledgedPreKeyMessage()

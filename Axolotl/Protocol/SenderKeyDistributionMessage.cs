@@ -55,12 +55,12 @@ namespace Axolotl.Protocol
 
 				if(ByteUtil.HighBitsToInt(version) < CiphertextMessage.CURRENT_VERSION)
 				{
-					throw new Exception("Legacy message: " + ByteUtil.HighBitsToInt(version));
+					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToInt(version));
 				}
 
 				if(ByteUtil.HighBitsToInt(version) > CURRENT_VERSION)
 				{
-					throw new Exception("Unknown version: " + ByteUtil.HighBitsToInt(version));
+					throw new InvalidMessageException("Unknown version: " + ByteUtil.HighBitsToInt(version));
 				}
 					
 				WhisperProtos.SenderKeyDistributionMessage distributionMessage;
@@ -76,7 +76,7 @@ namespace Axolotl.Protocol
 				   distributionMessage.chainKey == null ||
 				   distributionMessage.signingKey == null)
 				{
-					throw new Exception("Incomplete message.");
+					throw new InvalidMessageException("Incomplete message.");
 				}
 
 				_serialized = serialized;
@@ -87,7 +87,7 @@ namespace Axolotl.Protocol
 			}
 			catch(Exception e)
 			{
-				throw new IOException("WTF " + e);
+				throw new InvalidMessageException (e);
 			}
 		}
 
