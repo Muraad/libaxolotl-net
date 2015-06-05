@@ -113,9 +113,8 @@ namespace Axolotl.Protocol
 			try
 			{
 				byte[] fullMac;
-				using(var mac = new HMACSHA256())
+				using(var mac = new HMACSHA256(macKey))
 				{
-					mac.Key = macKey;
 					if(messageVersion >= 3)
 					{
 						var SIk = senderIdentityKey.PublicKey.Serialize();

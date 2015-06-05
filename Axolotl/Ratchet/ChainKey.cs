@@ -44,10 +44,12 @@ namespace Axolotl.Ratchet
 		{
 			try
 			{
-				using(var hmac = new HMACSHA256())
+				using(var hmac = new HMACSHA256(Key))
 				{
-					hmac.Key = Key;
-					return hmac.TransformFinalBlock(seed, 0, seed.Length);
+					var res = hmac.ComputeHash(seed);
+					return res;
+					// TODO Check
+					//return hmac.TransformFinalBlock(seed, 0, seed.Length);
 				}
 			}
 			catch(Exception e)

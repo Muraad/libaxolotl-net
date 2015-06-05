@@ -1,12 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/State/SessionState.cs">
-    <Files>
-      <File FileName="Axolotl/Ratchet/RatchetingSession.cs" Line="168" Column="4" />
-      <File FileName="Axolotl/State/PreKeyRecord.cs" Line="26" Column="64" />
-      <File FileName="Axolotl/State/SessionState.cs" Line="431" Column="33" />
-      <File FileName="Axolotl/State/SignedPreKeyRecord.cs" Line="23" Column="10" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

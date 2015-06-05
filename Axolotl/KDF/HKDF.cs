@@ -36,9 +36,11 @@ namespace Axolotl.KDF
 		private byte[] Extract (byte[] salt, byte[] inputKeyMaterial)
 		{
 			try {
-				using(var hmac = new HMACSHA256()){
-					hmac.Key = salt;
-					return hmac.TransformFinalBlock(inputKeyMaterial, 0, inputKeyMaterial.Length);
+				using(var hmac = new HMACSHA256(salt)){
+					//TODO Check!
+					var result = hmac.ComputeHash(inputKeyMaterial);
+					//var result = hmac.TransformFinalBlock(inputKeyMaterial, 0, inputKeyMaterial.Length);
+					return result;
 				}
 			}
 			catch (Exception e) {
@@ -58,9 +60,8 @@ namespace Axolotl.KDF
 				{
 					for (var i= GetIterationStartOffset(); i < iterations + GetIterationStartOffset(); i++)
 					{
-						using(var hmac = new HMACSHA256())
+						using(var hmac = new HMACSHA256(prk))
 						{
-							hmac.Key = prk;
 							hmac.TransformBlock(mixin, 0, mixin.Length, null, 0);
 							if(info != null) {
 								hmac.TransformBlock(info, 0, info.Length, null, 0);
