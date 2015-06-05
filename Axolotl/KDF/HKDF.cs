@@ -67,7 +67,8 @@ namespace Axolotl.KDF
 								hmac.TransformBlock(info, 0, info.Length, null, 0);
 							}
 							// TODO: Check~
-							byte[] stepResult = hmac.TransformFinalBlock(new byte[] { (byte)i }, 0, 1);
+							// byte[] stepResult = hmac.TransformFinalBlock(new byte[] { (byte)i }, 0, 1);
+							var stepResult = hmac.ComputeHash(new byte[] { (byte)i });
 							int    stepSize   = Math.Min(remainingBytes, stepResult.Length);
 
 							stream.Write(stepResult, 0, stepResult.Length);

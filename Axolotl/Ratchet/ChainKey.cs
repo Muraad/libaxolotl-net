@@ -48,8 +48,6 @@ namespace Axolotl.Ratchet
 				{
 					var res = hmac.ComputeHash(seed);
 					return res;
-					// TODO Check
-					//return hmac.TransformFinalBlock(seed, 0, seed.Length);
 				}
 			}
 			catch(Exception e)

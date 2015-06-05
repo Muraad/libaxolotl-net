@@ -6,3 +6,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+test-results/
+tests
+Tests/bin/
+Tests/test-results/*.xml

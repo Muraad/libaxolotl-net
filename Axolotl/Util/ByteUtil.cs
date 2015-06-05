@@ -7,9 +7,9 @@ namespace Axolotl.Util
 	{
 		public static byte[] Combine(params byte[][] elements)
 		{
-			// TODO: Replace everywhere with LINQ
-			var result = elements.SelectMany (i => i).ToArray ();
-			return result;
+			// TODO: Replace everywhere with LINQ Check!!!
+			//var result = elements.SelectMany (i => i).ToArray ();
+			return elements[1];
 		}
 
 		public static byte[][] Split(byte[] input, int firstLength, int secondLength)

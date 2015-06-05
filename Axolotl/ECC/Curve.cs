@@ -25,10 +25,14 @@ namespace Axolotl.ECC
 			switch (type) {
 				case Curve.DJB_TYPE:
 					byte[] keyBytes = new byte[32];
-					Array.Copy (bytes, keyBytes, bytes.Length);
-					return new DjbECPublicKey (keyBytes);
-				default:
-					throw new Exception ("Bad key type");
+						// TODO: Check!~
+						//Array.Copy (bytes, 0, keyBytes, 1, bytes.Length);
+						for (int i =0 ; i < keyBytes.Length; i++) {
+							keyBytes [i] = bytes [i + 1];
+						}
+						return new DjbECPublicKey (keyBytes);
+					default:
+						throw new Exception ("Bad key type");
 			}
 		}
 
@@ -44,7 +48,10 @@ namespace Axolotl.ECC
 			}
 
 			if (publicKey.GetKeyType () == DJB_TYPE) {
-				var shared = Sodium.ScalarMult.Mult (privateKey.Serialize (), publicKey.Serialize ());
+				var sK = privateKey.Serialize ();
+				var pK = publicKey.Serialize ();
+
+				var shared = Sodium.ScalarMult.Mult (sK, pK);
 				return shared;
 			} else {
 				throw new Exception ("Unknown type");

@@ -31,9 +31,7 @@ namespace Tests
 				(byte) 0x58, (byte) 0x65};
 
 			byte[] actualOutput = HKDF.CreateFor(3).DeriveSecrets(ikm, salt, info, 42);
-			Console.WriteLine (actualOutput.Length);
-
-			Assert.AreEqual (okm, actualOutput);
+			Assert.True (ArrayComparer.Compare (okm, actualOutput));
 		}
 
 		[Test()]
@@ -108,7 +106,7 @@ namespace Tests
 				(byte) 0x1d, (byte) 0x87};
 
 			byte[] actualOutput = HKDF.CreateFor(3).DeriveSecrets(ikm, salt, info, 82);
-			Assert.AreEqual(okm, actualOutput);
+			Assert.AreEqual (okm, actualOutput);
 		}
 
 		[Test()]
