@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using Axolotl.KDF;
+using Axolotl;
 
 namespace Tests
 {

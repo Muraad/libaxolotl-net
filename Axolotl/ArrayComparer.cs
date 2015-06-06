@@ -1,7 +1,6 @@
-using NUnit.Framework;
 using System;
 
-namespace Tests
+namespace Axolotl
 {
 	public static class ArrayComparer
 	{

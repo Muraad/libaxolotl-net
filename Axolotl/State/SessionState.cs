@@ -49,7 +49,6 @@ namespace Axolotl.State
 			Structure.LocalIdentityPublic = identityKey.Serialize();
 		}
 
-
 		public byte[] AliceBaseKey { get; set; }
 
 		public SessionStructure Structure { get; private set; }
@@ -91,23 +90,22 @@ namespace Axolotl.State
 			}
 		}
 
-		public ChainKey SenderChainKey
+		public ChainKey GetSenderChainKey()
 		{
-			get
-			{
-				var chainKeyStructure = Structure.SenderChain.chainKey;
-				return new ChainKey(HKDF.CreateFor(GetSessionVersion()),
-					chainKeyStructure.key,
-					chainKeyStructure.index);
-			}
-			set
-			{
-				var chainKey = new Chain.ChainKey { 
-					key = value.Key,
-					index = (UInt32)value.Index
-				};
-				Structure.SenderChain.chainKey = chainKey;
-			}
+			var chainKeyStructure = Structure.SenderChain.chainKey;
+			var cK = new ChainKey(HKDF.CreateFor(GetSessionVersion()),
+			                     chainKeyStructure.key,
+			                     chainKeyStructure.index); 
+			return cK;
+		}
+
+		public void SetSenderChainKey(ChainKey senderChainKey)
+		{
+			var chainKey = new Chain.ChainKey { 
+				key = senderChainKey.Key,
+				index = senderChainKey.Index
+			};
+			Structure.SenderChain.chainKey = chainKey;
 		}
 
 		public UInt32 PendingKeyExchangeSequence

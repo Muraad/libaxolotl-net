@@ -38,7 +38,8 @@ namespace Axolotl
 			if(obj.GetType() != typeof(IdentityKey))
 				return false;
 
-			return PublicKey.Equals(((IdentityKey)obj).PublicKey);
+			var res = PublicKey.Equals(((IdentityKey)obj).PublicKey);
+			return res;
 		}
 
 		public override int GetHashCode()

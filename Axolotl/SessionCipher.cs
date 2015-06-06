@@ -54,7 +54,7 @@ namespace Axolotl
 			{
 				SessionRecord sessionRecord = _sessionStore.LoadSession(_remoteAddress);
 				SessionState sessionState = sessionRecord.SessionState;
-				ChainKey chainKey = sessionState.SenderChainKey;
+				ChainKey chainKey = sessionState.GetSenderChainKey();
 				MessageKeys messageKeys = chainKey.GetMessageKeys();
 				ECPublicKey senderEphemeral = sessionState.SenderRatchetKey;
 				UInt32 previousCounter = sessionState.PreviousCounter;
@@ -78,7 +78,7 @@ namespace Axolotl
 						(WhisperMessage)ciphertextMessage);
 				}
 
-				sessionState.SenderChainKey = chainKey.GetNextChainKey();
+				sessionState.SetSenderChainKey (chainKey.GetNextChainKey ());
 				_sessionStore.StoreSession(_remoteAddress, sessionRecord);
 				return ciphertextMessage;
 			}
@@ -297,7 +297,7 @@ namespace Axolotl
 
 					sessionState.RootKey = senderChain.Item1;
 					sessionState.AddReceiverChain(theirEphemeral, receiverChain.Item2);
-					sessionState.PreviousCounter = Math.Max(sessionState.SenderChainKey.Index - 1, 0);
+					sessionState.PreviousCounter = Math.Max(sessionState.GetSenderChainKey().Index - 1, 0);
 					sessionState.SetSenderChain(ourNewEphemeral, senderChain.Item2);
 
 					return receiverChain.Item2;

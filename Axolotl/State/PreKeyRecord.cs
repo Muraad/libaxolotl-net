@@ -28,7 +28,7 @@ namespace Axolotl.State
 			}
 		}
 
-		public PreKeyRecord (int id, ECKeyPair keyPair)
+		public PreKeyRecord (UInt32 id, ECKeyPair keyPair)
 		{
 			structure = new PreKeyRecordStructure {
 				Id = (UInt32)id,

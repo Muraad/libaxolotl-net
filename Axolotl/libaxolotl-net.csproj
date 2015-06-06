@@ -121,6 +121,7 @@
     <Compile Include="Util\CryptoRandomProvider.cs" />
     <Compile Include="Util\Medium.cs" />
     <Compile Include="Groups\GroupSessionBuilder.cs" />
+    <Compile Include="ArrayComparer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />

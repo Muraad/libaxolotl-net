@@ -34,13 +34,14 @@ namespace Axolotl.ECC
 				return false;
 
 			var that = (DjbECPublicKey)obj;
-			return Array.Equals (PublicKey, that.PublicKey);
+			return ArrayComparer.Compare (PublicKey, that.PublicKey);//Array.Equals (PublicKey, that.PublicKey);
 		}
 
 		public override int GetHashCode ()
 		{
 			//TODO: gethashcode
 			return PublicKey.GetHashCode ();
+			//return 1;
 		}
 
 		public override int CompareTo(ECPublicKey another)

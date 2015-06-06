@@ -99,7 +99,7 @@ namespace Tests
 			ECKeyPair       bobBaseKey             = bobEphemeralKey;
 
 			ECPublicKey     aliceBasePublicKey       = Curve.DecodePoint(aliceBasePublic, 0);
-			ECPublicKey     aliceEphemeralPublicKey  = Curve.DecodePoint(aliceEphemeralPublic, 0);
+			// ECPublicKey     aliceEphemeralPublicKey  = Curve.DecodePoint(aliceEphemeralPublic, 0);
 			IdentityKey     aliceIdentityPublicKey   = new IdentityKey(aliceIdentityPublic, 0);
 
 			BobAxolotlParameters parameters = BobAxolotlParameters.NewBuilder()
@@ -120,8 +120,8 @@ namespace Tests
 
 			Assert.True (sessionLocalIk.Equals (bobPk));
 			Assert.True (session.GetRemoteIdentityKey().Equals (aliceIdentityPublicKey));
-			Assert.True (ArrayComparer.Compare(session.SenderChainKey.Key, senderChain));
+			Assert.True (ArrayComparer.Compare(session.GetSenderChainKey().Key, senderChain));
 		}
-	}
+	} 
 }
 

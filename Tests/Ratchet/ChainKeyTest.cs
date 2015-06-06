@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using Axolotl.Ratchet;
 using Axolotl.KDF;
+using Axolotl;
 
 namespace Tests
 {

@@ -39,15 +39,18 @@
     <Reference Include="Functional.Maybe">
       <HintPath>..\packages\Functional.Maybe.1.0.3\lib\Functional.Maybe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KDF\HKDFTest.cs" />
     <Compile Include="ECC\Curve25519Test.cs" />
     <Compile Include="Ratchet\ChainKeyTest.cs" />
-    <Compile Include="ArrayComparer.cs" />
     <Compile Include="Groups\GroupCipherTest.cs" />
     <Compile Include="Groups\ImMemorySenderKeyStore.cs" />
     <Compile Include="Ratchet\RatchetingSessionTest.cs" />
+    <Compile Include="Ratchet\RootKeyTest.cs" />
+    <Compile Include="SessionBuilderTest.cs" />
+    <Compile Include="TestInMemoryAxolotlStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

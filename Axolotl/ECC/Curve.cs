@@ -17,8 +17,6 @@ namespace Axolotl.ECC
 			var sKey = Sodium.PublicKeyAuth.ConvertEd25519SecretKeyToCurve25519SecretKey (keyPair.PrivateKey);
 			var pKey = Sodium.PublicKeyAuth.ConvertEd25519PublicKeyToCurve25519PublicKey (keyPair.PublicKey);
 
-
-
 			return new ECKeyPair (new DjbECPrivateKey(sKey), new DjbECPublicKey(pKey));
 		}
 

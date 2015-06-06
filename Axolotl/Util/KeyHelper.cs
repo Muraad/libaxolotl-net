@@ -17,13 +17,13 @@ namespace Axolotl.Util
 			return new IdentityKeyPair(publicKey, keyPair.PrivateKey);
 		}
 
-		public static int GenerateRegistrationId(bool extendedRange) 
+		public static UInt32 GenerateRegistrationId(bool extendedRange) 
 		{
 			try {
 
 				var rnd = new CryptoRandomProvider();
-				if (extendedRange) return rnd.Next(Int32.MaxValue - 1) + 1;
-				else               return rnd.Next(16380) + 1;
+				if (extendedRange) return (UInt32)rnd.Next(Int32.MaxValue - 1) + 1;
+				else               return (UInt32)rnd.Next(16380) + 1;
 
 			} catch (Exception e) {
 				throw new InvalidOperationException("Assertion error", e);
@@ -46,7 +46,7 @@ namespace Axolotl.Util
 			start--;
 
 			for (int i = 0; i < count; i++) {
-				results.Add(new PreKeyRecord(((start + i) % (Medium.MAX_VALUE-1)) + 1, Curve.GenerateKeyPair()));
+				results.Add(new PreKeyRecord((UInt32)((start + i) % (Medium.MAX_VALUE-1)) + 1, Curve.GenerateKeyPair()));
 			}
 
 			return results;

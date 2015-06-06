@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using Axolotl.ECC;
+using Axolotl;
 
 namespace Tests
 {
@@ -59,7 +60,7 @@ namespace Tests
 			byte[] sharedOne = Curve.CalculateAgreement(alicePublicKey, bobPrivateKey);
 			byte[] sharedTwo = Curve.CalculateAgreement(bobPublicKey, alicePrivateKey);
 
-			Assert.True (ArrayComparer.Compare(sharedOne, shared));
+			Assert.True (ArrayComparer.Compare (sharedOne, shared));
 			Assert.True (ArrayComparer.Compare (sharedTwo, shared));
 		}
 
