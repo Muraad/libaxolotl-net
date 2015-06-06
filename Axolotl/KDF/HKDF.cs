@@ -50,10 +50,13 @@ namespace Axolotl.KDF
 
 		private byte[] Expand (byte[] prk, byte[] info, int outputSize)
 		{
+			Console.WriteLine ("Output size is: {0}", outputSize);
 			try {
 				int                   iterations     = (int) Math.Ceiling((double) outputSize / (double) HASH_OUTPUT_SIZE);
 				byte[]                mixin          = new byte[0];
 				int                   remainingBytes = outputSize;
+
+				Console.WriteLine ("Iterations: {0}", iterations);
 
 				byte[] results;
 				using(var stream = new MemoryStream())
@@ -62,22 +65,26 @@ namespace Axolotl.KDF
 					{
 						using(var hmac = new HMACSHA256(prk))
 						{
-							hmac.TransformBlock(mixin, 0, mixin.Length, null, 0);
+							Console.WriteLine ("Remaining bytes: {0}", remainingBytes);
+
+							hmac.TransformBlock(mixin, 0, mixin.Length, mixin, 0);
+
 							if(info != null) {
-								hmac.TransformBlock(info, 0, info.Length, null, 0);
+								hmac.TransformBlock(info, 0, info.Length, info, 0);
 							}
-							// TODO: Check~
-							// byte[] stepResult = hmac.TransformFinalBlock(new byte[] { (byte)i }, 0, 1);
+							//hmac.TransformFinalBlock(new byte[] { (byte)i }, 0, 1);
+
 							var stepResult = hmac.ComputeHash(new byte[] { (byte)i });
 							int    stepSize   = Math.Min(remainingBytes, stepResult.Length);
 
-							stream.Write(stepResult, 0, stepResult.Length);
+							stream.Write(stepResult, 0, stepSize);
 
 							mixin          = stepResult;
 							remainingBytes -= stepSize;
 						}
 					}
 					results = stream.ToArray();
+					Console.WriteLine ("Stream length: {0}", stream.Length);
 				}
 				return results;
 			} catch (Exception e) {

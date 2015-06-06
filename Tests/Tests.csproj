@@ -34,7 +34,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Sodium">
-      <HintPath>..\packages\libsodium-net.0.8.0\lib\Net40\Sodium.dll</HintPath>
+      <HintPath>bin\Debug\Sodium.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -54,5 +54,8 @@
     <Folder Include="KDF\" />
     <Folder Include="ECC\" />
     <Folder Include="Ratchet\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

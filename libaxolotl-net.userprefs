@@ -1,27 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/Protocol/WhisperMessage.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/ECC/Curve.cs">
     <Files>
-      <File FileName="Tests/KDF/HKDFTest.cs" Line="125" Column="35" />
-      <File FileName="Tests/Ratchet/ChainKeyTest.cs" Line="36" Column="31" />
-      <File FileName="Axolotl/Ratchet/ChainKey.cs" Line="49" Column="1" />
-      <File FileName="Axolotl/KDF/DerivedMessageSecrets.cs" Line="21" Column="33" />
-      <File FileName="Axolotl/Util/ByteUtil.cs" Line="29" Column="3" />
-      <File FileName="Axolotl/KDF/HKDF.cs" Line="64" Column="8" />
-      <File FileName="Axolotl/Protocol/WhisperMessage.cs" Line="117" Column="6" />
+      <File FileName="Tests/Ratchet/ChainKeyTest.cs" Line="4" Column="19" />
+      <File FileName="Tests/ECC/Curve25519Test.cs" Line="3" Column="19" />
+      <File FileName="Axolotl/ECC/Curve.cs" Line="54" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="libaxolotl-net" expanded="True">
-            <Node name="KDF" expanded="True" />
-            <Node name="Protocol" expanded="True">
-              <Node name="WhisperMessage.cs" selected="True" />
-            </Node>
-            <Node name="Ratchet" expanded="True" />
-            <Node name="Util" expanded="True" />
+            <Node name="References" expanded="True" selected="True" />
           </Node>
           <Node name="Tests" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="ECC" expanded="True" />
+            <Node name="KDF" expanded="True" />
             <Node name="Ratchet" expanded="True" />
           </Node>
         </State>
@@ -30,17 +24,15 @@
         <State expanded="True" selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>chainKey</Value>
-        </State>
+        <State />
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True">
+        <State expanded="True">
           <Node name="Tests" expanded="True">
             <Node name="Tests" expanded="True">
-              <Node name="ChainKeyTest" expanded="True" />
-              <Node name="Curve25519Test" expanded="True" />
-              <Node name="HKDFTest" expanded="True" />
+              <Node name="Curve25519Test" expanded="True">
+                <Node name="TestAgreement" selected="True" />
+              </Node>
             </Node>
           </Node>
         </State>
@@ -50,7 +42,5 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
-    <Watch file="Tests/Ratchet/ChainKeyTest.cs" line="46" offsetX="646" offsetY="810" expression="chainKey" liveUpdate="False" />
-  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

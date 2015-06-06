@@ -43,7 +43,7 @@ namespace Tests
 				(byte) 0xc1, (byte) 0x03, (byte) 0x42, (byte) 0xa2, (byte) 0x46,
 				(byte) 0xd1, (byte) 0x5d};
 
-			ChainKey chainKey = new ChainKey(HKDF.CreateFor(2), seed, 0);;
+			ChainKey chainKey = new ChainKey(HKDF.CreateFor(2), seed, 0);
 
 			Assert.True(ArrayComparer.Compare(chainKey.Key, seed));
 			Assert.True(ArrayComparer.Compare(chainKey.GetMessageKeys().CipherKey, messageKey));
