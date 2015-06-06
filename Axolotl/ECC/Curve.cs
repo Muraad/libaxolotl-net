@@ -27,12 +27,12 @@ namespace Axolotl.ECC
 					byte[] keyBytes = new byte[32];
 						// TODO: Check!~
 						//Array.Copy (bytes, 0, keyBytes, 1, bytes.Length);
-						for (int i =0 ; i < keyBytes.Length; i++) {
+						for (int i = 0 ; i < keyBytes.Length; i++) {
 							keyBytes [i] = bytes [i + 1];
 						}
 						return new DjbECPublicKey (keyBytes);
 					default:
-						throw new Exception ("Bad key type");
+						throw new InvalidKeyException ("Bad key type");
 			}
 		}
 
