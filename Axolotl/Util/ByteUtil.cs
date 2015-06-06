@@ -1,15 +1,19 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Axolotl.Util
 {
 	public class ByteUtil
 	{
-		public static byte[] Combine(params byte[][] elements)
+		public static byte[] Combine (params byte[][] args)
 		{
-			// TODO: Replace everywhere with LINQ Check!!!
-			//var result = elements.SelectMany (i => i).ToArray ();
-			return elements[1];
+			List<byte> result = new List<byte> ();
+
+			foreach (var arg in args) {
+				result.AddRange (arg);
+			}
+			return result.ToArray ();
 		}
 
 		public static byte[][] Split(byte[] input, int firstLength, int secondLength)
@@ -62,24 +66,24 @@ namespace Axolotl.Util
 			return output;
 		}
 
-		public static byte IntsToByteHighAndLow(int highValue, int lowValue) {
+		public static byte IntsToByteHighAndLow(UInt32 highValue, UInt32 lowValue) {
 			return (byte)((highValue << 4 | lowValue) & 0xFF);
 		}
 
-		public static int HighBitsToInt(byte value) {
-			return (value & 0xFF) >> 4;
+		public static UInt32 HighBitsToUInt(byte value) {
+			return (UInt32)(value & 0xFF) >> 4;
 		}
 
-		public static int LowBitsToInt(byte value) {
-			return (value & 0xF);
+		public static UInt32 LowBitsToUInt(byte value) {
+			return (UInt32)(value & 0xF);
 		}
 
-		public static int HighBitsToMedium(int value) {
-			return (value >> 12);
+		public static UInt32 HighBitsToMedium(int value) {
+			return (UInt32)(value >> 12);
 		}
 
-		public static int LowBitsToMedium(int value) {
-			return (value & 0xFFF);
+		public static UInt32 LowBitsToMedium(int value) {
+			return (UInt32)(value & 0xFFF);
 		}
 
 		public static byte[] ShortToByteArray(int value) {

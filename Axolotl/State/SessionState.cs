@@ -13,64 +13,42 @@ namespace Axolotl.State
 	public class SessionState
 	{
 		private UInt32 _sessionVersion;
-		private IdentityKey _remoteIdentityKey;
-		private IdentityKey _localIdentityKey;
 
-		public UInt32 SessionVersion
-		{ 
-			get
-			{
-				var sVersion = Structure.SessionVersion.Value;
-				return sVersion == 0 ? 2 : sVersion;
-			} 
-			set
-			{
-				_sessionVersion = value;
-			} 
-		}
 
-		public IdentityKey RemoteIdentityKey
-		{ 
-			get
-			{
-				try
-				{
-					if(Structure.RemoteIdentityPublic == null)
-						return null;
-					return new IdentityKey(Structure.RemoteIdentityPublic, 0);
-				}
-				catch(InvalidKeyException e)
-				{
-					// TODO: LOG
-					Console.WriteLine("SessionRecordV2", e);
+		public IdentityKey GetRemoteIdentityKey()
+		{
+			try {
+				if(Structure.RemoteIdentityPublic == null)
 					return null;
-				}
+				return new IdentityKey(Structure.RemoteIdentityPublic, 0);
 			}
-			set
-			{
-				_remoteIdentityKey = value;
+			catch(InvalidKeyException e) {
+				// TODO: LOG
+				Console.WriteLine("SessionRecordV2", e);
+				return null;
 			}
 		}
 
+		public void SetRemoteIdentityKey(IdentityKey identityKey)
+		{
+			Structure.RemoteIdentityPublic = identityKey.Serialize ();;
+		}
 
-		public IdentityKey LocalIdentityKey
-		{ 
-			get
-			{
-				try
-				{
-					return new IdentityKey(Structure.LocalIdentityPublic, 0);
-				}
-				catch(InvalidKeyException e)
-				{
-					throw new InvalidOperationException("Assertion error", e);
-				}
-			} 
-			set
-			{
-				_localIdentityKey = value;
+		public IdentityKey GetLocalIdentityKey()
+		{
+			try {
+				return new IdentityKey(Structure.LocalIdentityPublic, 0);
+			}
+			catch(InvalidKeyException e) {
+				throw new InvalidOperationException("Assertion error", e);
 			}
 		}
+
+		public void SetLocalIdentityKey(IdentityKey identityKey)
+		{
+			Structure.LocalIdentityPublic = identityKey.Serialize();
+		}
+
 
 		public byte[] AliceBaseKey { get; set; }
 
@@ -84,7 +62,7 @@ namespace Axolotl.State
 
 		public RootKey RootKey
 		{
-			get { return new RootKey(HKDF.CreateFor(SessionVersion), Structure.RootKey); }
+			get { return new RootKey(HKDF.CreateFor(GetSessionVersion()), Structure.RootKey); }
 			set { Structure.RootKey = value.Key; }
 		}
 
@@ -118,7 +96,7 @@ namespace Axolotl.State
 			get
 			{
 				var chainKeyStructure = Structure.SenderChain.chainKey;
-				return new ChainKey(HKDF.CreateFor(SessionVersion),
+				return new ChainKey(HKDF.CreateFor(GetSessionVersion()),
 					chainKeyStructure.key,
 					chainKeyStructure.index);
 			}
@@ -210,6 +188,17 @@ namespace Axolotl.State
 			Structure = copy.Structure;
 		}
 
+		public UInt32 GetSessionVersion()
+		{
+			var sVersion = Structure.SessionVersion.Value;
+			return sVersion == 0 ? 2 : sVersion;
+		}
+
+		public void SetSessionVersion(UInt32 version)
+		{
+			Structure.SessionVersion = version;
+		}
+
 		public bool HasReceiverChain(ECPublicKey senderEphemeral)
 		{
 			return GetReceiverChain(senderEphemeral) != null;
@@ -257,7 +246,7 @@ namespace Axolotl.State
 			}
 			else
 			{
-				return new ChainKey(HKDF.CreateFor(SessionVersion),
+				return new ChainKey(HKDF.CreateFor(GetSessionVersion()),
 					ReceiverChain.chainKey.key,
 					ReceiverChain.chainKey.index);
 			}

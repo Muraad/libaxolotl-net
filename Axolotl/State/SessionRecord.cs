@@ -51,7 +51,7 @@ namespace Axolotl.State
 
 		public bool HasSessionState(UInt32 version, byte[] aliceBaseKey)
 		{
-			if(SessionState.SessionVersion == version &&
+			if(SessionState.GetSessionVersion() == version &&
 			   Array.Equals(aliceBaseKey, SessionState.AliceBaseKey))
 			{
 				return true;
@@ -59,7 +59,7 @@ namespace Axolotl.State
 
 			foreach(var state in PreviousStates)
 			{
-				if(state.SessionVersion == version &&
+				if(state.GetSessionVersion() == version &&
 				   Array.Equals(aliceBaseKey, state.AliceBaseKey))
 				{
 					return true;

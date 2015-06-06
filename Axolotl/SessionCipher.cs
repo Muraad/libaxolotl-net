@@ -58,14 +58,14 @@ namespace Axolotl
 				MessageKeys messageKeys = chainKey.GetMessageKeys();
 				ECPublicKey senderEphemeral = sessionState.SenderRatchetKey;
 				UInt32 previousCounter = sessionState.PreviousCounter;
-				UInt32 sessionVersion = sessionState.SessionVersion;
+				UInt32 sessionVersion = sessionState.GetSessionVersion();
 
 				byte[] ciphertextBody = GetCiphertext(sessionVersion, messageKeys, paddedMessage);
 				CiphertextMessage ciphertextMessage = new WhisperMessage(sessionVersion, messageKeys.MacKey,
 					                                      senderEphemeral, chainKey.Index,
 					                                      previousCounter, ciphertextBody,
-					                                      sessionState.LocalIdentityKey,
-					                                      sessionState.RemoteIdentityKey);
+					                                      sessionState.GetLocalIdentityKey(),
+					                                      sessionState.GetRemoteIdentityKey());
 
 				if(sessionState.HasUnacknowledgedPreKeyMessage())
 				{
@@ -74,7 +74,7 @@ namespace Axolotl
 
 					ciphertextMessage = new PreKeyWhisperMessage(sessionVersion, localRegistrationId, items.PreKeyId,
 						items.SignedPreKeyId, items.BaseKey,
-						sessionState.LocalIdentityKey,
+						sessionState.GetLocalIdentityKey(),
 						(WhisperMessage)ciphertextMessage);
 				}
 
@@ -184,11 +184,11 @@ namespace Axolotl
 				throw new InvalidMessageException("Uninitialized session!");
 			}
 
-			if(ciphertextMessage.MessageVersion != sessionState.SessionVersion)
+			if(ciphertextMessage.MessageVersion != sessionState.GetSessionVersion())
 			{
 				throw new InvalidMessageException(string.Format("Message version {0}, but session version {1}",
 					ciphertextMessage.MessageVersion,
-					sessionState.SessionVersion));
+					sessionState.GetSessionVersion()));
 			}
 
 			UInt32 messageVersion = ciphertextMessage.MessageVersion;
@@ -199,8 +199,8 @@ namespace Axolotl
 				                          chainKey, counter);
 
 			ciphertextMessage.VerifyMac(messageVersion,
-				sessionState.RemoteIdentityKey,
-				sessionState.LocalIdentityKey,
+				sessionState.GetRemoteIdentityKey(),
+				sessionState.GetLocalIdentityKey(),
 				messageKeys.MacKey);
 
 			byte[] plaintext = GetPlaintext(messageVersion, messageKeys, ciphertextMessage.Body);
@@ -229,7 +229,7 @@ namespace Axolotl
 				}
 
 				SessionRecord record = _sessionStore.LoadSession(_remoteAddress);
-				return record.SessionState.SessionVersion;
+				return record.SessionState.GetSessionVersion();
 			}
 		}
 

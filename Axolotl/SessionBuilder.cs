@@ -253,7 +253,7 @@ namespace Axolotl
 			byte[] baseKeySignature = Curve.CalculateSignature(parameters.OurIdentityKey.PrivateKey,
 			                                                   parameters.OurBaseKey.PublicKey.Serialize());
 
-			return new KeyExchangeMessage(sessionRecord.SessionState.SessionVersion,
+			return new KeyExchangeMessage(sessionRecord.SessionState.GetSessionVersion(),
 			                              message.Sequence, flags,
 			                              parameters.OurBaseKey.PublicKey,
 			                              baseKeySignature, parameters.OurRatchetKey.PublicKey,
@@ -288,7 +288,7 @@ namespace Axolotl
 			                                    (UInt32)Math.Min(message.MaxVersion, CiphertextMessage.CURRENT_VERSION),
 			                                    parameters.Create());
 
-			if (sessionRecord.SessionState.SessionVersion >= 3 &&
+			if (sessionRecord.SessionState.GetSessionVersion() >= 3 &&
 			    !Curve.VerifySignature(message.IdentityKey.PublicKey,
 			                       message.BaseKey.Serialize(),
 			                       message.BaseKeySignature))

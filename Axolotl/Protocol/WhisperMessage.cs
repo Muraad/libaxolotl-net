@@ -33,14 +33,14 @@ namespace Axolotl.Protocol
 				byte version = messageParts[0][0];
 				byte[] message = messageParts[1];
 
-				if(ByteUtil.HighBitsToInt(version) <= CiphertextMessage.UNSUPPORTED_VERSION)
+				if(ByteUtil.HighBitsToUInt(version) <= CiphertextMessage.UNSUPPORTED_VERSION)
 				{
-					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToInt(version));
+					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToUInt(version));
 				}
 
-				if(ByteUtil.HighBitsToInt(version) > CURRENT_VERSION)
+				if(ByteUtil.HighBitsToUInt(version) > CURRENT_VERSION)
 				{
-					throw new InvalidVersionException("Unknown version: " + ByteUtil.HighBitsToInt(version));
+					throw new InvalidVersionException("Unknown version: " + ByteUtil.HighBitsToUInt(version));
 				}
 
 				WhisperProtos.WhisperMessage whisperMessage;
@@ -60,7 +60,7 @@ namespace Axolotl.Protocol
 
 				_serialized = serialized;
 				SenderRatchetKey = Curve.DecodePoint(whisperMessage.RatchetKey, 0);
-				MessageVersion = (UInt32)ByteUtil.HighBitsToInt(version);
+				MessageVersion = (UInt32)ByteUtil.HighBitsToUInt(version);
 				Counter = whisperMessage.Counter.Value;
 				PreviousCounter = whisperMessage.PreviousCounter.Value;
 				Body = whisperMessage.Ciphertext;
@@ -76,7 +76,7 @@ namespace Axolotl.Protocol
 		                      IdentityKey senderIdentityKey,
 		                      IdentityKey receiverIdentityKey)
 		{
-			byte[] version = { ByteUtil.IntsToByteHighAndLow((int)messageVersion, CURRENT_VERSION) };
+			byte[] version = { ByteUtil.IntsToByteHighAndLow(messageVersion, CURRENT_VERSION) };
 
 			var messageObj = new WhisperProtos.WhisperMessage {
 				RatchetKey = senderRatchetKey.Serialize(),
@@ -149,7 +149,7 @@ namespace Axolotl.Protocol
 		public bool IsLegacy(byte[] message)
 		{
 			return message != null && message.Length >= 1 &&
-			ByteUtil.HighBitsToInt(message[0]) <= CiphertextMessage.UNSUPPORTED_VERSION;
+			ByteUtil.HighBitsToUInt(message[0]) <= CiphertextMessage.UNSUPPORTED_VERSION;
 		}
 
 		public override byte[] Serialize()
@@ -157,7 +157,7 @@ namespace Axolotl.Protocol
 			return _serialized;
 		}
 
-		public override int GetKeyType()
+		public override UInt32 GetKeyType()
 		{
 			return CiphertextMessage.WHISPER_TYPE;
 		}

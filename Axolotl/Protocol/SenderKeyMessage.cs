@@ -28,14 +28,14 @@ namespace Axolotl.Protocol
 				byte version = messageParts[0][0];
 				byte[] message = messageParts[1];
 
-				if(ByteUtil.HighBitsToInt(version) < 3)
+				if(ByteUtil.HighBitsToUInt(version) < 3)
 				{
-					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToInt(version));
+					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToUInt(version));
 				}
 
-				if(ByteUtil.HighBitsToInt(version) > CURRENT_VERSION)
+				if(ByteUtil.HighBitsToUInt(version) > CURRENT_VERSION)
 				{
-					throw new InvalidVersionException("Unknown version: " + ByteUtil.HighBitsToInt(version));
+					throw new InvalidVersionException("Unknown version: " + ByteUtil.HighBitsToUInt(version));
 				}
 					
 				WhisperProtos.SenderKeyMessage senderKeyMessage;
@@ -125,7 +125,7 @@ namespace Axolotl.Protocol
 			}
 		}
 
-		public override int GetKeyType()
+		public override UInt32 GetKeyType()
 		{
 			return CiphertextMessage.SENDERKEY_TYPE;
 		}

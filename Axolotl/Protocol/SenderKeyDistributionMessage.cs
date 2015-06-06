@@ -53,14 +53,14 @@ namespace Axolotl.Protocol
 				byte version = messageParts[0][0];
 				byte[] message = messageParts[1];
 
-				if(ByteUtil.HighBitsToInt(version) < CiphertextMessage.CURRENT_VERSION)
+				if(ByteUtil.HighBitsToUInt(version) < CiphertextMessage.CURRENT_VERSION)
 				{
-					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToInt(version));
+					throw new LegacyMessageException("Legacy message: " + ByteUtil.HighBitsToUInt(version));
 				}
 
-				if(ByteUtil.HighBitsToInt(version) > CURRENT_VERSION)
+				if(ByteUtil.HighBitsToUInt(version) > CURRENT_VERSION)
 				{
-					throw new InvalidMessageException("Unknown version: " + ByteUtil.HighBitsToInt(version));
+					throw new InvalidMessageException("Unknown version: " + ByteUtil.HighBitsToUInt(version));
 				}
 					
 				WhisperProtos.SenderKeyDistributionMessage distributionMessage;
@@ -80,7 +80,7 @@ namespace Axolotl.Protocol
 				}
 
 				_serialized = serialized;
-				Id = distributionMessage.id.Value;
+				//Id = distributionMessage.id.Value;
 				Iteration = distributionMessage.iteration.Value;
 				ChainKey = distributionMessage.chainKey;
 				SignatureKey = Curve.DecodePoint(distributionMessage.signingKey, 0);
@@ -96,7 +96,7 @@ namespace Axolotl.Protocol
 			return _serialized;
 		}
 
-		public override int GetKeyType()
+		public override UInt32 GetKeyType()
 		{
 			return SENDERKEY_DISTRIBUTION_TYPE;
 		}

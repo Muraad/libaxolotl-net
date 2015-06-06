@@ -16,7 +16,7 @@ namespace Axolotl.Protocol
 
 		public UInt32         Version { get; private set; }
 
-		public int         MaxVersion { get; private set; }
+		public UInt32         MaxVersion { get; private set; }
 
 		public UInt32         Sequence { get; private set; }
 
@@ -70,7 +70,7 @@ namespace Axolotl.Protocol
 			RatchetKey = ratchetKey;
 			IdentityKey = identityKey;
 
-			byte[] version = { ByteUtil.IntsToByteHighAndLow((int)Version, MaxVersion) };
+			byte[] version = { ByteUtil.IntsToByteHighAndLow(Version, MaxVersion) };
 			var keyExchangeMsg = new WhisperProtos.KeyExchangeMessage {
 				id = (Sequence << 5) | Flags,
 				baseKey = BaseKey.Serialize(),
@@ -97,8 +97,8 @@ namespace Axolotl.Protocol
 			try
 			{
 				byte[][] parts = ByteUtil.Split(serialized, 1, serialized.Length - 1);
-				Version = (UInt32)ByteUtil.HighBitsToInt(parts[0][0]);
-				MaxVersion = ByteUtil.LowBitsToInt(parts[0][0]);
+				Version = (UInt32)ByteUtil.HighBitsToUInt(parts[0][0]);
+				MaxVersion = ByteUtil.LowBitsToUInt(parts[0][0]);
 
 				if(Version <= CiphertextMessage.UNSUPPORTED_VERSION)
 				{

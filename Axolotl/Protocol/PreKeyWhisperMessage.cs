@@ -31,7 +31,7 @@ namespace Axolotl.Protocol
 		{
 			try
 			{
-				MessageVersion = (UInt32)ByteUtil.HighBitsToInt(serialized[0]);
+				MessageVersion = (UInt32)ByteUtil.HighBitsToUInt(serialized[0]);
 
 				if(MessageVersion > CiphertextMessage.CURRENT_VERSION)
 				{
@@ -95,7 +95,7 @@ namespace Axolotl.Protocol
 
 			preKeyId.Do(pKid => preKeyMessage.preKeyId = pKid);
 
-			byte[] versionBytes = { ByteUtil.IntsToByteHighAndLow((int)MessageVersion, CURRENT_VERSION) };
+			byte[] versionBytes = { ByteUtil.IntsToByteHighAndLow(MessageVersion, CURRENT_VERSION) };
 
 			byte[] messageBytes;
 			using(var stream = new MemoryStream())
@@ -107,7 +107,7 @@ namespace Axolotl.Protocol
 			_serialized = ByteUtil.Combine(versionBytes, messageBytes);
 		}
 
-		public override int GetKeyType()
+		public override UInt32 GetKeyType()
 		{
 			return CiphertextMessage.PREKEY_TYPE;
 		}

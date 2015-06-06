@@ -1,5 +1,7 @@
 using System;
 using Sodium;
+using System.Linq;
+using Axolotl.Util;
 
 namespace Axolotl.ECC
 {
@@ -11,8 +13,10 @@ namespace Axolotl.ECC
 		public static ECKeyPair GenerateKeyPair()
 		{
 			var keyPair = Sodium.PublicKeyAuth.GenerateKeyPair ();
+
 			var sKey = Sodium.PublicKeyAuth.ConvertEd25519SecretKeyToCurve25519SecretKey (keyPair.PrivateKey);
 			var pKey = Sodium.PublicKeyAuth.ConvertEd25519PublicKeyToCurve25519PublicKey (keyPair.PublicKey);
+
 
 
 			return new ECKeyPair (new DjbECPrivateKey(sKey), new DjbECPublicKey(pKey));
@@ -49,7 +53,12 @@ namespace Axolotl.ECC
 
 			if (publicKey.GetKeyType () == DJB_TYPE) {
 				var sK = privateKey.Serialize ();
-				var pK = publicKey.Serialize ();
+				var typedPK = publicKey.Serialize ();
+
+				var pK = new byte[typedPK.Length - 1];
+				for (int i = 1; i < typedPK.Length; i++) {
+					pK [i - 1] = typedPK [i];
+				}
 
 				var shared = Sodium.ScalarMult.Mult (sK, pK);
 				return shared;

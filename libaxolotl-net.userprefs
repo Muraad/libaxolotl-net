@@ -2,15 +2,18 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/ECC/Curve.cs">
     <Files>
-      <File FileName="Tests/Ratchet/ChainKeyTest.cs" Line="4" Column="19" />
-      <File FileName="Tests/ECC/Curve25519Test.cs" Line="3" Column="19" />
-      <File FileName="Axolotl/ECC/Curve.cs" Line="54" Column="21" />
+      <File FileName="Tests/Ratchet/ChainKeyTest.cs" Line="1" Column="1" />
+      <File FileName="Tests/ECC/Curve25519Test.cs" Line="1" Column="1" />
+      <File FileName="Axolotl/ECC/Curve.cs" Line="54" Column="5" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="libaxolotl-net" expanded="True">
-            <Node name="References" expanded="True" selected="True" />
+            <Node name="References" expanded="True" />
+            <Node name="ECC" expanded="True">
+              <Node name="Curve.cs" selected="True" />
+            </Node>
           </Node>
           <Node name="Tests" expanded="True">
             <Node name="References" expanded="True" />
@@ -27,15 +30,7 @@
         <State />
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True">
-          <Node name="Tests" expanded="True">
-            <Node name="Tests" expanded="True">
-              <Node name="Curve25519Test" expanded="True">
-                <Node name="TestAgreement" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

@@ -51,9 +51,9 @@ namespace Axolotl.Ratchet
 					                          AliceAxolotlParameters parameters)
 		{
 			try {
-				sessionState.SessionVersion = sessionVersion;
-				sessionState.RemoteIdentityKey = parameters.TheirIdentityKey;
-				sessionState.LocalIdentityKey = parameters.OurIdentityKey.PublicKey;
+				sessionState.SetSessionVersion(sessionVersion);
+				sessionState.SetRemoteIdentityKey(parameters.TheirIdentityKey);
+				sessionState.SetLocalIdentityKey(parameters.OurIdentityKey.PublicKey);
 
 				ECKeyPair             sendingRatchetKey = Curve.GenerateKeyPair();
 
@@ -115,44 +115,38 @@ namespace Axolotl.Ratchet
 					                          BobAxolotlParameters parameters)
 		{
 			try {
-				sessionState.SessionVersion = sessionVersion;
-				sessionState.RemoteIdentityKey = parameters.TheirIdentityKey;
-				sessionState.LocalIdentityKey = parameters.OurIdentityKey.PublicKey;
+				sessionState.SetSessionVersion(sessionVersion);
+				sessionState.SetRemoteIdentityKey(parameters.TheirIdentityKey);
+				sessionState.SetLocalIdentityKey(parameters.OurIdentityKey.PublicKey);
 
 				byte[] secrets;
 
 				using(var stream = new MemoryStream())
 				{
 					byte[] buffer;
-					int offset = 0;
 
 					if (sessionVersion >= 3) {
 						buffer = GetDiscontinuityBytes();
-						stream.Write(buffer, offset, buffer.Length);
-						offset = buffer.Length;
+						stream.Write(buffer, 0, buffer.Length);
 					}
 
 					buffer = Curve.CalculateAgreement(parameters.TheirIdentityKey.PublicKey,
 					                                  parameters.OurSignedPreKey.PrivateKey);
-					stream.Write(buffer, offset, buffer.Length);
-					offset += buffer.Length;
+					stream.Write(buffer, 0, buffer.Length);
 
 					buffer = Curve.CalculateAgreement(parameters.TheirBaseKey,
 					                                  parameters.OurIdentityKey.PrivateKey);
-					stream.Write(buffer, offset, buffer.Length);
-					offset += buffer.Length;
+					stream.Write(buffer, 0, buffer.Length);
 
 					buffer = Curve.CalculateAgreement(parameters.TheirBaseKey,
 					                                  parameters.OurSignedPreKey.PrivateKey);
-					stream.Write(buffer, offset, buffer.Length);
-					offset += buffer.Length;
+					stream.Write(buffer, 0, buffer.Length);
 
 					if (sessionVersion >= 3 && parameters.OurOneTimePreKey.IsSomething()) {
 
 						parameters.OurOneTimePreKey.Do(otpK => {
 							buffer = Curve.CalculateAgreement(parameters.TheirBaseKey, otpK.PrivateKey);
-							stream.Write(buffer, offset, buffer.Length);
-							offset += buffer.Length;
+							stream.Write(buffer, 0, buffer.Length);
 						});
 					}
 

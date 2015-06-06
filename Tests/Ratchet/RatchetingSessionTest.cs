@@ -115,8 +115,11 @@ namespace Tests
 
 			RatchetingSession.InitializeSession(session, 2, parameters);
 
-			Assert.True (session.LocalIdentityKey.Equals (bobIdentityKey.PublicKey));
-			Assert.True (session.RemoteIdentityKey.Equals (aliceIdentityPublicKey));
+			var bobPk = bobIdentityKey.PublicKey;
+			var sessionLocalIk = session.GetLocalIdentityKey ();
+
+			Assert.True (sessionLocalIk.Equals (bobPk));
+			Assert.True (session.GetRemoteIdentityKey().Equals (aliceIdentityPublicKey));
 			Assert.True (ArrayComparer.Compare(session.SenderChainKey.Key, senderChain));
 		}
 	}
