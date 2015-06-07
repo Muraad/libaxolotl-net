@@ -1,55 +1,43 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/ECC/DjbECPublicKey.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/State/Impl/InMemoryIdentityKeyStore.cs">
     <Files>
-      <File FileName="Tests/Ratchet/ChainKeyTest.cs" Line="1" Column="1" />
-      <File FileName="Tests/ECC/Curve25519Test.cs" Line="1" Column="1" />
-      <File FileName="Axolotl/ECC/Curve.cs" Line="25" Column="3" />
-      <File FileName="Tests/Ratchet/RatchetingSessionTest.cs" Line="121" Column="36" />
-      <File FileName="Axolotl/IdentityKey.cs" Line="8" Column="17" />
-      <File FileName="Axolotl/ECC/ECPublicKey.cs" Line="5" Column="2" />
-      <File FileName="Axolotl/ECC/DjbECPublicKey.cs" Line="1" Column="1" />
+      <File FileName="Tests/Ratchet/RatchetingSessionTest.cs" Line="1" Column="1" />
+      <File FileName="Axolotl/State/SessionState.cs" Line="1" Column="1" />
+      <File FileName="Tests/Ratchet/RootKeyTest.cs" Line="1" Column="1" />
+      <File FileName="Tests/SessionBuilderTest.cs" Line="91" Column="9" />
+      <File FileName="Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" Line="24" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="libaxolotl-net" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="ECC" expanded="True">
-              <Node name="DjbECPublicKey.cs" selected="True" />
+            <Node name="State" expanded="True">
+              <Node name="Impl" expanded="True">
+                <Node name="InMemoryIdentityKeyStore.cs" selected="True" />
+              </Node>
             </Node>
+            <Node name="Util" expanded="True" />
           </Node>
-          <Node name="Tests" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="ECC" expanded="True" />
-            <Node name="KDF" expanded="True" />
-            <Node name="Ratchet" expanded="True" />
-          </Node>
+          <Node name="Tests" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
         <State expanded="True" selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
+        <State>
+          <Value>sessionLocalIk</Value>
+          <Value>ArrayComparer.Compare (PublicKey, that.PublicKey);</Value>
+        </State>
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True">
-          <Node name="Tests" expanded="True">
-            <Node name="Tests" expanded="True">
-              <Node name="GroupCipherTest" expanded="True" />
-              <Node name="RatchetingSessionTest" expanded="True" />
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Tests/Ratchet/RatchetingSessionTest.cs" line="93" column="1" />
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Tests/Ratchet/RatchetingSessionTest.cs" line="122" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

@@ -25,8 +25,10 @@ namespace Axolotl.State
 
 		public bool IsTrustedIdentity(string name, IdentityKey identityKey) 
 		{
-			IdentityKey trusted = _trustedKeys[name];
-			return (trusted == null || trusted.Equals(identityKey));
+			if (!_trustedKeys.ContainsKey (name))
+				return false;
+			else
+				return _trustedKeys [name].Equals (identityKey);
 		}
 
 		public IdentityKeyPair GetIdentityKeyPair()
