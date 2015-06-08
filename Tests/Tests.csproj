@@ -51,6 +51,7 @@
     <Compile Include="Ratchet\RootKeyTest.cs" />
     <Compile Include="SessionBuilderTest.cs" />
     <Compile Include="TestInMemoryAxolotlStore.cs" />
+    <Compile Include="TestInMemoryIdentityKeyStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -166,7 +166,7 @@ namespace Axolotl
 				ECKeyPair             ourBaseKey           = Curve.GenerateKeyPair();
 				ECPublicKey           theirSignedPreKey    = supportsV3 ? preKey.GetSignedPreKey() : preKey.GetPreKey();
 				Maybe<ECPublicKey> theirOneTimePreKey      = preKey.GetPreKey().ToMaybe();
-				Maybe<UInt32>     theirOneTimePreKeyId 	   = theirOneTimePreKey.IsSomething() ? preKey.PreKeyID.ToMaybe() :Maybe<UInt32>.Nothing;
+				Maybe<UInt32>     theirOneTimePreKeyId 	   = theirOneTimePreKey.IsSomething() ? preKey.PreKeyId.ToMaybe() :Maybe<UInt32>.Nothing;
 
 				var aliceParams = AliceAxolotlParameters.NewBuilder();
 

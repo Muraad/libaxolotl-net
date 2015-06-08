@@ -1,26 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/SessionBuilder.cs">
-    <Files>
-      <File FileName="Tests/Ratchet/RatchetingSessionTest.cs" Line="1" Column="1" />
-      <File FileName="Axolotl/State/SessionState.cs" Line="1" Column="1" />
-      <File FileName="Tests/Ratchet/RootKeyTest.cs" Line="1" Column="1" />
-      <File FileName="Tests/SessionBuilderTest.cs" Line="1" Column="1" />
-      <File FileName="Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" Line="32" Column="1" />
-      <File FileName="Axolotl/SessionBuilder.cs" Line="193" Column="1" />
-      <File FileName="Axolotl/State/Impl/InMemoryAxolotlStore.cs" Line="30" Column="1" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="libaxolotl-net" expanded="True">
-            <Node name="State" expanded="True">
-              <Node name="Impl" expanded="True" />
-            </Node>
-            <Node name="Util" expanded="True" />
-            <Node name="SessionBuilder.cs" selected="True" />
+          <Node name="Tests" expanded="True">
+            <Node name="Ratchet" expanded="True" />
           </Node>
-          <Node name="Tests" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
@@ -37,7 +23,7 @@
           <Node name="Tests" expanded="True">
             <Node name="Tests" expanded="True">
               <Node name="SessionBuilderTest" expanded="True">
-                <Node name="TestBasicPreKeyV2" selected="True" />
+                <Node name="TestBasicPreKeyV3" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -46,9 +32,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/SessionBuilder.cs" line="148" column="40" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

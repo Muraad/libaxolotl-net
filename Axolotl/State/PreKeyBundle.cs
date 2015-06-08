@@ -9,7 +9,7 @@ namespace Axolotl.State
 
 		public UInt32 RegistrationID { get; private set; }
 		public UInt32 DeviceID { get; private set; }
-		public UInt32 PreKeyID { get; private set; }
+		public UInt32 PreKeyId { get; private set; }
 		public ECPublicKey PreKeyPublic { get; private set; }
 		public UInt32 SignedPreKeyID { get; private set; }
 		public ECPublicKey SignedPreKeyPublic { get; private set; }
@@ -22,7 +22,7 @@ namespace Axolotl.State
 		{
 			RegistrationID = registrationId;
 			DeviceID = deviceId;
-			PreKeyID = preKeyId;
+			PreKeyId = preKeyId;
 			PreKeyPublic = preKeyPublic;
 			SignedPreKeyID = signedPreKeyId;
 			SignedPreKeyPublic = signedPreKeyPublic;

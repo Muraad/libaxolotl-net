@@ -13,6 +13,11 @@ namespace Tests
 	[TestFixture()]
 	public class SessionBuilderTest
 	{
+		static DateTime Jan1st1970 = new DateTime
+			(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+		static long currentMillis = (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
+
 		private static AxolotlAddress ALICE_ADDRESS = new AxolotlAddress("+14151111111", 1);
 		private static AxolotlAddress BOB_ADDRESS   = new AxolotlAddress("+14152222222", 1);
 
@@ -41,7 +46,7 @@ namespace Tests
 			Assert.True(outgoingMessage.GetKeyType() == CiphertextMessage.PREKEY_TYPE);
 
 			PreKeyWhisperMessage incomingMessage = new PreKeyWhisperMessage(outgoingMessage.Serialize());
-			bobStore.StorePreKey((UInt32)31337, new PreKeyRecord(bobPreKey.PreKeyID, bobPreKeyPair));
+			bobStore.StorePreKey((UInt32)31337, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
 
 			var bobSessionCipher = new SessionCipher(bobStore, ALICE_ADDRESS);
 			var plaintext        = bobSessionCipher.Decrypt(incomingMessage);
@@ -67,7 +72,7 @@ namespace Tests
 			                             1, 31338, bobPreKeyPair.PublicKey,
 			                             0, null, null, bobStore.GetIdentityKeyPair().PublicKey	);
 
-			bobStore.StorePreKey((UInt32)31338, new PreKeyRecord(bobPreKey.PreKeyID, bobPreKeyPair));
+			bobStore.StorePreKey((UInt32)31338, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
 			aliceSessionBuilder.Process(bobPreKey);
 
 			outgoingMessage = aliceSessionCipher.Encrypt (Encoding.UTF8.GetBytes (originalMessage));
@@ -174,11 +179,6 @@ namespace Tests
 		[Test()]
 		public void TestBasicPreKeyV3()
 		{
-			var Jan1st1970 = new DateTime
-				(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-			var currentMillis = (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
-
 			var aliceStore         		 = new TestInMemoryAxolotlStore();
 			var aliceSessionBuilder		 = new SessionBuilder(aliceStore, BOB_ADDRESS);
 
@@ -206,7 +206,7 @@ namespace Tests
 			Assert.True(outgoingMessage.GetKeyType() == CiphertextMessage.PREKEY_TYPE);
 
 			PreKeyWhisperMessage incomingMessage = new PreKeyWhisperMessage(outgoingMessage.Serialize());
-			bobStore.StorePreKey(31337, new PreKeyRecord(bobPreKey.PreKeyID, bobPreKeyPair));
+			bobStore.StorePreKey(31337, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
 			bobStore.StoreSignedPreKey(22, new SignedPreKeyRecord(22, currentMillis, bobSignedPreKeyPair, bobSignedPreKeySignature));
 
 			SessionCipher bobSessionCipher = new SessionCipher(bobStore, ALICE_ADDRESS);
@@ -237,7 +237,7 @@ namespace Tests
 			                             23, bobSignedPreKeyPair.PublicKey, bobSignedPreKeySignature,
 			                             bobStore.GetIdentityKeyPair().PublicKey);
 
-			bobStore.StorePreKey(31338, new PreKeyRecord(bobPreKey.PreKeyID, bobPreKeyPair));
+			bobStore.StorePreKey(31338, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
 			bobStore.StoreSignedPreKey(23, new SignedPreKeyRecord(23, currentMillis, bobSignedPreKeyPair, bobSignedPreKeySignature));
 			aliceSessionBuilder.Process(bobPreKey);
 
@@ -264,6 +264,96 @@ namespace Tests
 			} catch (UntrustedIdentityException uie) {
 				Assert.Pass();
 			}
+		}
+
+		[Test()]
+		public void TestBadSignedPreKeySignature()
+		{
+			var aliceStore          = new TestInMemoryAxolotlStore();
+			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);
+
+			IIdentityKeyStore bobIdentityKeyStore = new TestInMemoryIdentityKeyStore();
+
+			ECKeyPair bobPreKeyPair            = Curve.GenerateKeyPair();
+			ECKeyPair bobSignedPreKeyPair      = Curve.GenerateKeyPair();
+			byte[]    bobSignedPreKeySignature = Curve.CalculateSignature(bobIdentityKeyStore.GetIdentityKeyPair().PrivateKey,
+			                                                              bobSignedPreKeyPair.PublicKey.Serialize());
+
+
+			for (int i = 0; i < bobSignedPreKeySignature.Length * 8; i++) 
+			{
+				var modifiedSignature = new byte[bobSignedPreKeySignature.Length];
+
+				Array.Copy (bobSignedPreKeySignature, 0, modifiedSignature, 0, modifiedSignature.Length);
+
+				modifiedSignature[i/8] ^= (byte)(0x01 << (i % 8));
+
+				PreKeyBundle bobPreKey = new PreKeyBundle(bobIdentityKeyStore.GetLocalRegistrationId(), 1,
+				                                          31337, bobPreKeyPair.PublicKey,
+				                                          22, bobSignedPreKeyPair.PublicKey, modifiedSignature,
+				                                          bobIdentityKeyStore.GetIdentityKeyPair().PublicKey);
+
+				try {
+					aliceSessionBuilder.Process(bobPreKey);
+					throw new InvalidOperationException("Accepted modified device key signature!");
+				} catch (InvalidKeyException ike) {
+					Assert.Pass();
+				}
+			}
+		}
+
+		[Test()]
+		public void TestRepeatBundleMessageV2()
+		{
+			var aliceStore          = new TestInMemoryAxolotlStore();
+			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);
+
+			var bobStore = new TestInMemoryAxolotlStore();
+
+			var bobPreKeyPair            = Curve.GenerateKeyPair();
+			var bobSignedPreKeyPair      = Curve.GenerateKeyPair();
+			var bobSignedPreKeySignature = Curve.CalculateSignature(bobStore.GetIdentityKeyPair().PrivateKey,
+			                                                              bobSignedPreKeyPair.PublicKey.Serialize());
+
+			var bobPreKey = new PreKeyBundle(bobStore.GetLocalRegistrationId(), 1,
+			                                          31337, bobPreKeyPair.PublicKey,
+			                                          0, null, null,
+			                                          bobStore.GetIdentityKeyPair().PublicKey);
+
+			bobStore.StorePreKey(31337, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
+			bobStore.StoreSignedPreKey(22, new SignedPreKeyRecord(22, currentMillis, bobSignedPreKeyPair, bobSignedPreKeySignature));
+
+			aliceSessionBuilder.Process(bobPreKey);
+
+			var originalMessage    = "L'homme est condamné à être libre";
+			var aliceSessionCipher = new SessionCipher(aliceStore, BOB_ADDRESS);
+			var outgoingMessageOne = aliceSessionCipher.Encrypt(Encoding.UTF8.GetBytes(originalMessage));
+            var outgoingMessageTwo = aliceSessionCipher.Encrypt(Encoding.UTF8.GetBytes(originalMessage));
+
+			Assert.True(outgoingMessageOne.GetKeyType() == CiphertextMessage.PREKEY_TYPE);
+
+			var incomingMessage = new PreKeyWhisperMessage(outgoingMessageOne.Serialize());
+
+			var bobSessionCipher = new SessionCipher(bobStore, ALICE_ADDRESS);
+
+			var        plaintext        = bobSessionCipher.Decrypt(incomingMessage);
+			Assert.True(originalMessage.Equals(Encoding.UTF8.GetString(plaintext)));
+
+            var bobOutgoingMessage = bobSessionCipher.Encrypt(Encoding.UTF8.GetBytes(originalMessage));
+
+			var alicePlaintext = aliceSessionCipher.Decrypt(new WhisperMessage(bobOutgoingMessage.Serialize()));
+			Assert.True(originalMessage.Equals(Encoding.UTF8.GetString(alicePlaintext)));
+
+			// The test
+
+			PreKeyWhisperMessage incomingMessageTwo = new PreKeyWhisperMessage(outgoingMessageTwo.Serialize());
+
+			plaintext = bobSessionCipher.Decrypt(incomingMessageTwo);
+            Assert.True(originalMessage.Equals(Encoding.UTF8.GetString(plaintext)));
+
+    		bobOutgoingMessage = bobSessionCipher.Encrypt(Encoding.UTF8.GetBytes(originalMessage));
+			alicePlaintext = aliceSessionCipher.Decrypt(new WhisperMessage(bobOutgoingMessage.Serialize()));
+			Assert.True(originalMessage.Equals(Encoding.UTF8.GetString(alicePlaintext)));
 		}
 
 		class TestDecryptionCallback : IDecryptionCallback
