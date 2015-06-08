@@ -171,6 +171,7 @@ namespace Tests
 			}
 		}
 
+		[Test()]
 		public void TestBasicPreKeyV3()
 		{
 			var Jan1st1970 = new DateTime
