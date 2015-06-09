@@ -411,6 +411,62 @@ namespace Tests
 			Assert.True(originalMessage.Equals(Encoding.UTF8.GetString (alicePlaintext)));
 		}
 
+		[Test()]
+		public void TestBadMessageBundle()
+		{
+			var aliceStore          = new TestInMemoryAxolotlStore();
+			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);
+
+			var bobStore = new TestInMemoryAxolotlStore();
+
+			var bobPreKeyPair            = Curve.GenerateKeyPair();
+			var bobSignedPreKeyPair      = Curve.GenerateKeyPair();
+			var bobSignedPreKeySignature = Curve.CalculateSignature(bobStore.GetIdentityKeyPair().PrivateKey,
+			                                                              bobSignedPreKeyPair.PublicKey.Serialize());
+
+			PreKeyBundle bobPreKey = new PreKeyBundle(bobStore.GetLocalRegistrationId(), 1,
+			                                          31337, bobPreKeyPair.PublicKey,
+			                                          22, bobSignedPreKeyPair.PublicKey, bobSignedPreKeySignature,
+			                                          bobStore.GetIdentityKeyPair().PublicKey);
+
+			bobStore.StorePreKey(31337, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
+			bobStore.StoreSignedPreKey(22, new SignedPreKeyRecord(22, currentMillis, bobSignedPreKeyPair, bobSignedPreKeySignature));
+
+			aliceSessionBuilder.Process(bobPreKey);
+
+			var originalMessage    = "L'homme est condamné à être libre";
+			var aliceSessionCipher = new SessionCipher(aliceStore, BOB_ADDRESS);
+			var outgoingMessageOne = aliceSessionCipher.Encrypt (Encoding.UTF8.GetBytes (originalMessage));
+
+			Assert.True(outgoingMessageOne.GetKeyType() == CiphertextMessage.PREKEY_TYPE);
+
+			var goodMessage = outgoingMessageOne.Serialize();
+			var badMessage  = new byte[goodMessage.Length];
+
+			Array.Copy(goodMessage, 0, badMessage, 0, badMessage.Length);
+
+			badMessage[badMessage.Length-10] ^= 0x01;
+
+			var incomingMessage  = new PreKeyWhisperMessage(badMessage);
+			var bobSessionCipher = new SessionCipher(bobStore, ALICE_ADDRESS);
+
+			var plaintext = new byte[0];
+
+			try {
+				plaintext = bobSessionCipher.Decrypt(incomingMessage);
+				throw new InvalidOperationException("Decrypt should have failed!");
+			} catch (InvalidMessageException e) {
+				// good.
+			}
+
+			Assert.True(bobStore.ContainsPreKey(31337));
+
+			plaintext = bobSessionCipher.Decrypt(new PreKeyWhisperMessage(goodMessage));
+
+			Assert.True(originalMessage.Equals(Encoding.UTF8.GetString(plaintext)));
+			Assert.True(!bobStore.ContainsPreKey(31337));
+		}
+
 		class TestDecryptionCallback : IDecryptionCallback
 		{
 			public void HandlePlaintext(byte[] plaintext) 
