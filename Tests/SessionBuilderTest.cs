@@ -467,6 +467,49 @@ namespace Tests
 			Assert.True(!bobStore.ContainsPreKey(31337));
 		}
 
+		[Test()]
+		public void testBasicKeyExchange()
+		{
+			var aliceStore          = new TestInMemoryAxolotlStore();
+			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);
+
+			var bobStore          = new TestInMemoryAxolotlStore();
+			var bobSessionBuilder = new SessionBuilder(bobStore, ALICE_ADDRESS);
+
+			var aliceKeyExchangeMessage      = aliceSessionBuilder.Process();
+			Assert.True(aliceKeyExchangeMessage != null);
+
+			var aliceKeyExchangeMessageBytes = aliceKeyExchangeMessage.Serialize();
+			var bobKeyExchangeMessage        = bobSessionBuilder.Process(new KeyExchangeMessage(aliceKeyExchangeMessageBytes));
+
+			Assert.True(bobKeyExchangeMessage != null);
+
+			var bobKeyExchangeMessageBytes = bobKeyExchangeMessage.Serialize();
+			var response = aliceSessionBuilder.Process(new KeyExchangeMessage(bobKeyExchangeMessageBytes));
+
+			Assert.True(response == null);
+			Assert.True(aliceStore.ContainsSession(BOB_ADDRESS));
+			Assert.True(bobStore.ContainsSession(ALICE_ADDRESS));
+
+			RunInteraction(aliceStore, bobStore);
+
+			aliceStore              = new TestInMemoryAxolotlStore();
+			aliceSessionBuilder     = new SessionBuilder(aliceStore, BOB_ADDRESS);
+			aliceKeyExchangeMessage = aliceSessionBuilder.Process();
+
+			try {
+				bobKeyExchangeMessage = bobSessionBuilder.Process(aliceKeyExchangeMessage);
+				throw new InvalidOperationException("This identity shouldn't be trusted!");
+			} catch (UntrustedIdentityException uie) {
+				bobStore.SaveIdentity(ALICE_ADDRESS.Name, aliceKeyExchangeMessage.IdentityKey);
+				bobKeyExchangeMessage = bobSessionBuilder.Process(aliceKeyExchangeMessage);
+			}
+
+			Assert.True(aliceSessionBuilder.Process(bobKeyExchangeMessage) == null);
+
+			RunInteraction(aliceStore, bobStore);
+		}
+
 		class TestDecryptionCallback : IDecryptionCallback
 		{
 			public void HandlePlaintext(byte[] plaintext) 
