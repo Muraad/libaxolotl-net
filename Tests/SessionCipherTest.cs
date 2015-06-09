@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using Axolotl.Protocol;
 using Axolotl;
 using System.Text;
+using Axolotl.ECC;
+using Axolotl.Ratchet;
+using Functional.Maybe;
 
 namespace Tests
 {
@@ -24,8 +27,7 @@ namespace Tests
 			var aliceSessionRecord = new SessionRecord();
 			var bobSessionRecord   = new SessionRecord();
 
-			// TODO
-			//InitializeSessionsV2(aliceSessionRecord.SessionState, bobSessionRecord.SessionState);
+			InitializeSessionsV2(aliceSessionRecord.SessionState, bobSessionRecord.SessionState);
 			RunInteraction(aliceSessionRecord, bobSessionRecord);
 		}
 
@@ -35,8 +37,7 @@ namespace Tests
 			var aliceSessionRecord = new SessionRecord();
 			var bobSessionRecord   = new SessionRecord();
 
-			// TODO
-			//InitializeSessionsV3(aliceSessionRecord.SessionState, bobSessionRecord.SessionState);
+			InitializeSessionsV3(aliceSessionRecord.SessionState, bobSessionRecord.SessionState);
 			RunInteraction(aliceSessionRecord, bobSessionRecord);
 		}
 
@@ -108,6 +109,82 @@ namespace Tests
 				byte[] receivedPlaintext = aliceCipher.Decrypt(new WhisperMessage(bobCiphertextMessages[i].Serialize()));
 				Assert.True(ArrayComparer.Compare(receivedPlaintext, bobPlaintextMessages[i]));
 			}
+		}
+
+		private void InitializeSessionsV2(SessionState aliceSessionState, SessionState bobSessionState)
+		{
+			var aliceIdentityKeyPair = Curve.GenerateKeyPair();
+			var aliceIdentityKey     = new IdentityKeyPair(new IdentityKey(aliceIdentityKeyPair.PublicKey),
+			                                                           aliceIdentityKeyPair.PrivateKey);
+			var aliceBaseKey         = Curve.GenerateKeyPair();
+			var aliceEphemeralKey    = Curve.GenerateKeyPair();
+
+			var bobIdentityKeyPair   = Curve.GenerateKeyPair();
+			var bobIdentityKey       = new IdentityKeyPair(new IdentityKey(bobIdentityKeyPair.PublicKey),
+			                                                           bobIdentityKeyPair.PrivateKey);
+			var bobBaseKey           = Curve.GenerateKeyPair();
+			var bobEphemeralKey      = bobBaseKey;
+
+			AliceAxolotlParameters aliceParameters = AliceAxolotlParameters.NewBuilder()
+				.SetOurIdentityKey(aliceIdentityKey)
+					.SetOurBaseKey(aliceBaseKey)
+					.SetTheirIdentityKey(bobIdentityKey.PublicKey)
+					.SetTheirSignedPreKey(bobEphemeralKey.PublicKey)
+					.SetTheirRatchetKey(bobEphemeralKey.PublicKey)
+					.SetTheirOneTimePreKey(Maybe<ECPublicKey>.Nothing)
+					.Create();
+
+			BobAxolotlParameters bobParameters = BobAxolotlParameters.NewBuilder()
+				.SetOurIdentityKey(bobIdentityKey)
+					.SetOurOneTimePreKey(Maybe<ECKeyPair>.Nothing)
+					.SetOurRatchetKey(bobEphemeralKey)
+					.SetOurSignedPreKey(bobBaseKey)
+					.SetTheirBaseKey(aliceBaseKey.PublicKey)
+					.SetTheirIdentityKey(aliceIdentityKey.PublicKey)
+					.Create();
+
+			RatchetingSession.InitializeSession(aliceSessionState, 2, aliceParameters);
+			RatchetingSession.InitializeSession(bobSessionState, 2, bobParameters);
+		}
+
+		private void InitializeSessionsV3(SessionState aliceSessionState, SessionState bobSessionState)
+		{
+			var aliceIdentityKeyPair = Curve.GenerateKeyPair();
+			var aliceIdentityKey     = new IdentityKeyPair(new IdentityKey(aliceIdentityKeyPair.PublicKey),
+			                                                           aliceIdentityKeyPair.PrivateKey);
+			var aliceBaseKey         = Curve.GenerateKeyPair();
+			var aliceEphemeralKey    = Curve.GenerateKeyPair();
+
+			var alicePreKey          = aliceBaseKey;
+
+			var bobIdentityKeyPair   = Curve.GenerateKeyPair();
+			var bobIdentityKey       = new IdentityKeyPair(new IdentityKey(bobIdentityKeyPair.PublicKey),
+			                                                           bobIdentityKeyPair.PrivateKey);
+			var bobBaseKey           = Curve.GenerateKeyPair();
+			var bobEphemeralKey      = bobBaseKey;
+
+			var bobPreKey            = Curve.GenerateKeyPair();
+
+			AliceAxolotlParameters aliceParameters = AliceAxolotlParameters.NewBuilder()
+				.SetOurBaseKey(aliceBaseKey)
+					.SetOurIdentityKey(aliceIdentityKey)
+					.SetTheirOneTimePreKey(Maybe<ECPublicKey>.Nothing)
+					.SetTheirRatchetKey(bobEphemeralKey.PublicKey)
+					.SetTheirSignedPreKey(bobBaseKey.PublicKey)
+					.SetTheirIdentityKey(bobIdentityKey.PublicKey)
+					.Create();
+
+			BobAxolotlParameters bobParameters = BobAxolotlParameters.NewBuilder()
+				.SetOurRatchetKey(bobEphemeralKey)
+					.SetOurSignedPreKey(bobBaseKey)
+					.SetOurOneTimePreKey(Maybe<ECKeyPair>.Nothing)
+					.SetOurIdentityKey(bobIdentityKey)
+					.SetTheirIdentityKey(aliceIdentityKey.PublicKey)
+					.SetTheirBaseKey(aliceBaseKey.PublicKey)
+					.Create();
+
+			RatchetingSession.InitializeSession(aliceSessionState, 3, aliceParameters);
+			RatchetingSession.InitializeSession(bobSessionState, 3, bobParameters);
 		}
 	}
 }
