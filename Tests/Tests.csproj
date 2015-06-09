@@ -52,6 +52,7 @@
     <Compile Include="SessionBuilderTest.cs" />
     <Compile Include="TestInMemoryAxolotlStore.cs" />
     <Compile Include="TestInMemoryIdentityKeyStore.cs" />
+    <Compile Include="SessionCipherTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
