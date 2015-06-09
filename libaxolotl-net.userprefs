@@ -4,8 +4,11 @@
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="libaxolotl-net" expanded="True">
+            <Node name="State" expanded="True" />
+          </Node>
           <Node name="Tests" expanded="True">
-            <Node name="Ratchet" expanded="True" />
+            <Node name="SessionBuilderTest.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -19,12 +22,14 @@
         </State>
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True">
+        <State expanded="True" selected="True">
           <Node name="Tests" expanded="True">
             <Node name="Tests" expanded="True">
-              <Node name="SessionBuilderTest" expanded="True">
-                <Node name="TestBasicPreKeyV3" selected="True" />
-              </Node>
+              <Node name="GroupCipherTest" expanded="True" />
+              <Node name="HKDFTest" expanded="True" />
+              <Node name="RatchetingSessionTest" expanded="True" />
+              <Node name="RootKeyTest" expanded="True" />
+              <Node name="SessionBuilderTest" expanded="True" />
             </Node>
           </Node>
         </State>
