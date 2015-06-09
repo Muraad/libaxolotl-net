@@ -540,6 +540,51 @@ namespace Tests
 			RunInteraction(aliceStore, bobStore);
 		}
 
+		[Test()]
+		public void TestOptionalOneTimePreKey()
+		{
+			var aliceStore          = new TestInMemoryAxolotlStore();
+			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);
+
+			var bobStore = new TestInMemoryAxolotlStore();
+
+			var bobPreKeyPair            = Curve.GenerateKeyPair();
+			var bobSignedPreKeyPair      = Curve.GenerateKeyPair();
+			var bobSignedPreKeySignature = Curve.CalculateSignature(bobStore.GetIdentityKeyPair().PrivateKey,
+			                                                              bobSignedPreKeyPair.PublicKey.Serialize());
+
+			var bobPreKey = new PreKeyBundle(bobStore.GetLocalRegistrationId(), 1,
+			                                          0, null,
+			                                          22, bobSignedPreKeyPair.PublicKey,
+			                                          bobSignedPreKeySignature,
+			                                          bobStore.GetIdentityKeyPair().PublicKey);
+
+			aliceSessionBuilder.Process(bobPreKey);
+
+			Assert.True(aliceStore.ContainsSession(BOB_ADDRESS));
+			Assert.True(aliceStore.LoadSession(BOB_ADDRESS).SessionState.GetSessionVersion() == 3);
+
+			var originalMessage    = "L'homme est condamné à être libre";
+			var aliceSessionCipher = new SessionCipher(aliceStore, BOB_ADDRESS);
+			var outgoingMessage = aliceSessionCipher.Encrypt (Encoding.UTF8.GetBytes (originalMessage));
+
+			Assert.True(outgoingMessage.GetKeyType() == CiphertextMessage.PREKEY_TYPE);
+
+			var incomingMessage = new PreKeyWhisperMessage(outgoingMessage.Serialize());
+			Assert.True(!incomingMessage.PreKeyId.HasValue);
+
+			bobStore.StorePreKey(31337, new PreKeyRecord(bobPreKey.PreKeyId, bobPreKeyPair));
+			bobStore.StoreSignedPreKey(22, new SignedPreKeyRecord(22, currentMillis, bobSignedPreKeyPair, bobSignedPreKeySignature));
+
+			var bobSessionCipher = new SessionCipher(bobStore, ALICE_ADDRESS);
+			var plaintext        = bobSessionCipher.Decrypt(incomingMessage);
+
+			Assert.True(bobStore.ContainsSession(ALICE_ADDRESS));
+			Assert.True(bobStore.LoadSession(ALICE_ADDRESS).SessionState.GetSessionVersion() == 3);
+			Assert.True(bobStore.LoadSession(ALICE_ADDRESS).SessionState.AliceBaseKey != null);
+			Assert.True(originalMessage.Equals(Encoding.UTF8.GetString(plaintext)));
+		}
+
 		class TestDecryptionCallback : IDecryptionCallback
 		{
 			public void HandlePlaintext(byte[] plaintext) 
