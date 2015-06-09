@@ -510,6 +510,36 @@ namespace Tests
 			RunInteraction(aliceStore, bobStore);
 		}
 
+		[Test()]
+		public void TestSimultaneousKeyExchange()
+		{
+			var aliceStore          = new TestInMemoryAxolotlStore();
+			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);
+
+			var bobStore          = new TestInMemoryAxolotlStore();
+			var bobSessionBuilder = new SessionBuilder(bobStore, ALICE_ADDRESS);
+
+			var aliceKeyExchange = aliceSessionBuilder.Process();
+			var bobKeyExchange   = bobSessionBuilder.Process();
+
+			Assert.True(aliceKeyExchange != null);
+			Assert.True(bobKeyExchange != null);
+
+			var aliceResponse = aliceSessionBuilder.Process(bobKeyExchange);
+			var bobResponse   = bobSessionBuilder.Process(aliceKeyExchange);
+
+			Assert.True(aliceResponse != null);
+			Assert.True(bobResponse != null);
+
+			var aliceAck = aliceSessionBuilder.Process(bobResponse);
+			var bobAck   = bobSessionBuilder.Process(aliceResponse);
+
+			Assert.True(aliceAck == null);
+			Assert.True(bobAck == null);
+
+			RunInteraction(aliceStore, bobStore);
+		}
+
 		class TestDecryptionCallback : IDecryptionCallback
 		{
 			public void HandlePlaintext(byte[] plaintext) 
