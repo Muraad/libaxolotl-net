@@ -1,28 +1,32 @@
-using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Axolotl;
-using Axolotl.State;
 using Axolotl.ECC;
 using Axolotl.Protocol;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+using Axolotl.State;
+using Axolotl.Util;
+using NUnit.Framework;
 
 namespace Tests
 {
-	public class TestInMemoryIdentityKeyStore : IIdentityKeyStore
+	public class TestInMemoryIdentityKeyStore : InMemoryIdentityKeyStore
 	{
-		public void SaveIdentity(string name, IdentityKey identityKey){
-			throw new NotImplementedException ();
+		public TestInMemoryIdentityKeyStore ()
+			: base(GenerateIdentityKeyPair(), GenerateRegistrationId())
+		{
 		}
-		public bool IsTrustedIdentity(string name, IdentityKey identityKey){
-			throw new NotImplementedException ();
+
+		private static IdentityKeyPair GenerateIdentityKeyPair() {
+			var identityKeyPairKeys = Curve.GenerateKeyPair();
+
+			return new IdentityKeyPair(new IdentityKey(identityKeyPairKeys.PublicKey),
+			                           identityKeyPairKeys.PrivateKey);
 		}
-		public IdentityKeyPair GetIdentityKeyPair(){
-			throw new NotImplementedException ();
-		}
-		public UInt32 GetLocalRegistrationId (){
-			throw new NotImplementedException ();
+
+		private static UInt32 GenerateRegistrationId() {
+			return KeyHelper.GenerateRegistrationId(false);
 		}
 	}
 }
