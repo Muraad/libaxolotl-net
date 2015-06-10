@@ -1,16 +1,25 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Tests/SessionCipherTest.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/Protocol/KeyExchangeMessage.cs">
     <Files>
-      <File FileName="Tests/SessionBuilderTest.cs" Line="19" Column="86" />
-      <File FileName="Tests/SessionCipherTest.cs" Line="187" Column="23" />
+      <File FileName="Tests/SessionBuilderTest.cs" Line="482" Column="8" />
+      <File FileName="Axolotl/SessionBuilder.cs" Line="148" Column="1" />
+      <File FileName="Axolotl/State/Impl/InMemoryAxolotlStore.cs" Line="29" Column="1" />
+      <File FileName="Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" Line="27" Column="1" />
+      <File FileName="Axolotl/Protocol/KeyExchangeMessage.cs" Line="117" Column="55" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Tests" expanded="True">
-            <Node name="SessionCipherTest.cs" selected="True" />
+        <State expanded="True" selected="True">
+          <Node name="libaxolotl-net" expanded="True">
+            <Node name="ECC" expanded="True" />
+            <Node name="Protocol" expanded="True" />
+            <Node name="State" expanded="True">
+              <Node name="Impl" expanded="True" />
+            </Node>
+            <Node name="Util" expanded="True" />
           </Node>
+          <Node name="Tests" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
@@ -18,21 +27,28 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
-          <Value>sessionLocalIk</Value>
-          <Value>ArrayComparer.Compare (PublicKey, that.PublicKey);</Value>
+          <Value>parts</Value>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True">
+        <State expanded="True">
           <Node name="Tests" expanded="True">
-            <Node name="Tests" expanded="True" />
+            <Node name="Tests" expanded="True">
+              <Node name="SessionBuilderTest" expanded="True">
+                <Node name="TestBasicPreKeyV2" selected="True" />
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" line="23" column="1" />
+      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Protocol/KeyExchangeMessage.cs" line="99" column="1" />
+      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Protocol/KeyExchangeMessage.cs" line="108" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

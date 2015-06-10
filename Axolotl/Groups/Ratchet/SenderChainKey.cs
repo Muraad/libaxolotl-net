@@ -33,8 +33,11 @@ namespace Axolotl.Groups.Ratchet
 		private byte[] GetDerivative (byte[] seed, byte[] key)
 		{
 			try {
-				HMAC mac = new HMACSHA256(key);
-				return mac.Hash;
+				using(var hmac = new HMACSHA256(key))
+				{
+					hmac.TransformFinalBlock(seed, 0, seed.Length);
+					return hmac.Hash;
+				}
 			}
 			catch {
 				throw new InvalidOperationException ("Assertion error");

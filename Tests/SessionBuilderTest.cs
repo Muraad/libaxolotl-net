@@ -456,7 +456,7 @@ namespace Tests
 				plaintext = bobSessionCipher.Decrypt(incomingMessage);
 				throw new InvalidOperationException("Decrypt should have failed!");
 			} catch (InvalidMessageException e) {
-				// good.
+				Assert.Pass ();
 			}
 
 			Assert.True(bobStore.ContainsPreKey(31337));
@@ -468,7 +468,7 @@ namespace Tests
 		}
 
 		[Test()]
-		public void testBasicKeyExchange()
+		public void TestBasicKeyExchange()
 		{
 			var aliceStore          = new TestInMemoryAxolotlStore();
 			var aliceSessionBuilder = new SessionBuilder(aliceStore, BOB_ADDRESS);

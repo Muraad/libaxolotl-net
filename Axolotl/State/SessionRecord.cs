@@ -34,9 +34,8 @@ namespace Axolotl.State
 
 			RecordStructure record;
 
-			using(var stream = new MemoryStream())
+			using(var stream = new MemoryStream(serialized))
 			{
-				stream.Write(serialized, 0, serialized.Length);
 				record = Serializer.Deserialize<RecordStructure>(stream);
 			}
 

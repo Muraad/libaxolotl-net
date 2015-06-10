@@ -45,9 +45,8 @@ namespace Axolotl.Protocol
 
 				WhisperProtos.WhisperMessage whisperMessage;
 
-				using(var stream = new MemoryStream())
+				using(var stream = new MemoryStream(message))
 				{
-					stream.Write(message, 0, message.Length);
 					whisperMessage = Serializer.Deserialize<WhisperProtos.WhisperMessage>(stream);
 				}
 

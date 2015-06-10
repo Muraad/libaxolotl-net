@@ -24,9 +24,8 @@ namespace Axolotl
 		{
 			//TODO: check for errors
 
-			using(var stream = new MemoryStream())
+			using(var stream = new MemoryStream(serialized))
 			{
-				stream.Write(serialized, 0, serialized.Length);
 				var deserialized = Serializer.Deserialize<IdentityKeyPairStructure>(stream);
 
 				PublicKey = new IdentityKey(deserialized.publicKey, 0);

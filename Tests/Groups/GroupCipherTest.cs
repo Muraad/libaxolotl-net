@@ -28,7 +28,7 @@ namespace Tests
 			SenderKeyDistributionMessage sentAliceDistributionMessage     = aliceSessionBuilder.Create(GROUP_SENDER);
 			SenderKeyDistributionMessage receivedAliceDistributionMessage = new SenderKeyDistributionMessage(sentAliceDistributionMessage.Serialize());
 
-			//    bobSessionBuilder.process(GROUP_SENDER, receivedAliceDistributionMessage);
+			//bobSessionBuilder.Process(GROUP_SENDER, receivedAliceDistributionMessage);
 
 			byte[] ciphertextFromAlice = aliceGroupCipher.Encrypt (Encoding.UTF8.GetBytes ("smert ze smert"));
 			try {

@@ -22,8 +22,7 @@ namespace Axolotl.Groups.State
 
 		public SenderKeyRecord (byte[] serialized)
 		{
-			using (var stream = new MemoryStream()) {
-				stream.Write (serialized, 0, serialized.Length);
+			using (var stream = new MemoryStream(serialized)) {
 				var stateStructure = Serializer.Deserialize<SenderKeyRecordStructure> (stream);
 				foreach (var structure in stateStructure.senderKeyStates) {
 					_senderKeyStates.Add (new SenderKeyState (structure));
@@ -64,9 +63,7 @@ namespace Axolotl.Groups.State
 			using (var stream = new MemoryStream()) {
 
 				var record = new SenderKeyRecordStructure {
-					senderKeyStates = _senderKeyStates.Select(x => new SenderKeyStateStructure {
-						// UNDONE
-					}).ToList()
+					senderKeyStates = _senderKeyStates.Select(state => state.Structure).ToList()
 				};
 
 				Serializer.Serialize<SenderKeyRecordStructure>(stream, record);

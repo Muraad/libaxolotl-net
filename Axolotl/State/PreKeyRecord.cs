@@ -40,8 +40,7 @@ namespace Axolotl.State
 		public PreKeyRecord (byte[] serialized)
 		{
 			// TODO: Check if right
-			using (var stream = new MemoryStream()) {
-				stream.Write (serialized, 0, serialized.Length);
+			using (var stream = new MemoryStream(serialized)) {
 				structure = Serializer.Deserialize<PreKeyRecordStructure> (stream);
 			}
 		}

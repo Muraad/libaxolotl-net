@@ -40,9 +40,8 @@ namespace Axolotl.Protocol
 					
 				WhisperProtos.SenderKeyMessage senderKeyMessage;
 
-				using(var stream = new MemoryStream())
+				using(var stream = new MemoryStream(message))
 				{
-					stream.Write(message, 0, message.Length);
 					senderKeyMessage = Serializer.Deserialize<WhisperProtos.SenderKeyMessage>(stream);
 				}
 					

@@ -40,9 +40,8 @@ namespace Axolotl.Protocol
 
 			
 				WhisperProtos.PreKeyWhisperMessage preKeyWhisperMessage;
-				using(var stream = new MemoryStream())
+				using(var stream = new MemoryStream(serialized))
 				{
-					stream.Write(serialized, 1, serialized.Length - 1);
 					preKeyWhisperMessage = Serializer.Deserialize<WhisperProtos.PreKeyWhisperMessage>(stream);
 				}
 			

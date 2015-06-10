@@ -65,9 +65,8 @@ namespace Axolotl.Protocol
 					
 				WhisperProtos.SenderKeyDistributionMessage distributionMessage;
 
-				using(var stream = new MemoryStream())
+				using(var stream = new MemoryStream(message))
 				{
-					stream.Write(message, 0, message.Length);
 					distributionMessage = Serializer.Deserialize<WhisperProtos.SenderKeyDistributionMessage>(stream);
 				}
 

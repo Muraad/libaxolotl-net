@@ -111,9 +111,8 @@ namespace Axolotl.Protocol
 				}
 
 				WhisperProtos.KeyExchangeMessage message;
-				using(var stream = new MemoryStream())
+				using(var stream = new MemoryStream(parts[1]))
 				{
-					stream.Write(parts[1], 0, parts[1].Length);
 					message = Serializer.Deserialize<WhisperProtos.KeyExchangeMessage>(stream);
 				}
 

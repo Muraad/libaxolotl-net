@@ -47,9 +47,7 @@ namespace Axolotl.State
 
 		public SignedPreKeyRecord (byte[] serialized)
 		{
-			using (var stream = new MemoryStream()) {
-				// TODO: add check
-				stream.Write (serialized, 0, serialized.Length);
+			using (var stream = new MemoryStream(serialized)) {
 				_structure = Serializer.Deserialize<SignedPreKeyRecordStructure> (stream);
 			}
 		}
