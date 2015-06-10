@@ -16,23 +16,23 @@ namespace Tests
 		[Test()]
 		public void TestNoSession ()
 		{
-			InMemorySenderKeyStore aliceStore = new InMemorySenderKeyStore();
-			InMemorySenderKeyStore bobStore   = new InMemorySenderKeyStore();
+			var aliceStore = new InMemorySenderKeyStore();
+			var bobStore   = new InMemorySenderKeyStore();
 
-			GroupSessionBuilder aliceSessionBuilder = new GroupSessionBuilder(aliceStore);
-			GroupSessionBuilder bobSessionBuilder   = new GroupSessionBuilder(bobStore);
+			var aliceSessionBuilder = new GroupSessionBuilder(aliceStore);
+			var bobSessionBuilder   = new GroupSessionBuilder(bobStore);
 
-			GroupCipher aliceGroupCipher = new GroupCipher(aliceStore, GROUP_SENDER);
-			GroupCipher bobGroupCipher   = new GroupCipher(bobStore, GROUP_SENDER);
+			var aliceGroupCipher = new GroupCipher(aliceStore, GROUP_SENDER);
+			var bobGroupCipher   = new GroupCipher(bobStore, GROUP_SENDER);
 
-			SenderKeyDistributionMessage sentAliceDistributionMessage     = aliceSessionBuilder.Create(GROUP_SENDER);
-			SenderKeyDistributionMessage receivedAliceDistributionMessage = new SenderKeyDistributionMessage(sentAliceDistributionMessage.Serialize());
+			var sentAliceDistributionMessage     = aliceSessionBuilder.Create(GROUP_SENDER);
+			var receivedAliceDistributionMessage = new SenderKeyDistributionMessage(sentAliceDistributionMessage.Serialize());
 
 			bobSessionBuilder.Process(GROUP_SENDER, receivedAliceDistributionMessage);
 
-			byte[] ciphertextFromAlice = aliceGroupCipher.Encrypt (Encoding.UTF8.GetBytes ("smert ze smert"));
+			var ciphertextFromAlice = aliceGroupCipher.Encrypt (Encoding.UTF8.GetBytes ("smert ze smert"));
 			try {
-				byte[] plaintextFromAlice  = bobGroupCipher.Decrypt(ciphertextFromAlice);
+				var plaintextFromAlice  = bobGroupCipher.Decrypt(ciphertextFromAlice);
 				throw new InvalidOperationException("Should be no session!");
 			} catch (NoSessionException e) {
 				Assert.Pass ();

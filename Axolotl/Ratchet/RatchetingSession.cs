@@ -123,31 +123,32 @@ namespace Axolotl.Ratchet
 				byte[] secrets;
 
 				using(var stream = new MemoryStream())
+				using(var sw = new StreamWriter(stream))
 				{
 					byte[] buffer;
 
 					if (sessionVersion >= 3) {
 						buffer = GetDiscontinuityBytes();
-						stream.Write(buffer, 0, buffer.Length);
+						sw.Write(buffer);
 					}
 
 					buffer = Curve.CalculateAgreement(parameters.TheirIdentityKey.PublicKey,
 					                                  parameters.OurSignedPreKey.PrivateKey);
-					stream.Write(buffer, 0, buffer.Length);
+					sw.Write(buffer);
 
 					buffer = Curve.CalculateAgreement(parameters.TheirBaseKey,
 					                                  parameters.OurIdentityKey.PrivateKey);
-					stream.Write(buffer, 0, buffer.Length);
+					sw.Write(buffer);
 
 					buffer = Curve.CalculateAgreement(parameters.TheirBaseKey,
 					                                  parameters.OurSignedPreKey.PrivateKey);
-					stream.Write(buffer, 0, buffer.Length);
+					sw.Write(buffer);
 
 					if (sessionVersion >= 3 && parameters.OurOneTimePreKey.IsSomething()) {
 
 						parameters.OurOneTimePreKey.Do(otpK => {
 							buffer = Curve.CalculateAgreement(parameters.TheirBaseKey, otpK.PrivateKey);
-							stream.Write(buffer, 0, buffer.Length);
+							sw.Write(buffer);
 						});
 					}
 
