@@ -1,42 +1,48 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/Protocol/KeyExchangeMessage.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/Groups/GroupCipher.cs">
     <Files>
-      <File FileName="Tests/SessionBuilderTest.cs" Line="482" Column="8" />
-      <File FileName="Axolotl/SessionBuilder.cs" Line="148" Column="1" />
-      <File FileName="Axolotl/State/Impl/InMemoryAxolotlStore.cs" Line="29" Column="1" />
-      <File FileName="Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" Line="27" Column="1" />
-      <File FileName="Axolotl/Protocol/KeyExchangeMessage.cs" Line="117" Column="55" />
+      <File FileName="Axolotl/State/SessionState.cs" Line="347" Column="47" />
+      <File FileName="Axolotl/Protocol/SenderKeyMessage.cs" Line="27" Column="1" />
+      <File FileName="Axolotl/Groups/GroupCipher.cs" Line="44" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True">
+        <State expanded="True">
           <Node name="libaxolotl-net" expanded="True">
             <Node name="ECC" expanded="True" />
+            <Node name="Exceptions" expanded="True" />
+            <Node name="Groups" expanded="True">
+              <Node name="Ratchet" expanded="True" />
+              <Node name="State" expanded="True" />
+              <Node name="GroupCipher.cs" selected="True" />
+            </Node>
+            <Node name="Protobuf" expanded="True">
+              <Node name="SessionStructure" expanded="True" />
+            </Node>
             <Node name="Protocol" expanded="True" />
             <Node name="State" expanded="True">
               <Node name="Impl" expanded="True" />
             </Node>
             <Node name="Util" expanded="True" />
           </Node>
-          <Node name="Tests" expanded="True" />
+          <Node name="Tests" expanded="True">
+            <Node name="Groups" expanded="True" />
+            <Node name="KDF" expanded="True" />
+          </Node>
         </State>
       </Pad>
       <Pad Id="ClassPad">
         <State expanded="True" selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>parts</Value>
-        </State>
+        <State />
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
         <State expanded="True">
-          <Node name="Tests" expanded="True">
+          <Node name="Tests" expanded="True" selected="True">
             <Node name="Tests" expanded="True">
-              <Node name="SessionBuilderTest" expanded="True">
-                <Node name="TestBasicPreKeyV2" selected="True" />
-              </Node>
+              <Node name="GroupCipherTest" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -46,8 +52,8 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" line="23" column="1" />
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Protocol/KeyExchangeMessage.cs" line="99" column="1" />
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Protocol/KeyExchangeMessage.cs" line="108" column="1" />
+      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Protocol/SenderKeyMessage.cs" line="27" column="1" />
+      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Groups/GroupCipher.cs" line="83" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

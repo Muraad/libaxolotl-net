@@ -330,11 +330,6 @@ namespace Axolotl.State
 				}
 			}
 
-			//this.sessionStructure = this.sessionStructure.toBuilder()
-			//	.setReceiverChains(chainAndIndex.second(), updatedChain)
-			//		.build();
-			// UNDONE
-
 			return result;
 		}
 
@@ -350,17 +345,10 @@ namespace Axolotl.State
 				iv = messageKeys.Iv
 			};
 			chain.messageKeys.Add(messageKeyStructure);
-
-			// TODO
-
-			//			this.sessionStructure = this.sessionStructure.toBuilder()
-			//				.setReceiverChains(chainAndIndex.second(), updatedChain)
-			//				.build();
 		}
 
 		public void SetReceiverChainKey(ECPublicKey senderEphemeral, ChainKey chainKey)
 		{
-
 			var chainAndIndex = GetReceiverChain(senderEphemeral);
 			var chain = chainAndIndex.Item1;
 			var chainKeyStructure = new Chain.ChainKey {
@@ -368,12 +356,6 @@ namespace Axolotl.State
 				index = (UInt32)chainKey.Index
 			};
 			chain.chainKey = chainKeyStructure;
-
-
-			// UNDONE
-			//			this.sessionStructure = this.sessionStructure.toBuilder()
-			//				.setReceiverChains(chainAndIndex.second(), updatedChain)
-			//				.build();
 		}
 
 		public void SetPendingKeyExchange(UInt32 sequence,
@@ -431,7 +413,6 @@ namespace Axolotl.State
 
 		public void ClearUnacknowledgedPreKeyMessage()
 		{
-			// TODO: make normal clearing
 			Structure.PendPreKey = null;
 		}
 
@@ -439,7 +420,6 @@ namespace Axolotl.State
 		{
 			using(var stream = new MemoryStream())
 			{
-				//TODO: check
 				Serializer.Serialize<SessionStructure>(stream, Structure);
 				return stream.ToArray();
 			}

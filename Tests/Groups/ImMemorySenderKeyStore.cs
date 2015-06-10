@@ -15,7 +15,11 @@ namespace Axolotl.Groups
 		}
 
 		public void StoreSenderKey(SenderKeyName senderKeyName, SenderKeyRecord record) {
-			store.Add(senderKeyName, record);
+			if (store.ContainsKey (senderKeyName)) {
+				store [senderKeyName] = record;
+			} else {
+				store.Add (senderKeyName, record);
+			}
 		}
 
 		public SenderKeyRecord LoadSenderKey(SenderKeyName senderKeyName) {

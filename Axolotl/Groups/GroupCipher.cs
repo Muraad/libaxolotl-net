@@ -167,12 +167,13 @@ namespace Axolotl.Groups
 					var encryptor = aes.CreateEncryptor();
 
 					using(var mStream = new MemoryStream())
-						using(var cStream = new CryptoStream(mStream, encryptor, CryptoStreamMode.Write))
-						{
-							cStream.Write(paddedPlaintext, 0, paddedPlaintext.Length);
-							cStream.FlushFinalBlock();
-							result = mStream.ToArray();
-						}
+					using(var cStream = new CryptoStream(mStream, encryptor, CryptoStreamMode.Write))
+					using(var sw = new StreamWriter(cStream))
+					{
+						sw.Write(paddedPlaintext);
+						cStream.FlushFinalBlock();
+						result = mStream.ToArray();
+					}
 				}
 
 				return result;
