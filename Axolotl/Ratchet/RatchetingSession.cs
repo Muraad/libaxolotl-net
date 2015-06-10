@@ -59,39 +59,40 @@ namespace Axolotl.Ratchet
 
 				byte[] secrets;
 				using(var stream = new MemoryStream())
+				using(var sw = new StreamWriter(stream))
 				{
 					byte[] buf;
 					int offset = 0;
 
 					if (sessionVersion >= 3) {
 						buf = GetDiscontinuityBytes();
-						stream.Write(buf, offset, buf.Length);
+						sw.Write(buf);
 						offset = buf.Length;
 					}
 
 					buf = Curve.CalculateAgreement(parameters.TheirSignedPreKey,
 					                               parameters.OurIdentityKey.PrivateKey);
 
-					stream.Write(buf, offset, buf.Length);
+					sw.Write(buf);
 					offset = buf.Length;
 
 					buf = Curve.CalculateAgreement(parameters.TheirIdentityKey.PublicKey,
 					                               parameters.OurBaseKey.PrivateKey);
 
-					stream.Write(buf, offset, buf.Length);
+					sw.Write(buf);
 					offset += buf.Length;
 
 					buf = Curve.CalculateAgreement(parameters.TheirSignedPreKey,
 					                               parameters.OurBaseKey.PrivateKey);
 
-					stream.Write(buf, offset, buf.Length);
+					sw.Write(buf);
 					offset += buf.Length;
 
 					if (sessionVersion >= 3 && parameters.TheirOneTimePreKey.IsSomething()) {
 						parameters.TheirOneTimePreKey.Do(pKey => { 
 							buf = Curve.CalculateAgreement(pKey,
 							                               parameters.OurBaseKey.PrivateKey);
-							stream.Write(buf, offset, buf.Length); 
+							sw.Write(buf); 
 						});
 					}
 
