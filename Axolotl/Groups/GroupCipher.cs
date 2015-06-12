@@ -168,9 +168,10 @@ namespace Axolotl.Groups
 
 					using(var mStream = new MemoryStream())
 					using(var cStream = new CryptoStream(mStream, encryptor, CryptoStreamMode.Write))
-					using(var sw = new StreamWriter(cStream))
+					using(var sw = new BinaryWriter(cStream))
 					{
 						sw.Write(paddedPlaintext);
+						sw.Flush();
 						cStream.FlushFinalBlock();
 						result = mStream.ToArray();
 					}

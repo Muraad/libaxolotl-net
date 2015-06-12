@@ -14,7 +14,6 @@ namespace Axolotl.State
 	{
 		private UInt32 _sessionVersion;
 
-
 		public IdentityKey GetRemoteIdentityKey()
 		{
 			try {
@@ -31,7 +30,7 @@ namespace Axolotl.State
 
 		public void SetRemoteIdentityKey(IdentityKey identityKey)
 		{
-			Structure.RemoteIdentityPublic = identityKey.Serialize ();;
+			Structure.RemoteIdentityPublic = identityKey.Serialize ();
 		}
 
 		public IdentityKey GetLocalIdentityKey()

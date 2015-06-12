@@ -46,6 +46,11 @@ namespace Axolotl.State
 
 		[ProtoMember(13)]
 		public byte[] AliceBaseKey { get; set; }
+
+		public SessionStructure ()
+		{
+			ReceiverChains = new List<Chain> ();
+		}
 	}
 
 	[ProtoContract]
@@ -56,6 +61,11 @@ namespace Axolotl.State
 
 		[ProtoMember(2)]
 		public List<SessionStructure> PreviousSessions { get; set; }
+
+		public RecordStructure ()
+		{
+			PreviousSessions = new List<SessionStructure> ();
+		}
 	}
 
 	[ProtoContract]

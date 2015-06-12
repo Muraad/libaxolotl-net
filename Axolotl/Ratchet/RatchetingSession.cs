@@ -59,34 +59,29 @@ namespace Axolotl.Ratchet
 
 				byte[] secrets;
 				using(var stream = new MemoryStream())
-				using(var sw = new StreamWriter(stream))
+				using(var sw = new BinaryWriter(stream))
 				{
 					byte[] buf;
-					int offset = 0;
 
 					if (sessionVersion >= 3) {
 						buf = GetDiscontinuityBytes();
 						sw.Write(buf);
-						offset = buf.Length;
 					}
 
 					buf = Curve.CalculateAgreement(parameters.TheirSignedPreKey,
 					                               parameters.OurIdentityKey.PrivateKey);
 
 					sw.Write(buf);
-					offset = buf.Length;
 
 					buf = Curve.CalculateAgreement(parameters.TheirIdentityKey.PublicKey,
 					                               parameters.OurBaseKey.PrivateKey);
 
 					sw.Write(buf);
-					offset += buf.Length;
 
 					buf = Curve.CalculateAgreement(parameters.TheirSignedPreKey,
 					                               parameters.OurBaseKey.PrivateKey);
 
 					sw.Write(buf);
-					offset += buf.Length;
 
 					if (sessionVersion >= 3 && parameters.TheirOneTimePreKey.IsSomething()) {
 						parameters.TheirOneTimePreKey.Do(pKey => { 
@@ -95,6 +90,8 @@ namespace Axolotl.Ratchet
 							sw.Write(buf); 
 						});
 					}
+
+					sw.Flush();
 
 					secrets = stream.ToArray();
 				}
@@ -123,7 +120,7 @@ namespace Axolotl.Ratchet
 				byte[] secrets;
 
 				using(var stream = new MemoryStream())
-				using(var sw = new StreamWriter(stream))
+				using(var sw = new BinaryWriter(stream))
 				{
 					byte[] buffer;
 
@@ -151,6 +148,8 @@ namespace Axolotl.Ratchet
 							sw.Write(buffer);
 						});
 					}
+
+					sw.Flush();
 
 					secrets = stream.ToArray();
 				}
