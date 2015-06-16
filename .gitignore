@@ -6,7 +6,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
-test-results/
+[Tt]est-results/
 tests
 Tests/bin/
 Tests/test-results/*.xml
