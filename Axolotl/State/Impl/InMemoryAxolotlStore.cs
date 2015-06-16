@@ -5,102 +5,124 @@ namespace Axolotl.State
 {
 	public class InMemoryAxolotlStore : IAxolotlStore
 	{
-		private InMemoryPreKeyStore       _preKeyStore;
-		private InMemorySessionStore      _sessionStore;
-		private InMemorySignedPreKeyStore _signedPreKeyStore;
+        private InMemoryPreKeyStore       _preKeyStore       = new InMemoryPreKeyStore();
+        private InMemorySessionStore      _sessionStore      = new InMemorySessionStore();
+        private InMemorySignedPreKeyStore _signedPreKeyStore = new InMemorySignedPreKeyStore();
 
-		private InMemoryIdentityKeyStore  _identityKeyStore;
+        private InMemoryIdentityKeyStore  _identityKeyStore;
 
-		public InMemoryAxolotlStore(IdentityKeyPair identityKeyPair, UInt32 registrationId) 
-		{
-			_identityKeyStore = new InMemoryIdentityKeyStore(identityKeyPair, registrationId);
-			_preKeyStore = new InMemoryPreKeyStore ();
-			_sessionStore = new InMemorySessionStore ();
-			_signedPreKeyStore = new InMemorySignedPreKeyStore ();
-		}
+        public InMemoryAxolotlStore(IdentityKeyPair identityKeyPair, UInt32 registrationId) 
+        {
+          _identityKeyStore = new InMemoryIdentityKeyStore(identityKeyPair, registrationId);
+        }
 
-		public void SaveIdentity(string name, IdentityKey identityKey) 
-		{
-			_identityKeyStore.SaveIdentity(name, identityKey);
-		}
+        public IdentityKeyPair GetIdentityKeyPair() 
+        {
+          return _identityKeyStore.GetIdentityKeyPair();
+        }
 
-		public bool IsTrustedIdentity(string name, IdentityKey identityKey) 
-		{
-			return _identityKeyStore.IsTrustedIdentity(name, identityKey);
-		}
+        public UInt32 GetLocalRegistrationId() 
+        {
+          return _identityKeyStore.GetLocalRegistrationId();
+        }
 
-		public PreKeyRecord LoadPreKey(uint preKeyId)
-		{
-			return _preKeyStore.LoadPreKey(preKeyId);
-		}
+        public void SaveIdentity(string name, IdentityKey identityKey) 
+        {
+          _identityKeyStore.SaveIdentity(name, identityKey);
+        }
 
-		public void StorePreKey(uint preKeyId, PreKeyRecord record) 
-		{
-			_preKeyStore.StorePreKey(preKeyId, record);
-		}
+        public bool IsTrustedIdentity(string name, IdentityKey identityKey) 
+        {
+          return _identityKeyStore.IsTrustedIdentity(name, identityKey);
+        }
 
-		public bool ContainsPreKey(uint preKeyId) {
-			return _preKeyStore.ContainsPreKey(preKeyId);
-		}
+        public PreKeyRecord LoadPreKey(UInt32 preKeyId)
+        {
+            try 
+            {
+              return _preKeyStore.LoadPreKey(preKeyId);
+            }
+            catch(Exception e)
+            {
+                throw new InvalidOperationException("wtf", e);
+            }
+        }
 
-		public void RemovePreKey(uint preKeyId) {
-			_preKeyStore.RemovePreKey(preKeyId);
-		}
+        public void StorePreKey(UInt32 preKeyId, PreKeyRecord record) 
+        {
+          _preKeyStore.StorePreKey(preKeyId, record);
+        }
 
-		public SessionRecord LoadSession(AxolotlAddress address) {
-			return _sessionStore.LoadSession(address);
-		}
+        public bool ContainsPreKey(UInt32 preKeyId) 
+        {
+          return _preKeyStore.ContainsPreKey(preKeyId);
+        }
 
-		public List<int> GetSubDeviceSessions(string name) {
-			return _sessionStore.GetSubDeviceSessions(name);
-		}
+        public void RemovePreKey(UInt32 preKeyId) 
+        {
+          _preKeyStore.RemovePreKey(preKeyId);
+        }
 
-		public void StoreSession(AxolotlAddress address, SessionRecord record) {
-			_sessionStore.StoreSession(address, record);
-		}
+        public SessionRecord LoadSession(AxolotlAddress address) 
+        {
+          return _sessionStore.LoadSession(address);
+        }
 
-		public bool ContainsSession(AxolotlAddress address) {
-			return _sessionStore.ContainsSession(address);
-		}
+        public List<UInt32> GetSubDeviceSessions(string name) 
+        {
+          return _sessionStore.GetSubDeviceSessions(name);
+        }
 
-		public void DeleteSession(AxolotlAddress address) {
-			_sessionStore.DeleteSession(address);
-		}
+        public void StoreSession(AxolotlAddress address, SessionRecord record) 
+        {
+          _sessionStore.StoreSession(address, record);
+        }
 
-		public void DeleteAllSessions(string name) {
-			_sessionStore.DeleteAllSessions(name);
-		}
+        public bool ContainsSession(AxolotlAddress address) 
+        {
+          return _sessionStore.ContainsSession(address);
+        }
 
-		public SignedPreKeyRecord LoadSignedPreKey(UInt32 signedPreKeyId)
-		{
-			return _signedPreKeyStore.LoadSignedPreKey(signedPreKeyId);
-		}
+        public void DeleteSession(AxolotlAddress address) 
+        {
+          _sessionStore.DeleteSession(address);
+        }
 
-		public List<SignedPreKeyRecord> LoadSignedPreKeys() {
-			return _signedPreKeyStore.LoadSignedPreKeys();
-		}
+        public void DeleteAllSessions(string name) 
+        {
+          _sessionStore.DeleteAllSessions(name);
+        }
 
-		public void StoreSignedPreKey(UInt32 signedPreKeyId, SignedPreKeyRecord record) {
-			_signedPreKeyStore.StoreSignedPreKey(signedPreKeyId, record);
-		}
+        public SignedPreKeyRecord LoadSignedPreKey(UInt32 signedPreKeyId) 
+        {
+          try {
+              return _signedPreKeyStore.LoadSignedPreKey(signedPreKeyId);
+          }
+          catch (Exception e)
+          {
+            throw new InvalidOperationException("wtf", e);
+          }
+        }
 
-		public bool ContainsSignedPreKey(UInt32 signedPreKeyId) {
-			return _signedPreKeyStore.ContainsSignedPreKey(signedPreKeyId);
-		}
+        public List<SignedPreKeyRecord> LoadSignedPreKeys() 
+        {
+          return _signedPreKeyStore.LoadSignedPreKeys();
+        }
 
-		public void RemoveSignedPreKey(UInt32 signedPreKeyId) {
-			_signedPreKeyStore.RemoveSignedPreKey(signedPreKeyId);
-		}
+        public void StoreSignedPreKey(UInt32 signedPreKeyId, SignedPreKeyRecord record) 
+        {
+          _signedPreKeyStore.StoreSignedPreKey(signedPreKeyId, record);
+        }
 
-		public IdentityKeyPair GetIdentityKeyPair()
-		{
-			return _identityKeyStore.GetIdentityKeyPair ();
-		}
+        public bool ContainsSignedPreKey(UInt32 signedPreKeyId) 
+        {
+          return _signedPreKeyStore.ContainsSignedPreKey(signedPreKeyId);
+        }
 
-		public UInt32 GetLocalRegistrationId()
-		{
-			return _identityKeyStore.GetLocalRegistrationId ();
-		}
+        public void RemoveSignedPreKey(UInt32 signedPreKeyId) 
+        {
+          _signedPreKeyStore.RemoveSignedPreKey(signedPreKeyId);
+        }
 	}
 }
 

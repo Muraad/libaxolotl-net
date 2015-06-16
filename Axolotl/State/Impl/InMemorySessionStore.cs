@@ -25,9 +25,9 @@ namespace Axolotl.State
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public List<int> GetSubDeviceSessions(string name)
+		public List<UInt32> GetSubDeviceSessions(string name)
 		{
-			var deviceIds = new List<int>();
+			var deviceIds = new List<UInt32>();
 
 			foreach (var key in _sessions.Keys) {
 				if (key.Name.Equals(name) &&

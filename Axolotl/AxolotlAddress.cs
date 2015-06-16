@@ -1,12 +1,14 @@
+using System;
+
 namespace Axolotl
 {
 	public class AxolotlAddress
 	{
 		public string Name { get; private set; }
 
-		public int DeviceID { get; private set; }
+		public UInt32 DeviceID { get; private set; }
 
-		public AxolotlAddress(string name, int deviceId)
+		public AxolotlAddress(string name, UInt32 deviceId)
 		{
 			Name = name;
 			DeviceID = deviceId;
@@ -31,7 +33,7 @@ namespace Axolotl
 
 		public override int GetHashCode()
 		{
-			return Name.GetHashCode() ^ DeviceID;
+			return Name.GetHashCode() ^ (int)DeviceID;
 		}
 	}
 }

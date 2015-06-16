@@ -1,13 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Axolotl/Groups/GroupCipher.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Tests/TestInMemoryAxolotlStore.cs">
     <Files>
+      <File FileName="Axolotl/Groups/GroupCipher.cs" Line="1" Column="1" />
       <File FileName="Axolotl/State/SessionState.cs" Line="1" Column="1" />
-      <File FileName="Axolotl/Protocol/SenderKeyMessage.cs" Line="35" Column="5" />
-      <File FileName="Axolotl/Groups/GroupCipher.cs" Line="34" Column="1" />
-      <File FileName="Axolotl/AxolotlAddress.cs" Line="1" Column="1" />
-      <File FileName="Axolotl/Ratchet/RatchetingSession.cs" Line="123" Column="20" />
-      <File FileName="Tests/Groups/GroupCipherTest.cs" Line="33" Column="1" />
+      <File FileName="Axolotl/SessionBuilder.cs" Line="1" Column="1" />
+      <File FileName="Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" Line="1" Column="1" />
+      <File FileName="Tests/SessionBuilderTest.cs" Line="1" Column="1" />
+      <File FileName="Tests/TestInMemoryAxolotlStore.cs" Line="12" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,7 +18,6 @@
             <Node name="Groups" expanded="True">
               <Node name="Ratchet" expanded="True" />
               <Node name="State" expanded="True" />
-              <Node name="GroupCipher.cs" selected="True" />
             </Node>
             <Node name="Protobuf" expanded="True">
               <Node name="SessionStructure" expanded="True" />
@@ -33,6 +32,7 @@
           <Node name="Tests" expanded="True">
             <Node name="Groups" expanded="True" />
             <Node name="KDF" expanded="True" />
+            <Node name="TestInMemoryAxolotlStore.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -43,21 +43,17 @@
         <State />
       </Pad>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True">
-          <Node name="Tests" expanded="True">
-            <Node name="Tests" expanded="True" />
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/State/Impl/InMemoryIdentityKeyStore.cs" line="23" column="1" />
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Groups/GroupCipher.cs" line="71" column="1" />
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Groups/GroupCipher.cs" line="179" column="1" />
-      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/Protocol/SenderKeyMessage.cs" line="27" column="1" />
+      <Breakpoint file="/home/darthramone/Проекты/libaxolotl-net/Axolotl/SessionBuilder.cs" line="148" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="Axolotl/Ratchet/RatchetingSession.cs" line="62" offsetX="506" offsetY="1098" expression="stream" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>

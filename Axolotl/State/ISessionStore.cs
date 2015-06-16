@@ -8,7 +8,7 @@ namespace Axolotl.State
 	{
 		SessionRecord LoadSession(AxolotlAddress address);
 
-		List<int> GetSubDeviceSessions(string name);
+		List<UInt32> GetSubDeviceSessions(string name);
 
 		bool ContainsSession(AxolotlAddress address);
 

@@ -39,25 +39,29 @@ namespace Axolotl
 
 		public Maybe<UInt32> Process(SessionRecord sessionRecord, PreKeyWhisperMessage message)
 		{
-			var messageVersion = message.MessageVersion;
-			var theirIdentityKey = message.IdentityKey;
+            var messageVersion   = message.MessageVersion;
+            var theirIdentityKey = message.IdentityKey;
 
-			Maybe<UInt32> unsignedPreKeyId;
+            Maybe<UInt32> unsignedPreKeyId;
 
-			if (!_identityKeyStore.IsTrustedIdentity(_remoteAddress.Name, theirIdentityKey)) 
-			{
-				throw new UntrustedIdentityException();
-			}
+            if (!_identityKeyStore.IsTrustedIdentity(_remoteAddress.Name, theirIdentityKey)) {
+              throw new UntrustedIdentityException();
+            }
 
-			switch (messageVersion) 
-			{
-				case 2:  unsignedPreKeyId = ProcessV2(sessionRecord, message); break;
-				case 3:  unsignedPreKeyId = ProcessV3(sessionRecord, message); break;
-				default: throw new InvalidOperationException("Unknown version: " + messageVersion);
-			}
+            switch (messageVersion) 
+            {
+              case 2: 
+                  unsignedPreKeyId = ProcessV2(sessionRecord, message); 
+                  break;
+              case 3:  
+                  unsignedPreKeyId = ProcessV3(sessionRecord, message); 
+                  break;
+              default: 
+                throw new InvalidOperationException("Unknown version: " + messageVersion);
+            }
 
-			_identityKeyStore.SaveIdentity(_remoteAddress.Name, theirIdentityKey);
-			return unsignedPreKeyId;
+            _identityKeyStore.SaveIdentity(_remoteAddress.Name, theirIdentityKey);
+            return unsignedPreKeyId;
 		}
 
 		private Maybe<UInt32> ProcessV2 (SessionRecord sessionRecord, PreKeyWhisperMessage message)
@@ -166,7 +170,7 @@ namespace Axolotl
 				ECKeyPair             ourBaseKey           = Curve.GenerateKeyPair();
 				ECPublicKey           theirSignedPreKey    = supportsV3 ? preKey.GetSignedPreKey() : preKey.GetPreKey();
 				Maybe<ECPublicKey> theirOneTimePreKey      = preKey.GetPreKey().ToMaybe();
-				Maybe<UInt32>     theirOneTimePreKeyId 	   = theirOneTimePreKey.IsSomething() ? preKey.PreKeyId.ToMaybe() :Maybe<UInt32>.Nothing;
+				Maybe<UInt32>     theirOneTimePreKeyId 	   = theirOneTimePreKey.IsSomething() ? preKey.PreKeyId.ToMaybe() : Maybe<UInt32>.Nothing;
 
 				var aliceParams = AliceAxolotlParameters.NewBuilder();
 
