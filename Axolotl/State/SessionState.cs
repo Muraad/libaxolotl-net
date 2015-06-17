@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using ProtoBuf;
 using Functional.Maybe;
+using Axolotl.Logging;
 
 namespace Axolotl.State
 {
@@ -22,8 +23,7 @@ namespace Axolotl.State
 				return new IdentityKey(Structure.RemoteIdentityPublic, 0);
 			}
 			catch(InvalidKeyException e) {
-				// TODO: LOG
-				Console.WriteLine("SessionRecordV2", e);
+                Logger.w("SessionRecordV2", e);
 				return null;
 			}
 		}
