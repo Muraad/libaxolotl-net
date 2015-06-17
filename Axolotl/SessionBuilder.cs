@@ -5,6 +5,7 @@ using Axolotl.State;
 using Axolotl.Ratchet;
 using Axolotl.ECC;
 using Axolotl.Util;
+using Axolotl.Logging;
 
 namespace Axolotl
 {
@@ -107,8 +108,7 @@ namespace Axolotl
 		{
 			if (sessionRecord.HasSessionState(message.MessageVersion, message.BaseKey.Serialize())) 
 			{
-				// TODO: LOG // TAG ?
-				Console.WriteLine("SessionBuilder : " + "We've already setup a session for this V3 message, letting bundled message fall through...");
+				Logger.w("SessionBuilder : ", "We've already setup a session for this V3 message, letting bundled message fall through...");
 				return Maybe<UInt32>.Nothing;
 			}
 

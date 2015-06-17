@@ -224,8 +224,7 @@ namespace Axolotl.State
 				}
 				catch(InvalidKeyException e)
 				{
-					//TODO: LOG
-					Console.WriteLine("SessionRecordV2", e);
+                    Logger.w("SessionRecordV2", e);
 				}
 			}
 
